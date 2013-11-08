@@ -1,0 +1,57 @@
+PODS:
+  - AFNetworking (2.0.1):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.0.1)
+  - AFNetworking/Security (2.0.1)
+  - AFNetworking/Serialization (2.0.1)
+  - AFNetworking/UIKit (2.0.1):
+    - AFNetworking/NSURLConnection
+  - AKTabBarController (1.1.0)
+  - ALAlertBanner (0.3.1)
+  - FMDB (2.1):
+    - FMDB/standard
+  - FMDB/common (2.1)
+  - FMDB/standard (2.1):
+    - FMDB/common
+  - PKRevealController (2.0.5)
+  - REMenu (1.6)
+  - SVProgressHUD (0.9)
+  - SVPullToRefresh (0.4.1)
+  - YLProgressBar (3.1.0)
+
+DEPENDENCIES:
+  - AFNetworking
+  - AKTabBarController
+  - ALAlertBanner
+  - FMDB
+  - PKRevealController
+  - REMenu
+  - SVProgressHUD
+  - SVPullToRefresh
+  - YLProgressBar
+
+SPEC CHECKSUMS:
+  AFNetworking: a6f11ac4ac087303e6ff87adc1ba57b0dac20ef8
+  AKTabBarController: 34443d5d028700dea1d00a6f275e8ef17fc947c2
+  ALAlertBanner: 16235298226059cd876a9de0a5d7f9bac6a79459
+  FMDB: 3fd5aaf632ca4ed39e3f101e0398504e6d5b0918
+  PKRevealController: 50a737bde432e51b68596d46b33617ec8bcb3a6a
+  REMenu: 65aee777063bc70210d8257d4a935a4fb98cad52
+  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
+  SVPullToRefresh: 61a0e4bd12bd6f8e3465909810b0fbeb1a28d5f2
+  YLProgressBar: a1e1596cb883660ccd1babedf2e233c84258513c
+
+COCOAPODS: 0.26.2
