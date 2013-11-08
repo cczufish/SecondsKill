@@ -63,7 +63,7 @@
     [fmt setDateFormat:kDateFormat];
     
     if (self.adapterType == CommodityAdapterTypeKilling) {
-        if (![self.surplusTipLabel.text isEqualToString:@"已被秒杀空了"]) {
+        if (![self.surplusTipLabel.text isEqualToString:@"秒杀已结束"]) {
             NSDate *date = [fmt dateFromString:self.surplusLabel.text];
             NSDate *newdate = [date dateByAddingTimeInterval:-1.0f];
             
@@ -71,9 +71,10 @@
             self.commodity.surplus = [fmt stringFromDate:newdate];
             
             if ([self.commodity.surplus isEqualToString:kNullTime]) {
-                self.surplusTipLabel.text = @"已被秒杀空了";
+                self.surplusTipLabel.text = @"秒杀已结束";
                 self.surplusLabel.hidden = YES;
                 self.commodity.surplus = self.surplusLabel.text;
+                self.alreadyOrderPB.hidden = YES;
             }
         }
     }
@@ -111,7 +112,8 @@
     if (self.adapterType == CommodityAdapterTypeKilling) {
         UIViewController *vc = self.viewController;
         VWebViewController *webVC = [vc.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
-        webVC.navigationItem.title = vc.navigationItem.title;
+        webVC.navigationItem.title = vc.tabTitle;
+        
         webVC.linkAddress = self.commodity.link;
         [webVC setHidesBottomBarWhenPushed:YES];
         [vc.navigationController pushViewController:webVC animated:YES];

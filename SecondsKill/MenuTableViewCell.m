@@ -7,6 +7,8 @@
 //
 
 #import "MenuTableViewCell.h"
+#import "MenuViewController.h"
+#import "UIButton+MenuItem.h"
 
 @implementation MenuTableViewCell
 
@@ -33,31 +35,30 @@
 
 - (IBAction)buttonPressed:(UIButton *)btn
 {
-    NSLog(@"%d,%d",self.viewController.view.tag,self.viewController.revealController.frontViewController.view.tag);
-    for (UIView *view = self.superview; view; view = view.superview) {
-        if ([view isKindOfClass:[UITableView class]]) {
-            UITableView *tableView = (UITableView *)view;
-
-//            UIButton *selectedBtn = [tableView.selectedBtnOfSection objectAtIndex:[[btn.menuInfo objectForKey:@"section"] integerValue]];
-            btn.seleted = NO;
-            [tableView.selectedBtnOfSection replaceObjectAtIndex:[[btn.menuInfo objectForKey:@"section"] integerValue] withObject:btn];
-
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            NSMutableArray *seletedMenus = [NSMutableArray arrayWithArray:[userDefaults objectForKey:SELECTED_MENU_KEY]];
-
-            [seletedMenus replaceObjectAtIndex:[[btn.menuInfo objectForKey:@"section"] integerValue] withObject:btn.menuInfo];
-            
-            [userDefaults setObject:seletedMenus forKey:SELECTED_MENU_KEY];
-            [userDefaults synchronize];
-
+    int section = [[btn.menuInfo objectForKey:@"section"] integerValue];
+    
+    MenuViewController *menuVC = (MenuViewController *) self.viewController;
+    
+    NSDictionary *seletedMenuItem = menuVC.seletedMenuItems[section];
+    
+    for (UIButton *menuBtn in menuVC.allMenuItems) {
+        if ([[menuBtn.menuInfo objectForKey:@"title"] isEqualToString:[seletedMenuItem objectForKey:@"title"]]
+            && [[menuBtn.menuInfo objectForKey:@"section"] integerValue] == [[seletedMenuItem objectForKey:@"section"] integerValue]) {
+            menuBtn.menuSelected = NO;
             break;
         }
     }
     
-    btn.seleted = YES;
+    btn.menuSelected = YES;
+    [menuVC.seletedMenuItems replaceObjectAtIndex:section withObject:btn.menuInfo];
     
-//    SuperViewController *superVC = (SuperViewController *) self.viewController;
-//    [superVC showFrontViewController];
+    //index == 1 只有所选菜单项是电商名称时才更新leftBarButtonItem
+    if (section == 1) {
+        UIViewController *vc = [menuVC currentViewController];
+        
+        UIButton *leftBtn = (UIButton *)vc.navigationItem.leftBarButtonItem.customView;
+        [leftBtn setTitle:[btn.menuInfo objectForKey:@"title"] forState:UIControlStateNormal];
+    }
 }
 
 @end

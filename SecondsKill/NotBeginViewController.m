@@ -9,6 +9,7 @@
 #import "NotBeginViewController.h"
 #import "CommodityTableViewAdapter.h"
 #import "Commodity.h"
+#import "AppDelegate.h"
 
 @interface NotBeginViewController ()
 
@@ -20,7 +21,10 @@
 static id previousLocationObserver;
 
 @implementation NotBeginViewController
-
+- (void)refreshCommoditys
+{
+    NSLog(@"NotBeginViewController refreshCommoditys");
+}
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -28,14 +32,7 @@ static id previousLocationObserver;
     
     previousLocationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"tapViewNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
-        //        self.menuOpened = YES;
-        //        if (self.menuOpened) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        NSArray *seletedMenus = [userDefaults objectForKey:SELECTED_MENU_KEY];
-        NSLog(@"%@",[seletedMenus[1] objectForKey:@"title"]);
-        UIButton *leftBtn2 = (UIButton *)self.navigationItem.leftBarButtonItem.customView;
-        [leftBtn2 setTitle:[seletedMenus[1] objectForKey:@"title"] forState:UIControlStateNormal];
-        //        }
+
     }];
 }
 
@@ -83,21 +80,24 @@ static id previousLocationObserver;
 
 - (void)selectMenu
 {
-    //    if (self.menuOpened) {
-    //        [self.revealController showViewController:self.revealController.frontViewController];
-    //    }
-    //    else {
-//    self.revealController.leftViewController.view.tag = self.view.tag;
+//    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+//    self.revealController = (PKRevealController *) appDelegate.window.rootViewController;
+//    
+//    
+//    AKTabBarController *tabBarController = (AKTabBarController *)self.revealController.frontViewController;
+//    self.revealController.leftViewController = [tabBarController.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
     [self.revealController showViewController:self.revealController.leftViewController];
-    //    }
-    //    self.menuOpened = !self.menuOpened;
+
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.view.tag = 1;
+    _seletedMenuItems = [[NSMutableArray alloc] initWithCapacity:[self.menus count]];
+    for (int i = 0; i < [self.menus count]; i++) {
+        [self.seletedMenuItems addObject:[self.menus[i] objectAtIndex:1]];//放title为“全部“的菜单设置为默认选择菜单
+    }
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setButtonStyle:leftBtn imageName:@"down_arrow.png"];
@@ -149,36 +149,6 @@ static id previousLocationObserver;
     
     self.tableView.backgroundColor =  RGB(38.0f, 38.0f, 38.0f);
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-}
-
-- (void)insertRowAtTop:(SuperViewController *)weakSelf
-{
-    int64_t delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [weakSelf.tableView beginUpdates];
-        
-        Commodity *temp = [Commodity commodityWithName:@"来自下拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
-        temp.link = @"http://tudou.com";
-        temp.detrusionTime = @"00:00:05";
-        temp.pictureURL = @"http://pic4.nipic.com/20091028/735390_104541056365_2.jpg";
-        temp.upCount = 3;
-        temp.inventory = 100;
-        
-        [self.commoditys insertObject:temp atIndex:0];
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil] withRowAnimation:UITableViewRowAnimationBottom];
-        
-        [weakSelf.tableView endUpdates];
-        
-        [weakSelf.tableView.pullToRefreshView stopAnimating];
-        
-        ALAlertBanner *banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功加载%d条数据",1] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
-            NSLog(@"tapped!");
-            [alertBanner hide];
-        }];
-        banner.secondsToShow = 1.5f;
-        [banner show];
-    });
 }
 
 - (void)insertRowAtBottom:(SuperViewController *)weakSelf

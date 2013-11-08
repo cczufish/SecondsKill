@@ -10,8 +10,11 @@
 
 @interface SuperViewController : UITableViewController
 
+@property (nonatomic, copy) NSArray *menus;
 @property (nonatomic, assign) BOOL needPullRefresh;
 
 - (void)setButtonStyle:(UIButton *)btn imageName:(NSString *)imageName;
+
+- (UIViewController *)currentViewController;
 
 @end

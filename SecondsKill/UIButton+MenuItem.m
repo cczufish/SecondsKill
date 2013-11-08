@@ -10,37 +10,39 @@
 #import <objc/runtime.h>
 
 static const void *menuInfoKey;
-static const void *seletedKey;
+static const void *menuSelectedKey;
 
-#define kBtnLayerName @"leftBorder"
+#define kMenuItemLayerName @"menuSelected"
 
 @implementation UIButton (MenuItem)
 
 @dynamic menuInfo;
-@dynamic seleted;
+@dynamic menuSelected;
 
-- (BOOL)isSeleted
+- (BOOL)menuSelected
 {
-    return [objc_getAssociatedObject(self, &seletedKey) boolValue];
+    return [objc_getAssociatedObject(self, &menuSelectedKey) boolValue];
 }
 
-- (void)setSeleted:(BOOL)seleted
+- (void)setMenuSelected:(BOOL)menuSelected
 {
-    if (seleted) {
+    if (menuSelected) {
         [self setBackgroundColor:RGB(20.0f, 20.0f, 20.0f)];
         
-        CALayer *newLayer = [CALayer layer];
-        newLayer.name = kBtnLayerName;
-        newLayer.backgroundColor = RGB(199, 55, 33).CGColor;
-        newLayer.frame = CGRectMake(0, 0, 5, 50);
-        [self.layer addSublayer:newLayer];
+        if(![self hasLayer:kMenuItemLayerName]) {
+            CALayer *newLayer = [CALayer layer];
+            newLayer.name = kMenuItemLayerName;
+            newLayer.backgroundColor = RGB(199, 55, 33).CGColor;
+            newLayer.frame = CGRectMake(0, 0, 5, 50);
+            [self.layer addSublayer:newLayer];
+        }
     }
     else {
         [self setBackgroundColor:[UIColor clearColor]];
-        [self removeLayerWithName:kBtnLayerName];
+        [self removeLayerWithName:kMenuItemLayerName];
     }
 
-    objc_setAssociatedObject(self, &seletedKey, [NSNumber numberWithBool:seleted], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &menuSelectedKey, [NSNumber numberWithBool:menuSelected], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSDictionary *)menuInfo

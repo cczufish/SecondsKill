@@ -15,6 +15,6 @@
 
 @property (nonatomic, copy) NSDictionary *menuInfo;
 
-@property (nonatomic, assign, getter=isSeleted) BOOL seleted;
+@property (nonatomic, assign) BOOL menuSelected;
 
 @end

@@ -24,7 +24,6 @@
 #define FONT_NAME @"Helvetica-Bold"
 //#define REQUEST_TIMEOUT_INTERVAL 120.0f
 
-    #define SELECTED_MENU_KEY @"selectedMenu"
 
     #define RGB(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
     #define RGBA(r,g,b,a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:(a)]
@@ -46,6 +45,5 @@
     #else
         #define NSLog(...);
     #endif
-
 
 #endif

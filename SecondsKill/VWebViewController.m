@@ -28,17 +28,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     _defaultBarItems = [NSMutableArray arrayWithArray:self.toolBar.items];
     [_defaultBarItems removeObjectAtIndex:kStopBarItemIndex];
     
     _loadingBarItems = [NSMutableArray arrayWithArray:self.toolBar.items];
     [_loadingBarItems removeObjectAtIndex:kRefreshBarItemIndex];
     
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    rightBtn.frame = CGRectMake(0, 0, 30, 30);
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
-
     self.webView.scalesPageToFit = YES;//自动对页面进行缩放以适应屏幕
     
     if (![self.linkAddress hasPrefix:@"http://"] && ![self.linkAddress hasPrefix:@"https://"]) {
@@ -81,10 +77,10 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    NSURL *url = [[NSURL alloc] initWithScheme:[webView.request.URL scheme] host:[webView.request.URL host] path:@"/favicon.ico"];
-    UIButton *rightBtn = (UIButton *) self.navigationItem.rightBarButtonItem.customView;
-    [rightBtn setImageForState:UIControlStateNormal withURL:url];
+//    self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+//    NSURL *url = [[NSURL alloc] initWithScheme:[webView.request.URL scheme] host:[webView.request.URL host] path:@"/favicon.ico"];
+//    UIButton *rightBtn = (UIButton *) self.navigationItem.rightBarButtonItem.customView;
+//    [rightBtn setImageForState:UIControlStateNormal withURL:url];
     
     [self updateToolbarItems];
     [self resetProgressBar];

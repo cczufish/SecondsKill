@@ -35,7 +35,6 @@
 		82A0F7FE1828A0F400C9C6C6 /* down_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 82A0F7FC1828A0F400C9C6C6 /* down_arrow.png */; };
 		82A0F7FF1828A0F400C9C6C6 /* mainbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 82A0F7FD1828A0F400C9C6C6 /* mainbg.png */; };
 		82A0F8021828E3E600C9C6C6 /* CommodityTableViewAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 82A0F8011828E3E600C9C6C6 /* CommodityTableViewAdapter.m */; };
-		82A0F8081828F2FF00C9C6C6 /* UITableView+menu.m in Sources */ = {isa = PBXBuildFile; fileRef = 82A0F8071828F2FF00C9C6C6 /* UITableView+menu.m */; };
 		82A0F80B1829EA2500C9C6C6 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 82A0F80A1829EA2500C9C6C6 /* readme.txt */; };
 		82A0F80E182A1EC300C9C6C6 /* SimpleCommodityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 82A0F80D182A1EC300C9C6C6 /* SimpleCommodityTableViewCell.m */; };
 		82A519C5182B948700D70496 /* UIButton+MenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 82A519C4182B948700D70496 /* UIButton+MenuItem.m */; };
@@ -113,8 +112,6 @@
 		82A0F7FD1828A0F400C9C6C6 /* mainbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mainbg.png; sourceTree = "<group>"; };
 		82A0F8001828E3E600C9C6C6 /* CommodityTableViewAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommodityTableViewAdapter.h; sourceTree = "<group>"; };
 		82A0F8011828E3E600C9C6C6 /* CommodityTableViewAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommodityTableViewAdapter.m; sourceTree = "<group>"; };
-		82A0F8061828F2FF00C9C6C6 /* UITableView+menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+menu.h"; sourceTree = "<group>"; };
-		82A0F8071828F2FF00C9C6C6 /* UITableView+menu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+menu.m"; sourceTree = "<group>"; };
 		82A0F80A1829EA2500C9C6C6 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		82A0F80C182A1EC300C9C6C6 /* SimpleCommodityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleCommodityTableViewCell.h; sourceTree = "<group>"; };
 		82A0F80D182A1EC300C9C6C6 /* SimpleCommodityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleCommodityTableViewCell.m; sourceTree = "<group>"; };
@@ -229,15 +226,13 @@
 		8255F20A1821F71800613ADE /* menu */ = {
 			isa = PBXGroup;
 			children = (
-				8255F25C18222EE900613ADE /* MenuTableViewCell.h */,
-				8255F25D18222EE900613ADE /* MenuTableViewCell.m */,
 				824247C8181F82B800C97F13 /* MenuViewController.h */,
 				824247C9181F82B800C97F13 /* MenuViewController.m */,
-				8255F20E1821F89300613ADE /* menu.plist */,
-				82A0F8061828F2FF00C9C6C6 /* UITableView+menu.h */,
-				82A0F8071828F2FF00C9C6C6 /* UITableView+menu.m */,
+				8255F25C18222EE900613ADE /* MenuTableViewCell.h */,
+				8255F25D18222EE900613ADE /* MenuTableViewCell.m */,
 				82A519C3182B948700D70496 /* UIButton+MenuItem.h */,
 				82A519C4182B948700D70496 /* UIButton+MenuItem.m */,
+				8255F20E1821F89300613ADE /* menu.plist */,
 			);
 			name = menu;
 			sourceTree = "<group>";
@@ -576,7 +571,6 @@
 				82ACA599181FADDF002A103B /* CommodityTableViewCell.m in Sources */,
 				82A0F8021828E3E600C9C6C6 /* CommodityTableViewAdapter.m in Sources */,
 				82A519C5182B948700D70496 /* UIButton+MenuItem.m in Sources */,
-				82A0F8081828F2FF00C9C6C6 /* UITableView+menu.m in Sources */,
 				82ACA58E181F9A44002A103B /* MoreViewController.m in Sources */,
 				82AAC4B81820A18D0057E164 /* StrikeThroughLabel.m in Sources */,
 				82F98C7D181F4AD600AC2F36 /* AppDelegate.m in Sources */,

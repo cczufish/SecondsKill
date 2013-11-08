@@ -10,6 +10,8 @@
 
 @interface MenuViewController : SuperViewController
 
-@property (nonatomic, copy) NSArray *menus;
+@property (nonatomic, strong) NSMutableSet *allMenuItems;
+
+@property (nonatomic, strong) NSMutableArray *seletedMenuItems;
 
 @end

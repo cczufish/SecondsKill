@@ -589,9 +589,6 @@ typedef struct
     
     self.revealResetTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                    action:@selector(didRecognizeTapGesture:)];
-    //lijingcheng
-    self.revealPanGestureRecognizer.delegate = self;
-    self.revealResetTapGestureRecognizer.delegate = self;
     
     [self updatePanGestureRecognizerPresence];
     [self updateTapGestureRecognizerPrecence];
@@ -1413,13 +1410,6 @@ typedef struct
     {
         return [self.frontViewController shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
     }
-}
-
-//lijingcheng
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"tapViewNotification" object:self userInfo:nil];
-    return YES;
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

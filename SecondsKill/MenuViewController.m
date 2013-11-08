@@ -8,10 +8,15 @@
 
 #import "MenuViewController.h"
 #import "MenuTableViewCell.h"
+#import "KillingViewController.h"
+#import "NotBeginViewController.h"
+#import "UIButton+MenuItem.h"
 
 #define kHeightForSectionHeader 30.0f
 
 @interface MenuViewController ()
+
+- (void)resetMenuItemStatus;
 
 @end
 
@@ -25,31 +30,58 @@
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = kMenuItemDefaultBGColor;
-
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"menu" ofType:@"plist"];
-    _menus = [[NSArray alloc] initWithContentsOfFile:path];
-
-    NSMutableArray *tempForBtn = [[NSMutableArray alloc] initWithCapacity:[self.menus count]];
-    NSMutableArray *tempForDict = [[NSMutableArray alloc] initWithCapacity:[self.menus count]];
-
-    for (int i = 0; i < [self.menus count]; i++) {
-        [tempForBtn addObject:[NSNull null]];
-        [tempForDict addObject:[[self.menus objectAtIndex:i] objectAtIndex:1]];
-    }
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:tempForDict forKey:SELECTED_MENU_KEY];
-    [userDefaults synchronize];
-    
-    self.tableView.selectedBtnOfSection = tempForBtn;
-    
-	
+    _allMenuItems = [[NSMutableSet alloc] initWithCapacity:50];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
+    [super viewWillAppear:animated];
+
+    [self resetMenuItemStatus];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
     
+    UIViewController *vc = [self currentViewController];
+    
+    if ([vc isKindOfClass:[KillingViewController class]]) {
+        KillingViewController *killingVC = (KillingViewController *) vc;
+        [killingVC refreshCommoditys];
+    }
+    else if ([vc isKindOfClass:[NotBeginViewController class]]) {
+        NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
+        [notBeginVC refreshCommoditys];
+    }
+}
+
+- (void)resetMenuItemStatus
+{
+    UIViewController *vc = [self currentViewController];
+    
+    if ([vc isKindOfClass:[KillingViewController class]]) {
+        KillingViewController *killingVC = (KillingViewController *) vc;
+        self.seletedMenuItems = killingVC.seletedMenuItems;
+    }
+    else if ([vc isKindOfClass:[NotBeginViewController class]]) {
+        NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
+        self.seletedMenuItems = notBeginVC.seletedMenuItems;
+    }
+    
+    for (UIButton *menuBtn in self.allMenuItems) {
+        for (NSDictionary *seletedMenu in self.seletedMenuItems) {
+            if ([[menuBtn.menuInfo objectForKey:@"title"] isEqualToString:[seletedMenu objectForKey:@"title"]]
+                && [[menuBtn.menuInfo objectForKey:@"section"] integerValue] == [[seletedMenu objectForKey:@"section"] integerValue]) {
+                menuBtn.menuSelected = YES;
+                break;
+            }
+            else {
+                menuBtn.menuSelected = NO;
+            }
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate / UITableViewDataSource
@@ -91,7 +123,7 @@
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectInset(headerView.bounds, 12.0f, 5.0f)];
     textLabel.text = [[self.menus objectAtIndex:section] objectAtIndex:0];
     textLabel.font = [UIFont fontWithName:FONT_NAME size:14];
-    textLabel.textColor = [UIColor whiteColor];
+    textLabel.textColor = [UIColor lightGrayColor];
     textLabel.backgroundColor = [UIColor clearColor];
     [headerView addSubview:textLabel];
     
@@ -108,11 +140,7 @@
         NSDictionary *menuItem = [datas objectAtIndex:(indexPath.row + 1)];
         [cell.centerMenuItem setTitle:[menuItem objectForKey:@"title"] forState:UIControlStateNormal];
         cell.centerMenuItem.menuInfo = menuItem;
-        
-        if ([[tableView.selectedBtnOfSection objectAtIndex:indexPath.section] isEqual:[NSNull null]]) {
-            cell.centerMenuItem.seleted = YES;
-            [tableView.selectedBtnOfSection replaceObjectAtIndex:indexPath.section withObject:cell.centerMenuItem];
-        }
+        [self.allMenuItems addObject:cell.centerMenuItem];
     }
     else {
         int index = indexPath.row * 2 + 1;
@@ -120,6 +148,8 @@
         NSDictionary *menuItem = [datas objectAtIndex:index];
         [cell.leftMenuItem setTitle:[menuItem objectForKey:@"title"] forState:UIControlStateNormal];
         cell.leftMenuItem.menuInfo = menuItem;
+        [self.allMenuItems addObject:cell.leftMenuItem];
+        [self.allMenuItems addObject:cell.rightMenuItem];
         
         //前两个类别的菜单在cell中一行显示两个菜单项，当菜单个数为单数时，右侧菜单项不显示内容
         if ((index + 1) > [datas indexOfObject:[datas lastObject]]) {
@@ -132,12 +162,13 @@
             cell.rightMenuItem.enabled = YES;
             cell.rightMenuItem.menuInfo = menuItem;
         }
-        
-        if ([[tableView.selectedBtnOfSection objectAtIndex:indexPath.section] isEqual:[NSNull null]]) {
-            cell.leftMenuItem.seleted = YES;
-            [tableView.selectedBtnOfSection replaceObjectAtIndex:indexPath.section withObject:cell.leftMenuItem];
-        }
     }
+    
+    //只要新的菜单组中有一个菜单能够显示出来便设置菜单选择状态，
+    if (indexPath.row == 0) {
+        [self resetMenuItemStatus];
+    }
+    
     return cell;
 }
 

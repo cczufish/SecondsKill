@@ -16,7 +16,7 @@
     InitProject();
     
     UITabBarController *tabBarController = (UITabBarController *) self.window.rootViewController;
-    
+
     AKTabBarController *akTabbarController = [[AKTabBarController alloc] initWithTabBarHeight:50.0f];
     akTabbarController.viewControllers = (NSMutableArray *) tabBarController.viewControllers;
     akTabbarController.selectedTextColor = [UIColor orangeColor];

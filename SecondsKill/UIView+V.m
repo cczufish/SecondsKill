@@ -12,34 +12,44 @@
 
 - (void)removeLayerWithName:(NSString *)name
 {
-    NSArray *subLayers = [self.layer sublayers];
+    CALayer *layer = [self layerByName:name];
     
-    for (int i = 0; i < [subLayers count]; i++) {
-        CALayer *temp = (CALayer *)[subLayers objectAtIndex:i];
-        if ([temp.name isEqualToString:name]) {
-            [temp removeFromSuperlayer];
-        }
+    if (layer) {
+        [layer removeFromSuperlayer];
     }
 }
 
 - (BOOL)hasLayer:(NSString *)name
 {
-    BOOL flag = NO;
-    
+    if ([self layerByName:name]) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (CALayer *)layerByName:(NSString *)name
+{
+    CALayer *layer = nil;
+
     NSArray *subLayers = [self.layer sublayers];
     
     for (int i = 0; i < [subLayers count]; i++) {
         CALayer *temp = (CALayer *)[subLayers objectAtIndex:i];
         if ([temp.name isEqualToString:name]) {
-            flag = YES;
+            layer = temp;
+            break;
         }
     }
-    return flag;
+    
+    return layer;
 }
 
 - (UIViewController*)viewController
 {
     UIViewController *vc = nil;
+    
     for (UIView *next = self.superview; next; next = next.superview) {
         UIResponder *nextResponder = [next nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
@@ -47,6 +57,7 @@
             break;
         }
     }
+    
     return vc;
 }
 
