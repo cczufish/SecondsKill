@@ -49,6 +49,25 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.revealController.recognizesPanningOnFrontView = YES;
+    
+    [MobClick beginLogPageView:@"\"去比价\"界面"];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.revealController.recognizesPanningOnFrontView = NO;
+    
+    [MobClick endLogPageView:@"\"去比价\"界面"];
+}
+
+
 
 - (void)refresh
 {
@@ -75,7 +94,7 @@
             NSLog(@"tapped!");
             [alertBanner hide];
         }];
-        banner.secondsToShow = 2.5f;
+        banner.secondsToShow = ALERT_SHOW_SECONDS;
         [banner show];
     });
 }
@@ -96,6 +115,8 @@
         [weakSelf.tableView.infiniteScrollingView stopAnimating];
     });
 }
+
+#pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -135,6 +156,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];//取消当前行被选择后的样式
 }
 
+#pragma mark - AKTabBarController need
+
 - (NSString *)tabImageName
 {
     return @"icon_handbag_normal.png";
@@ -143,12 +166,6 @@
 - (NSString *)tabTitle
 {
     return @"去比价";
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

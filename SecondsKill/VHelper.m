@@ -50,10 +50,30 @@ BOOL isFirstRun()
 
 void InitProject()
 {
-//    [MobClick setLogEnabled:YES];//开启调试模式
-//    //使用友盟统计分析,此方式每次启动app时向服务器发送上次数据。
-//    [MobClick startWithAppkey:UMENG_APPKEY];
-    //    [MobClick checkUpdate:@"New version" cancelButtonTitle:@"Skip" otherButtonTitles:@"Goto Store"];
+    //使用友盟统计分析,此方式每次启动app时向服务器发送上次数据。
+    [MobClick startWithAppkey:UMENG_APPKEY];
+    
+    [UMSocialData setAppKey:UMENG_APPKEY];
+    
+    //打开调试log的开关
+    [UMSocialData openLog:YES];
+    //如果你要支持不同的屏幕方向，需要这样设置，否则在iPhone只支持一个竖屏方向
+    [UMSocialConfig setSupportedInterfaceOrientations:UIInterfaceOrientationMaskAll];
+    
+    
+    //打开Qzone的SSO开关
+    [UMSocialConfig setSupportQzoneSSO:YES importClasses:@[[QQApiInterface class],[TencentOAuth class]]];
+    //设置手机QQ的AppId，指定你的分享url，若传nil，将使用友盟的网址
+    [UMSocialConfig setQQAppId:TENCENT_APPID url:nil importClasses:@[[QQApiInterface class],[TencentOAuth class]]];
+    //打开新浪微博的SSO开关
+    [UMSocialConfig setSupportSinaSSO:YES];
+    
+    [UMSocialConfig setWXAppId:WEIXIN_APPID url:nil];
+    //设置微信分享应用类型，用户点击消息将跳转到应用，或者到下载页面
+    //UMSocialWXMessageTypeImage 为纯图片类型
+    [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeApp;
+    //分享图文样式到微信朋友圈显示字数比较少，只显示分享标题
+    [UMSocialData defaultData].extConfig.title = @"朋友圈分享内容";
 
     //网络请求时提示
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];

@@ -260,7 +260,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pg4-JZ-1Ec" customClass="VWebView">
+                            <webView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pg4-JZ-1Ec" customClass="VWebView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -269,9 +269,12 @@
                                     <outlet property="progressDelegate" destination="IEc-qh-CZp" id="JFk-FP-Ptk"/>
                                 </connections>
                             </webView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="qdp-ml-mqg">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="qdp-ml-mqg">
                                 <rect key="frame" x="0.0" y="460" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Au7-h0-s9D"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem image="back.png" style="plain" id="xGk-B1-kRG">
                                         <connections>
@@ -305,6 +308,11 @@
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="qdp-ml-mqg" secondAttribute="bottom" id="2p3-lw-5YJ"/>
+                            <constraint firstAttribute="bottom" secondItem="pg4-JZ-1Ec" secondAttribute="bottom" constant="44" id="Vvj-Fd-F5F"/>
+                            <constraint firstItem="pg4-JZ-1Ec" firstAttribute="top" secondItem="tkw-zQ-1PK" secondAttribute="top" id="gEv-IV-qmq"/>
+                        </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>

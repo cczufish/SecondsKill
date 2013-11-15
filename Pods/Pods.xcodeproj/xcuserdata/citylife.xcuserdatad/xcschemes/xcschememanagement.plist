@@ -29,12 +29,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-REMenu.xcscheme</key>
+		<key>Pods-PXAlertView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-SVProgressHUD.xcscheme</key>
+		<key>Pods-REMenu.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -57,52 +57,52 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>183F5499C1384622BEE6A3F3</key>
+		<key>3779027329D94C70AECDD2EC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>21CC7F9688CD4E42AF7D7608</key>
+		<key>3A477D252FFD43CCB5B7539E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>23FA98229B3C4F4F906A518D</key>
+		<key>419CA0F8DA5B40489E991398</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2D9AE396D7A9428597AF39D5</key>
+		<key>4345F8223AF84CEE8D63F5F6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2F98B92052714DAFBD57003C</key>
+		<key>79B747C4F6F94C19932FD7EE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3956782CB69A43B084871235</key>
+		<key>91F21361D9D3457DBF65DA7C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7B4626111624464386B7076E</key>
+		<key>9D0C90FDEA8540C2B9E361F3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7FEEBF4C1B294793B59784EA</key>
+		<key>AD217EB0A3AF46058D1B4809</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>84A51DA4AD0C453FA98AB340</key>
+		<key>D1634350C6454EC585D8DFC9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F3C3E7883BED4A218AE481ED</key>
+		<key>ECE80774DDE4421497F4BA89</key>
 		<dict>
 			<key>primary</key>
 			<true/>

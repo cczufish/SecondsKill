@@ -22,4 +22,7 @@
 
 @property (nonatomic, weak) id<VWebViewProgressDelegate> progressDelegate;
 
+@property (nonatomic, strong) YLProgressBar *progressBar;
+
+- (void)resetProgressBar;
 @end

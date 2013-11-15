@@ -6,7 +6,12 @@
   Copyright (c) 2013年 edouglas. All rights reserved.
 */
 
-修改过以下第三方框架，如果该框架不小心更新了代码，则需要按下面内容重新修改
+一、发布程序前的工作：
+    1､在App Store新建应用后，将appid添加到VHeader.h文件的“APP_ID“宏定义中。
+    2､用发布证书编译打包程序 
+    3､替换apigee debug sdk 为release版本
+
+二、修改过以下第三方框架，如果该框架不小心更新了代码，则需要按下面内容重新修改
 
 1､YLProgressBar
     (1)、修改- (void)drawRect:(CGRect)rect方法：

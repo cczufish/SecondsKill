@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2F98B92052714DAFBD57003C"
+               BlueprintIdentifier = "9D0C90FDEA8540C2B9E361F3"
                BuildableName = "libPods-AKTabBarController.a"
                BlueprintName = "Pods-AKTabBarController"
                ReferencedContainer = "container:Pods.xcodeproj">

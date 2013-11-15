@@ -7,6 +7,8 @@
 //
 
 #import "CommodityTableViewCell.h"
+#import "KillingViewController.h"
+#import "NotBeginViewController.h"
 
 #define kDateFormat @"HH:mm:ss"
 #define kNullTime @"00:00:00"
@@ -36,7 +38,7 @@
     self.priceLabel.strikeThroughEnabled = YES;//删除线
     
     [self setButtonStyle:self.shareBtn imageName:@"icon_share.png"];
-    [self setButtonStyle:self.upBtn imageName:@"btn_hui.png"];
+    [self setButtonStyle:self.upBtn imageName:@"icon_bell_off.png"];
 
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(changeSurplusTime) userInfo:nil repeats:YES];
 
@@ -97,14 +99,39 @@
 
 - (IBAction)share:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"share" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alertView show];
+    id vc = self.viewController;
+    
+    if ([vc isKindOfClass:[KillingViewController class]]) {
+        vc = (KillingViewController *) vc;
+    }
+    else if ([vc isKindOfClass:[NotBeginViewController class]]) {
+        vc = (NotBeginViewController *) vc;
+    }
+    
+    [UMSocialSnsService presentSnsIconSheetView:self.viewController
+                                         appKey:UMENG_APPKEY
+                                      shareText:@"好便宜啊，大家快来看！"
+                                     shareImage:[UIImage imageNamed:@"icon_bell_on.png"]
+                                shareToSnsNames:nil
+                                       delegate:vc];
 }
 
+//upded这个数据需要通过本地存储的该商品数据与新拿来的商品数据pi配，如果是同一商品，那么由本地存储的uped数据判断该怎么处理，本地存储数据3天清一次缓存，只清3天前数据，前一、两天的不清。
 - (IBAction)up:(id)sender
 {
-    int upCount = [self.upBtn.titleLabel.text intValue];
-    [self.upBtn setTitle:[NSString stringWithFormat:@"%d",++upCount] forState:UIControlStateNormal];
+    if (self.commodity.uped) {
+        [sender setImage:[[UIImage imageNamed:@"icon_bell_off.png"] imageWithNewSize:CGSizeMake(16, 16)] forState:UIControlStateNormal];
+        
+        int upCount = [self.upBtn.titleLabel.text intValue];
+        [sender setTitle:[NSString stringWithFormat:@"%d",--upCount] forState:UIControlStateNormal];
+    }
+    else {
+        [sender setImage:[[UIImage imageNamed:@"icon_bell_on.png"] imageWithNewSize:CGSizeMake(16, 16)] forState:UIControlStateNormal];
+        
+        int upCount = [self.upBtn.titleLabel.text intValue];
+        [sender setTitle:[NSString stringWithFormat:@"%d",++upCount] forState:UIControlStateNormal];
+    }
+    self.commodity.uped = !self.commodity.uped;
 }
 
 - (IBAction)linkOrAlert:(id)sender

@@ -19,8 +19,6 @@
 @property (nonatomic, assign) int resourceCount;
 @property (nonatomic, assign) int resourceCompletedCount;
 
-@property (nonatomic, strong) YLProgressBar *progressBar;
-
 @end
 
 @implementation VWebViewController
@@ -40,15 +38,26 @@
     if (![self.linkAddress hasPrefix:@"http://"] && ![self.linkAddress hasPrefix:@"https://"]) {
         self.linkAddress = [NSString stringWithFormat:@"http://%@",self.linkAddress];
     }
-    
-    _progressBar = [[YLProgressBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, 5.0f)];
-    _progressBar.type = YLProgressBarTypeFlat;
-    _progressBar.progressTintColor = RGB(51, 153, 255);
-//    _progressBar.hideStripes = YES;
-    _progressBar.trackTintColor = [UIColor clearColor];
-    [self.view addSubview:_progressBar];
-    
+
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.linkAddress]]];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.revealController.recognizesPanningOnFrontView = YES;
+    
+    [MobClick beginLogPageView:@"\"浏览器\"界面"];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.revealController.recognizesPanningOnFrontView = NO;
+    
+    [MobClick endLogPageView:@"\"浏览器\"界面"];
 }
 
 - (void)updateToolbarItems {
@@ -65,11 +74,7 @@
 }
 
 #pragma mark - UIWebViewDelegate
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-    self.progressBar.hidden = NO;
 
-    return YES;
-}
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
     [self updateToolbarItems];
@@ -83,24 +88,17 @@
 //    [rightBtn setImageForState:UIControlStateNormal withURL:url];
     
     [self updateToolbarItems];
-    [self resetProgressBar];
+
+    [self.webView resetProgressBar];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self updateToolbarItems];
-    [self resetProgressBar];
+    [self.webView resetProgressBar];
 }
 
 - (void)webView:(VWebView *)_vwebView didReceiveResourceNumber:(int)resourceNumber totalResources:(int)totalResources {
-    self.progressBar.progress = (float)resourceNumber / totalResources;
-}
-
-- (void)resetProgressBar
-{
-    self.progressBar.progress = 0.0f;
-    self.progressBar.hidden = YES;
-    _webView.resourceCount = 0;
-    _webView.resourceCompletedCount = 0;
+    self.webView.progressBar.progress = (float)resourceNumber / totalResources;
 }
 
 #pragma mark - UIButton Action
@@ -128,13 +126,39 @@
 
 - (IBAction)action:(id)sender
 {
+    [UMSocialSnsService presentSnsIconSheetView:self
+                                         appKey:UMENG_APPKEY
+                                      shareText:self.linkAddress
+                                     shareImage:[UIImage imageNamed:@"icon_bell_on.png"]
+                                shareToSnsNames:nil
+                                       delegate:self];
 
 }
-
-- (void)didReceiveMemoryWarning
+//各个页面执行授权完成、分享完成、或者评论完成时的回调函数
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [UMSocialConfig setFinishToastIsHidden:YES position:UMSocialiToastPositionTop];
+    
+    if (response.responseType == UMSResponseShareToMutilSNS) {
+        ALAlertBanner *banner = nil;
+        
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功分享至%@!",[[response.data allKeys] objectAtIndex:0]] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
+                [alertBanner hide];
+            }];
+        }
+        else {
+            if (response.responseCode != UMSResponseCodeCancel) {
+                banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleFailure position:ALAlertBannerPositionTop title:@"分享失败!" subtitle:response.message tappedBlock:^(ALAlertBanner *alertBanner) {
+                    [alertBanner hide];
+                }];
+            }
+        }
+        //问题是发了两个通知
+        
+        banner.secondsToShow = ALERT_SHOW_SECONDS;
+        [banner show];
+    }
 }
 
 @end

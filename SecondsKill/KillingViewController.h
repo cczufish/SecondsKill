@@ -8,7 +8,7 @@
 
 #import "SuperViewController.h"
 
-@interface KillingViewController : SuperViewController
+@interface KillingViewController : SuperViewController<UMSocialUIDelegate>
 
 @property (nonatomic, strong) NSMutableArray *commoditys;
 

@@ -27,8 +27,8 @@ PODS:
   - FMDB/standard (2.1):
     - FMDB/common
   - PKRevealController (2.0.5)
+  - PXAlertView (0.0.6)
   - REMenu (1.6)
-  - SVProgressHUD (0.9)
   - SVPullToRefresh (0.4.1)
   - YLProgressBar (3.1.0)
 
@@ -38,8 +38,8 @@ DEPENDENCIES:
   - ALAlertBanner
   - FMDB
   - PKRevealController
+  - PXAlertView
   - REMenu
-  - SVProgressHUD
   - SVPullToRefresh
   - YLProgressBar
 
@@ -49,8 +49,8 @@ SPEC CHECKSUMS:
   ALAlertBanner: 16235298226059cd876a9de0a5d7f9bac6a79459
   FMDB: 3fd5aaf632ca4ed39e3f101e0398504e6d5b0918
   PKRevealController: 50a737bde432e51b68596d46b33617ec8bcb3a6a
+  PXAlertView: 2684135028a05101d7b0f8f6d6414d3abb65368c
   REMenu: 65aee777063bc70210d8257d4a935a4fb98cad52
-  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
   SVPullToRefresh: 61a0e4bd12bd6f8e3465909810b0fbeb1a28d5f2
   YLProgressBar: a1e1596cb883660ccd1babedf2e233c84258513c
 

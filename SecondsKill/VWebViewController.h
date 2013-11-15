@@ -9,7 +9,7 @@
 #import "SuperViewController.h"
 #import "VWebView.h"
 
-@interface VWebViewController : UIViewController<UIWebViewDelegate,VWebViewProgressDelegate>
+@interface VWebViewController : UIViewController<UIWebViewDelegate,VWebViewProgressDelegate, UMSocialUIDelegate>
 
 @property (nonatomic, copy) NSString *linkAddress;
 

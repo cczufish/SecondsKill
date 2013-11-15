@@ -8,7 +8,7 @@
 
 #import "SuperViewController.h"
 
-@interface NotBeginViewController : SuperViewController
+@interface NotBeginViewController : SuperViewController<UMSocialUIDelegate>
 
 @property (nonatomic, strong) NSMutableArray *commoditys;
 

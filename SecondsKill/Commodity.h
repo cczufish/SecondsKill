@@ -24,7 +24,7 @@
 @property (nonatomic, assign) NSInteger inventory;//剩余库存
 @property (nonatomic, assign) CGFloat alreadyOrder;//已订购比率
 
-@property (nonatomic, assign) BOOL timerStart;
+@property (nonatomic, assign) BOOL uped;
 
 - (instancetype)initWithName:(NSString *)name source:(NSString *)source price:(CGFloat)price killPrice:(CGFloat)killPrice;
 

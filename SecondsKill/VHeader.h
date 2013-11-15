@@ -17,12 +17,19 @@
 //#define DB_NAME @"trackup.sqlite3"
 //#define AES256_PASSWORD_KEY @"citylife20130609"
 //
-//#define UMENG_APPKEY @"5253608956240bb5182daaa8"
-//
-//#define DEFAULT_PAGE 1
-//#define DEFAULT_PAGESIZE 5
+    #define UMENG_APPKEY @"522e80dc56240b3cbc02d78b"
+#define TENCENT_APPID @"801430933"
+#define WEIXIN_APPID @"wxwxcdef309f0d88c12b"
+
+#define APP_ID @""
+
+#define APIGEE_ORGNAME @"athui"
+#define APIGEE_APPNAME @"sandbox"
+#define APIGEE_PATH @"msitem"
+
 #define FONT_NAME @"Helvetica-Bold"
-//#define REQUEST_TIMEOUT_INTERVAL 120.0f
+
+    #define ALERT_SHOW_SECONDS 2.0f
 
 
     #define RGB(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]

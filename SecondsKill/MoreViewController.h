@@ -8,6 +8,6 @@
 
 #import "SuperViewController.h"
 
-@interface MoreViewController : SuperViewController
+@interface MoreViewController : SuperViewController<UMSocialUIDelegate>
 
 @end

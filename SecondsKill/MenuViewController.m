@@ -39,6 +39,8 @@
     [super viewWillAppear:animated];
 
     [self resetMenuItemStatus];
+    
+    [MobClick beginLogPageView:@"\"分类导航\"界面"];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -55,6 +57,8 @@
         NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
         [notBeginVC refreshCommoditys];
     }
+    
+    [MobClick endLogPageView:@"\"分类导航\"界面"];
 }
 
 - (void)resetMenuItemStatus

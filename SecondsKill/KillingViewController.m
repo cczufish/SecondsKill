@@ -17,8 +17,6 @@
 
 @end
 
-static id previousLocationObserver;
-
 @implementation KillingViewController
 - (void)refreshCommoditys
 {
@@ -27,6 +25,7 @@ static id previousLocationObserver;
 
 - (void)refreshTableView
 {
+    
 //    self.refreshControl.attributedTitle = [[NSAttributedString alloc]initWithString:@"刷新中"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
@@ -49,27 +48,55 @@ static id previousLocationObserver;
             ALAlertBanner *banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功加载%d条数据", 1] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
                 [alertBanner hide];
             }];
-            banner.secondsToShow = 1.5f;
+            banner.secondsToShow = ALERT_SHOW_SECONDS;
             [banner show];
         });
     });
+}
+
+//各个页面执行授权完成、分享完成、或者评论完成时的回调函数
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    [UMSocialConfig setFinishToastIsHidden:YES position:UMSocialiToastPositionTop];
+    
+    if (response.responseType == UMSResponseShareToMutilSNS) {
+        ALAlertBanner *banner = nil;
+        
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功分享至%@!",[[response.data allKeys] objectAtIndex:0]] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
+                [alertBanner hide];
+            }];
+        }
+        else {
+            if (response.responseCode != UMSResponseCodeCancel) {
+                banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleFailure position:ALAlertBannerPositionTop title:@"分享失败!" subtitle:response.message tappedBlock:^(ALAlertBanner *alertBanner) {
+                    [alertBanner hide];
+                }];
+            }
+        }
+        //问题是发了两个通知
+        
+        banner.secondsToShow = ALERT_SHOW_SECONDS;
+        [banner show];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    previousLocationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"tapViewNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        
-
-    }];
+    self.revealController.recognizesPanningOnFrontView = YES;
+    
+    [MobClick beginLogPageView:@"\"秒杀中\"界面"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:previousLocationObserver];
+    self.revealController.recognizesPanningOnFrontView = NO;
+    
+    [MobClick endLogPageView:@"\"秒杀中\"界面"];
 }
 
 - (void)selectMenu
@@ -194,6 +221,8 @@ static id previousLocationObserver;
         [weakSelf.tableView.infiniteScrollingView stopAnimating];
     });
 }
+
+#pragma mark - AKTabBarController need
 
 - (NSString *)tabImageName
 {
