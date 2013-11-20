@@ -8,49 +8,42 @@
 
 #import "APIGeeHelper.h"
 
-@interface APIGeeHelper ()
+#define APIGEE_ORGNAME @"athui"
+#define APIGEE_APPNAME @"sandbox"
+#define APIGEE_BASEURL @"https://www.athui.com"
+#define APIGEE_TYPE @"msitems"
 
-@property (strong, nonatomic) ApigeeClient *apigeeClient; //object for initializing the App Services SDK
-@property (strong, nonatomic) ApigeeMonitoringClient *monitoringClient; //client object for Apigee App Monitoring methods
-@property (strong, nonatomic) ApigeeDataClient *dataClient;	//client object for App Services data methods
-
-@end
+static ApigeeClient *apigeeClient;
+static ApigeeDataClient *dataClient;
 
 @implementation APIGeeHelper
 
-- (id)xx
+SHARD_INSTANCE_IMPL(APIGeeHelper)
+
+- (void)initialize
 {
-    //Instantiate ApigeeClient to initialize the SDK
-    _apigeeClient = [[ApigeeClient alloc] initWithOrganizationId:APIGEE_ORGNAME applicationId:APIGEE_APPNAME];
+    apigeeClient = [[ApigeeClient alloc] initWithOrganizationId:APIGEE_ORGNAME applicationId:APIGEE_APPNAME baseURL:APIGEE_BASEURL];
+    dataClient = [apigeeClient dataClient];
     
-    //Retrieve instances of ApigeeClient.monitoringClient and ApigeeClient.dataClient
-    self.monitoringClient = [_apigeeClient monitoringClient]; //used to call App Monitoring methods
-    self.dataClient = [_apigeeClient dataClient]; //used to call data methods
-    [self.dataClient setLogging:true];
-
-
-    return nil;
+    #ifdef DEBUG
+        [dataClient setLogging:true];
+    #endif
 }
 
-
--(NSString*)postBook {
-    
-    NSMutableDictionary *entity = [[NSMutableDictionary alloc] init ];
-    
-    [entity setObject:@"book" forKey:@"type"];
-    [entity setObject:@"the old man and the sea" forKey:@"title"];
-    
-    ApigeeClientResponse *response = [self.dataClient createEntity:entity];
-    
-    @try {
-        NSLog(@"%@",response.response);
-        NSArray * books = [response.response objectForKey:@"entities"];;
-        return [books objectAtIndex:0];
-    }
-    @catch (NSException * e) {
-        return @"false";
-    }
++ (ApigeeClientResponse *)requestByQL:(NSString *)ql
+{
+    return [dataClient getEntities:APIGEE_TYPE queryString:ql];
 }
 
+//- (BOOL)postMessage:(NSString*)message {
+//    
+//    NSMutableDictionary *activityProperties = [[NSMutableDictionary alloc] init];
+//    [activityProperties setObject:APIGEE_TYPE forKey:@"type"];
+//    [activityProperties setObject:@"xxx" forKey:@"title"];
+//    
+//    ApigeeClientResponse *response = [self.dataClient createEntity:activityProperties];
+//    
+//    return [response completedSuccessfully];
+//}
 
 @end

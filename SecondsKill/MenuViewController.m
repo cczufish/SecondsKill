@@ -16,6 +16,8 @@
 
 @interface MenuViewController ()
 
+//根据不同源界面保存的菜单筛选条件设置菜单界面的数据选择状态，
+//第一次打开菜单界面时，菜单项的选择状态通过cellForRowAtIndexPath方法设定
 - (void)resetMenuItemStatus;
 
 @end
@@ -29,20 +31,23 @@
     self.title = @"分类导航";
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.backgroundColor = kMenuItemDefaultBGColor;
     
-    _allMenuItems = [[NSMutableSet alloc] initWithCapacity:50];
+    self.allMenuItems = [NSMutableSet setWithCapacity:50];
 }
 
+//打开菜单界面时重置菜单选择状态
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.seletedChanged = NO;
 
     [self resetMenuItemStatus];
     
     [MobClick beginLogPageView:@"\"分类导航\"界面"];
 }
 
+//离开菜单选择界面时根据所选菜单项筛选界面数据
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -51,15 +56,21 @@
     
     if ([vc isKindOfClass:[KillingViewController class]]) {
         KillingViewController *killingVC = (KillingViewController *) vc;
-        [killingVC refreshCommoditys];
+        if (self.seletedChanged) {
+            [killingVC refreshCommoditys];
+        }
     }
     else if ([vc isKindOfClass:[NotBeginViewController class]]) {
         NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
-        [notBeginVC refreshCommoditys];
+        if (self.seletedChanged) {
+            [notBeginVC refreshCommoditys];
+        }
     }
     
     [MobClick endLogPageView:@"\"分类导航\"界面"];
 }
+
+#pragma mark -
 
 - (void)resetMenuItemStatus
 {
@@ -126,7 +137,7 @@
     
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectInset(headerView.bounds, 12.0f, 5.0f)];
     textLabel.text = [[self.menus objectAtIndex:section] objectAtIndex:0];
-    textLabel.font = [UIFont fontWithName:FONT_NAME size:14];
+    textLabel.font = DEFAULT_FONT;
     textLabel.textColor = [UIColor lightGrayColor];
     textLabel.backgroundColor = [UIColor clearColor];
     [headerView addSubview:textLabel];
@@ -147,15 +158,14 @@
         [self.allMenuItems addObject:cell.centerMenuItem];
     }
     else {
-        int index = indexPath.row * 2 + 1;
+        int index = indexPath.row * 2 + 1;//因为一行显示两个菜单数据，所以加此处理
         
         NSDictionary *menuItem = [datas objectAtIndex:index];
         [cell.leftMenuItem setTitle:[menuItem objectForKey:@"title"] forState:UIControlStateNormal];
         cell.leftMenuItem.menuInfo = menuItem;
         [self.allMenuItems addObject:cell.leftMenuItem];
-        [self.allMenuItems addObject:cell.rightMenuItem];
         
-        //前两个类别的菜单在cell中一行显示两个菜单项，当菜单个数为单数时，右侧菜单项不显示内容
+        //一行显示两个菜单项，如果数据不够填充两个菜单项时，右侧菜单项不显示内容
         if ((index + 1) > [datas indexOfObject:[datas lastObject]]) {
             [cell.rightMenuItem setTitle:@"" forState:UIControlStateNormal];
             cell.rightMenuItem.enabled = NO;
@@ -166,9 +176,10 @@
             cell.rightMenuItem.enabled = YES;
             cell.rightMenuItem.menuInfo = menuItem;
         }
+        [self.allMenuItems addObject:cell.rightMenuItem];
     }
     
-    //只要新的菜单组中有一个菜单能够显示出来便设置菜单选择状态，
+    //只要新的菜单组(section)中有一个菜单项能够显示出来便设置菜单选择状态
     if (indexPath.row == 0) {
         [self resetMenuItemStatus];
     }

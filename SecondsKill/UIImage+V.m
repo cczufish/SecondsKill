@@ -35,7 +35,7 @@
     [[UIColor blackColor] set];
     
     CGRect textRect = CGRectMake(point.x, point.y, self.size.width, self.size.height);
-    [text drawInRect:CGRectIntegral(textRect) withFont:[UIFont fontWithName:FONT_NAME size:14]];
+    [text drawInRect:CGRectIntegral(textRect) withFont:DEFAULT_FONT];
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

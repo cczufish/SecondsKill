@@ -10,10 +10,9 @@
 
 @interface KillingViewController : SuperViewController<UMSocialUIDelegate>
 
-@property (nonatomic, strong) NSMutableArray *commoditys;
+@property (nonatomic, strong) NSMutableArray *seletedMenuItems;//用于记录当前界面数据筛选条件
 
-@property (nonatomic, strong) NSMutableArray *seletedMenuItems;
-
+//从菜单界面返回时，触发此方法
 - (void)refreshCommoditys;
 
 @end

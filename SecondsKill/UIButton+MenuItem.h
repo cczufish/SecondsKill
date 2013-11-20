@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#define kMenuItemDefaultBGColor RGB(38.0f, 38.0f, 38.0f)
-#define kMenuItemSelectedBGColor RGB(20.0f, 20.0f, 20.0f)
-
 @interface UIButton (MenuItem)
 
 @property (nonatomic, copy) NSDictionary *menuInfo;

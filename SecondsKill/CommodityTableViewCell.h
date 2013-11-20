@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "StrikeThroughLabel.h"
 #import "CommodityTableViewAdapter.h"
-#import "Commodity.h"
 
 @interface CommodityTableViewCell : UITableViewCell
 
@@ -35,7 +34,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *upBtn;//顶
 @property (nonatomic, weak) IBOutlet UIButton *linkOrAlertBtn;//直达链接
 
-@property (nonatomic, strong) Commodity *commodity;//商品对象
+@property (nonatomic, strong) ApigeeEntity *entity;//商品对象
 
 //分享
 - (IBAction)share:(id)sender;

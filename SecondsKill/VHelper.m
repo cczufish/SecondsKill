@@ -50,15 +50,43 @@ BOOL isFirstRun()
 
 void InitProject()
 {
+    
+    if (REUIKitIsFlatMode()) {
+        [[UINavigationBar appearance] setBarTintColor:RGB(199, 55, 33)];// only ios7
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        
+//        UITextAttributeFont – 字体key
+//        UITextAttributeTextColor – 文字颜色key
+//        UITextAttributeTextShadowColor – 文字阴影色key
+//        UITextAttributeTextShadowOffset – 文字阴影偏移量key
+//        如下代码所示，对导航栏的标题风格做了修改：
+        NSShadow *shadow = [[NSShadow alloc] init];
+        shadow.shadowColor = [UIColor blackColor];
+        shadow.shadowOffset = CGSizeMake(0, 1);
+        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, shadow, NSShadowAttributeName, [UIFont fontWithName:FONT_NAME size:21.0], NSFontAttributeName, nil]];
+        
+        //修改状态栏颜色为亮色,前提是在info.plist增加key"View controller-based status bar appearance"并设置值为NO
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }
+    
+    
+    APIGeeHelper *apigeeHelper = [APIGeeHelper shardInstance];
+    [apigeeHelper initialize];
+    
+    
     //使用友盟统计分析,此方式每次启动app时向服务器发送上次数据。
     [MobClick startWithAppkey:UMENG_APPKEY];
     
     [UMSocialData setAppKey:UMENG_APPKEY];
-    
+#ifdef DEBUG
+     //[UMSocialData openLog:YES];
+#endif
     //打开调试log的开关
-    [UMSocialData openLog:YES];
+   
     //如果你要支持不同的屏幕方向，需要这样设置，否则在iPhone只支持一个竖屏方向
     [UMSocialConfig setSupportedInterfaceOrientations:UIInterfaceOrientationMaskAll];
+    
+    [UMSocialConfig setFinishToastIsHidden:YES position:UMSocialiToastPositionTop];
     
     
     //打开Qzone的SSO开关

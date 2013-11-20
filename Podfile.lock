@@ -1,23 +1,21 @@
 PODS:
-  - AFNetworking (2.0.1):
+  - AFNetworking (2.0.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.0.1):
+  - AFNetworking/NSURLConnection (2.0.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.0.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.0.1)
-  - AFNetworking/Security (2.0.1)
-  - AFNetworking/Serialization (2.0.1)
-  - AFNetworking/UIKit (2.0.1):
+  - AFNetworking/NSURLSession (2.0.3):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.0.3)
+  - AFNetworking/Security (2.0.3)
+  - AFNetworking/Serialization (2.0.3)
+  - AFNetworking/UIKit (2.0.3):
     - AFNetworking/NSURLConnection
   - AKTabBarController (1.1.0)
   - ALAlertBanner (0.3.1)
@@ -26,10 +24,12 @@ PODS:
   - FMDB/common (2.1)
   - FMDB/standard (2.1):
     - FMDB/common
-  - PKRevealController (2.0.5)
+  - iOS7Colors (2.1.0)
+  - PKRevealController (2.0.6)
   - PXAlertView (0.0.6)
-  - REMenu (1.6)
+  - REMenu (1.7)
   - SVPullToRefresh (0.4.1)
+  - UIImage+BlurredFrame (0.0.2)
   - YLProgressBar (3.1.0)
 
 DEPENDENCIES:
@@ -37,21 +37,25 @@ DEPENDENCIES:
   - AKTabBarController
   - ALAlertBanner
   - FMDB
+  - iOS7Colors
   - PKRevealController
   - PXAlertView
   - REMenu
   - SVPullToRefresh
+  - UIImage+BlurredFrame
   - YLProgressBar
 
 SPEC CHECKSUMS:
-  AFNetworking: a6f11ac4ac087303e6ff87adc1ba57b0dac20ef8
+  AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
   AKTabBarController: 34443d5d028700dea1d00a6f275e8ef17fc947c2
   ALAlertBanner: 16235298226059cd876a9de0a5d7f9bac6a79459
   FMDB: 3fd5aaf632ca4ed39e3f101e0398504e6d5b0918
-  PKRevealController: 50a737bde432e51b68596d46b33617ec8bcb3a6a
+  iOS7Colors: bde8733c6cb28db1065875dcff38667090f58779
+  PKRevealController: 883287432cecf4cda037184eb822548b9713f8c2
   PXAlertView: 2684135028a05101d7b0f8f6d6414d3abb65368c
-  REMenu: 65aee777063bc70210d8257d4a935a4fb98cad52
+  REMenu: f9fb696fcc2f4a64511ffc99e251738f0ab6b945
   SVPullToRefresh: 61a0e4bd12bd6f8e3465909810b0fbeb1a28d5f2
+  UIImage+BlurredFrame: e35b3b542923b64e0ef1c5cfd2ef7971a9a0b2a3
   YLProgressBar: a1e1596cb883660ccd1babedf2e233c84258513c
 
 COCOAPODS: 0.26.2

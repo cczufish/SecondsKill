@@ -44,7 +44,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-UIImage+BlurredFrame.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-YLProgressBar.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-iOS7Colors.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -57,52 +67,62 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3779027329D94C70AECDD2EC</key>
+		<key>1D9E97396A024B3E89214DBC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3A477D252FFD43CCB5B7539E</key>
+		<key>20F586E9846D4731B43F32F0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>419CA0F8DA5B40489E991398</key>
+		<key>482F908ED4514E818A52CE5E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4345F8223AF84CEE8D63F5F6</key>
+		<key>4F2C6B517AAD4BB79BFBE17E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>79B747C4F6F94C19932FD7EE</key>
+		<key>6CEFDEF8908747909A00DCE3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>91F21361D9D3457DBF65DA7C</key>
+		<key>757DDB626F3A476CB5765B32</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9D0C90FDEA8540C2B9E361F3</key>
+		<key>AF833A9FB7AA4A81AA7D2A0E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AD217EB0A3AF46058D1B4809</key>
+		<key>C15109924BC345CEAEB5F20D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D1634350C6454EC585D8DFC9</key>
+		<key>C4AA252B4D824962813654A9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ECE80774DDE4421497F4BA89</key>
+		<key>C84FEEDF6E9549A499288CDE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CB3325F0938C45F196D94D52</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F84C7BDFC34C446A84EF0167</key>
 		<dict>
 			<key>primary</key>
 			<true/>

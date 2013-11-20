@@ -7,53 +7,59 @@
 //
 
 #import "ComparePriceViewController.h"
-#import "SimpleCommodityTableViewCell.h"
-#import "Commodity.h"
+#import "ComparePriceTableViewCell.h"
+
+#define kPadding 5.0f;
 
 @interface ComparePriceViewController ()
+@property (nonatomic, strong) NSMutableArray *entities;
 
+@property (nonatomic, strong) NSString *cursor;
+@property (nonatomic, strong) NSString *queryString;
 @end
 
 @implementation ComparePriceViewController
-
+//一开始不加载数据
 - (void)viewDidLoad
 {
+    self.canRefreshTableView = YES;
+    
     [super viewDidLoad];
     
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self setButtonStyle:rightBtn imageName:nil];
-    [rightBtn setTitle:@"刷新" forState:UIControlStateNormal];
-    [rightBtn addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
+    self.searchBar.placeholder = @"搜索";
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
+    /*
+    @property (nonatomic, readwrite, retain) UIView *inputAccessoryView
+   */
     
-    _commoditys = [[NSMutableArray alloc] initWithCapacity:10];
-    
-    for (int i = 0; i < 5; i ++) {
-        NSString *name = [NSString stringWithFormat:@"商品%d", i];
-        if (i == 0) {
-            name = @"利用objective-c的category特性，修改UILabel的绘制代码。";
-        }
+ 
+    self.entities = [NSMutableArray arrayWithCapacity:20];
+
         
-        Commodity *temp = [Commodity commodityWithName:name source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
-        temp.link = @"cocoachina.com";
-        [_commoditys addObject:temp];
-    }
-    self.tableView.backgroundColor = RGB(38.0f, 38.0f, 38.0f);
-    
     if (REUIKitIsFlatMode()) {
-        [self.searchDisplayController.searchBar performSelector:@selector(setBarTintColor:) withObject:RGB(199, 55, 33)];
+        self.searchBar.barTintColor = RGB(199, 55, 33);
     } else {
-        self.searchDisplayController.searchBar.tintColor = RGB(199, 55, 33);
+        self.searchBar.tintColor = RGB(199, 55, 33);
     }
-    
 }
 
+- (void)requestDatas:(NSString *)queryString
+{
+    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:queryString];
+    
+    if([clientResponse completedSuccessfully]) {
+        self.entities = (NSMutableArray *) clientResponse.entities;
+        self.cursor = clientResponse.cursor;
+        self.queryString = queryString;
+        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
+        [self.tableView reloadData];
+    }
+}
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    self.revealController.recognizesPanningOnFrontView = YES;
+    self.revealController.recognizesPanningOnFrontView = NO;
     
     [MobClick beginLogPageView:@"\"去比价\"界面"];
 }
@@ -62,17 +68,11 @@
 {
     [super viewWillDisappear:animated];
     
-    self.revealController.recognizesPanningOnFrontView = NO;
-    
     [MobClick endLogPageView:@"\"去比价\"界面"];
 }
 
 
 
-- (void)refresh
-{
-    NSLog(@"refresh");
-}
 
 - (void)insertRowAtTop:(SuperViewController *)weakSelf
 {
@@ -81,21 +81,21 @@
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [weakSelf.tableView beginUpdates];
         
-        Commodity *temp = [Commodity commodityWithName:@"来自下拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
-        temp.link = @"http://tudou.com";
-        [self.commoditys insertObject:temp atIndex:0];
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil] withRowAnimation:UITableViewRowAnimationBottom];
-        
+//        Commodity *temp = [Commodity commodityWithName:@"来自下拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
+//        temp.link = @"http://tudou.com";
+//        [self.commoditys insertObject:temp atIndex:0];
+//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil] withRowAnimation:UITableViewRowAnimationBottom];
+//        
         [weakSelf.tableView endUpdates];
         
         [weakSelf.tableView.pullToRefreshView stopAnimating];
         
-        ALAlertBanner *banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功加载%d条数据",1] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
-            NSLog(@"tapped!");
-            [alertBanner hide];
-        }];
-        banner.secondsToShow = ALERT_SHOW_SECONDS;
-        [banner show];
+//        ALAlertBanner *banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功加载%d条数据",1] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
+//            NSLog(@"tapped!");
+//            [alertBanner hide];
+//        }];
+//        banner.secondsToShow = 2;
+//        [banner show];
     });
 }
 
@@ -105,10 +105,10 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [weakSelf.tableView beginUpdates];
-        Commodity *temp = [Commodity commodityWithName:@"来自上拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
-        temp.link = @"http://tudou.com";
-        [self.commoditys addObject:temp];
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:(self.commoditys.count - 1) inSection:0], nil] withRowAnimation:UITableViewRowAnimationTop];
+//        Commodity *temp = [Commodity commodityWithName:@"来自上拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
+//        temp.link = @"http://tudou.com";
+//        [self.commoditys addObject:temp];
+//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:(self.commoditys.count - 1) inSection:0], nil] withRowAnimation:UITableViewRowAnimationTop];
         
         [weakSelf.tableView endUpdates];
         
@@ -116,31 +116,41 @@
     });
 }
 
-#pragma mark - UITableViewDelegate
+#pragma mark - UITableViewDelegate / UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [self.commoditys count];
+	return [self.entities count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell*cell =[self tableView:tableView cellForRowAtIndexPath:indexPath];
-    return cell.frame.size.height;
+    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+    
+    NSString *title = [entity getStringProperty:@"title"];
+    
+    CGSize size = [title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(240.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat cellHeight = size.height + kPadding;
+    return MAX(cellHeight, 80.0f);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	SimpleCommodityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simpleCommodityCellID"];
-
-    Commodity *temp = [self.commoditys objectAtIndex:indexPath.row];
+	ComparePriceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"comparePriceCellID"];
     
-    cell.nameLabel.text = [temp.name stringByAppendingString:@"\n "];;
-    cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", temp.price];
-    [cell.sourceImg setImageWithURL:[NSURL URLWithString:temp.source] placeholderImage:nil];
+    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
+    cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"m_price"]];
+    NSString *title = [entity getStringProperty:@"title"];
 
-    cell.commodity = temp;
+    CGSize size = [title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     
+    CGRect newRect = cell.nameLabel.frame;
+    newRect.size.height = size.height;
+    cell.nameLabel.frame = newRect;
+    
+    cell.nameLabel.text = title;
+
     return cell;
 }
 
@@ -148,12 +158,20 @@
 {
     VWebViewController *webVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
     webVC.navigationItem.title = self.navigationItem.title;
-    Commodity *temp = [self.commoditys objectAtIndex:indexPath.row];
-    webVC.linkAddress = temp.link;
+    
+    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+    webVC.linkAddress = [entity getStringProperty:@"link"];
+    
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];//取消当前行被选择后的样式
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [self.searchBar resignFirstResponder];
+    [self requestDatas:@"select * order by end_t asc&limit=3"];
 }
 
 #pragma mark - AKTabBarController need

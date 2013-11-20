@@ -10,8 +10,10 @@
 
 @interface MenuViewController : SuperViewController
 
+@property (nonatomic, assign) BOOL seletedChanged;
+
 @property (nonatomic, strong) NSMutableSet *allMenuItems;
 
-@property (nonatomic, strong) NSMutableArray *seletedMenuItems;
+@property (nonatomic, weak) NSMutableArray *seletedMenuItems;//临时记录所选菜单项，由于这里不是copy，所以修改它的同时也修改了它的源数据
 
 @end

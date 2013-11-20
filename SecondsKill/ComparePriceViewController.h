@@ -8,8 +8,8 @@
 
 #import "SuperViewController.h"
 
-@interface ComparePriceViewController : SuperViewController
+@interface ComparePriceViewController : SuperViewController<UISearchBarDelegate>
 
-@property (nonatomic, strong) NSMutableArray *commoditys;
+@property (nonatomic, weak) IBOutlet UISearchBar *searchBar;
 
 @end

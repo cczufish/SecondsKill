@@ -8,10 +8,15 @@
 
 #import "NotBeginViewController.h"
 #import "CommodityTableViewAdapter.h"
-#import "Commodity.h"
 #import "AppDelegate.h"
 
 @interface NotBeginViewController ()
+
+
+@property (nonatomic, strong) NSMutableArray *entities;
+
+@property (nonatomic, strong) NSString *cursor;
+@property (nonatomic, strong) NSString *queryString;
 
 @property (nonatomic, strong) CommodityTableViewAdapter *tableViewAdapter;
 @property (nonatomic, strong) REMenu *menu;
@@ -59,7 +64,7 @@
     
     self.menu.itemHeight = 30.0f;
     self.menu.backgroundColor = RGB(199, 55, 33);
-    self.menu.font = [UIFont fontWithName:FONT_NAME size:14];
+    self.menu.font = DEFAULT_FONT;
     self.menu.textColor = [UIColor whiteColor];
     self.menu.textShadowColor = [UIColor clearColor];
 }
@@ -91,6 +96,8 @@
 
 - (void)viewDidLoad
 {
+    self.canRefreshTableView = YES;
+    
     [super viewDidLoad];
     
     _seletedMenuItems = [[NSMutableArray alloc] initWithCapacity:[self.menus count]];
@@ -116,37 +123,26 @@
     [self configDownMenu];
 
     
-    _commoditys = [[NSMutableArray alloc] initWithCapacity:10];
+    self.entities = [NSMutableArray arrayWithCapacity:20];
+    self.queryString = @"select * order by end_t asc&limit=3";
     
-    for (int i = 0; i < 5; i ++) {
-        NSString *name = [NSString stringWithFormat:@"商品%d", i];
-        if (i == 0) {
-            name = @"利用objective-c的category特性，修改UILabel的绘制代码。";
-        }
+    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:self.queryString];
+    
+    if([clientResponse completedSuccessfully]) {
+        self.entities = (NSMutableArray *) clientResponse.entities;
+        self.cursor = clientResponse.cursor;
         
-        Commodity *temp = [Commodity commodityWithName:name source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
-        temp.link = @"http://baidu.com";
-        if (i == 0) {
-            temp.detrusionTime = @"00:00:05";
-        }
-        else {
-            temp.detrusionTime = @"00:02:02";
-        }
-        temp.pictureURL = @"http://pic4.nipic.com/20091028/735390_104541056365_2.jpg";
-        temp.upCount = 3;
-        temp.inventory = 43;
-        [_commoditys addObject:temp];
+        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
+        [self.tableView reloadData];
     }
     
     _tableViewAdapter = [[CommodityTableViewAdapter alloc] init];
-    _tableViewAdapter.commoditys = self.commoditys;
+    _tableViewAdapter.commoditys = self.entities;
     _tableViewAdapter.adapterType = CommodityAdapterTypeNotBegin;
     _tableViewAdapter.cellID = @"notBeginCellID";
     
     self.tableView.delegate = _tableViewAdapter;
     self.tableView.dataSource = _tableViewAdapter;
-    
-    self.tableView.backgroundColor =  RGB(38.0f, 38.0f, 38.0f);
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
@@ -156,46 +152,27 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [weakSelf.tableView beginUpdates];
-        Commodity *temp = [Commodity commodityWithName:@"来自上拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
-        temp.link = @"http://tudou.com";
-        temp.detrusionTime = @"00:00:05";
-        temp.pictureURL = @"http://pic4.nipic.com/20091028/735390_104541056365_2.jpg";
-        temp.upCount = 3;
-        temp.inventory = 23;
-        
-        [self.commoditys addObject:temp];
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:(self.commoditys.count - 1) inSection:0], nil] withRowAnimation:UITableViewRowAnimationTop];
+//        Commodity *temp = [Commodity commodityWithName:@"来自上拉刷新" source:@"http://newsimages.mainone.com/2013-04/01153154889.png" price:100 killPrice:50];
+//        temp.link = @"http://tudou.com";
+//        temp.detrusionTime = @"00:00:05";
+//        temp.pictureURL = @"http://pic4.nipic.com/20091028/735390_104541056365_2.jpg";
+//        temp.upCount = 3;
+//        temp.inventory = 23;
+//        
+//        [self.commoditys addObject:temp];
+//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:(self.commoditys.count - 1) inSection:0], nil] withRowAnimation:UITableViewRowAnimationTop];
         
         [weakSelf.tableView endUpdates];
         
         [weakSelf.tableView.infiniteScrollingView stopAnimating];
     });
 }
+#pragma mark - UMSocialUIDelegate
+
 //各个页面执行授权完成、分享完成、或者评论完成时的回调函数
--(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+- (void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    [UMSocialConfig setFinishToastIsHidden:YES position:UMSocialiToastPositionTop];
-    
-    if (response.responseType == UMSResponseShareToMutilSNS) {
-        ALAlertBanner *banner = nil;
-        
-        if (response.responseCode == UMSResponseCodeSuccess) {
-            banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"成功分享至%@!",[[response.data allKeys] objectAtIndex:0]] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
-                [alertBanner hide];
-            }];
-        }
-        else {
-            if (response.responseCode != UMSResponseCodeCancel) {
-                banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleFailure position:ALAlertBannerPositionTop title:@"分享失败!" subtitle:response.message tappedBlock:^(ALAlertBanner *alertBanner) {
-                    [alertBanner hide];
-                }];
-            }
-        }
-        //问题是发了两个通知
-        
-        banner.secondsToShow = ALERT_SHOW_SECONDS;
-        [banner show];
-    }
+    [AlertHelper sharedUMSocialSuccess:response inView:self.view];
 }
 #pragma mark - AKTabBarController need
 

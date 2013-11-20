@@ -8,7 +8,7 @@
 			<key>title</key>
 			<string>全部</string>
 			<key>params</key>
-			<string>type=inventory&amp;menuitem=all</string>
+			<string>all</string>
 			<key>section</key>
 			<integer>0</integer>
 		</dict>
@@ -16,7 +16,7 @@
 			<key>title</key>
 			<string>有库存</string>
 			<key>params</key>
-			<string>type=inventory&amp;menuitem=has</string>
+			<string>remain&gt;0</string>
 			<key>section</key>
 			<integer>0</integer>
 		</dict>
@@ -27,7 +27,7 @@
 			<key>title</key>
 			<string>全部</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=all</string>
+			<string>all</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -35,7 +35,7 @@
 			<key>title</key>
 			<string>亚马逊</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=amazon</string>
+			<string>site=&apos;az&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -43,7 +43,7 @@
 			<key>title</key>
 			<string>京东</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=jd</string>
+			<string>site=&apos;jd&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -51,7 +51,7 @@
 			<key>title</key>
 			<string>苏宁</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=suning</string>
+			<string>site=&apos;suning&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -59,7 +59,7 @@
 			<key>title</key>
 			<string>一号店</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=yhd</string>
+			<string>site=&apos;yh&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -67,7 +67,7 @@
 			<key>title</key>
 			<string>易迅</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=yixun</string>
+			<string>site=&apos;yx&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -75,7 +75,7 @@
 			<key>title</key>
 			<string>国美</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=gome</string>
+			<string>site=&apos;gm&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -83,7 +83,7 @@
 			<key>title</key>
 			<string>新蛋</string>
 			<key>params</key>
-			<string>type=EBusiness&amp;menuitem=newegg</string>
+			<string>site=&apos;ne&apos;</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -94,7 +94,7 @@
 			<key>title</key>
 			<string>全部</string>
 			<key>params</key>
-			<string>type=category&amp;menuitem=all</string>
+			<string>all</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -102,7 +102,7 @@
 			<key>title</key>
 			<string>手机/数码/配件</string>
 			<key>params</key>
-			<string>type=category&amp;menuitem=mobile</string>
+			<string>cate=&apos;手机/数码/配件&apos;</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -110,7 +110,7 @@
 			<key>title</key>
 			<string>电脑/办公/外设</string>
 			<key>params</key>
-			<string>type=category&amp;menuitem=computer</string>
+			<string>cate=&apos;电脑/办公/外设&apos;</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -118,7 +118,7 @@
 			<key>title</key>
 			<string>家用电器</string>
 			<key>params</key>
-			<string>type=category&amp;menuitem=electric</string>
+			<string>cate=&apos;家用电器&apos;</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -126,7 +126,7 @@
 			<key>title</key>
 			<string>家居/家装/厨具/汽配</string>
 			<key>params</key>
-			<string>type=category&amp;menuitem=home_furnishing</string>
+			<string>cate=&apos;家居/家装/厨具/汽配&apos;</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -134,7 +134,7 @@
 			<key>title</key>
 			<string>钟表/珠宝/礼品/箱包</string>
 			<key>params</key>
-			<string>type=category&amp;menuitem=gift</string>
+			<string>cate=&apos;钟表/珠宝/礼品/箱包&apos;</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>

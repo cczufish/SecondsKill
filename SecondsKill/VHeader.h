@@ -9,27 +9,23 @@
 #ifndef SecondsKill_VHeader_h
 #define SecondsKill_VHeader_h
 
-//#define _AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
-
 //#define BASE_URL @"https://192.168.10.16:8443/Trackup/"
-//#define APP_KEY @"dGVzdDp0ZXN0"
-//#define APP_NAME @"秒杀惠"
-//#define DB_NAME @"trackup.sqlite3"
-//#define AES256_PASSWORD_KEY @"citylife20130609"
+//#define DB_NAME @"secondskill.db"
 //
     #define UMENG_APPKEY @"522e80dc56240b3cbc02d78b"
 #define TENCENT_APPID @"801430933"
 #define WEIXIN_APPID @"wxwxcdef309f0d88c12b"
 
-#define APP_ID @""
 
-#define APIGEE_ORGNAME @"athui"
-#define APIGEE_APPNAME @"sandbox"
-#define APIGEE_PATH @"msitem"
+#warning 用发布证书编译打包程序
+#warning 替换apigee debug sdk 为release版本
 
-#define FONT_NAME @"Helvetica-Bold"
+#define FONT_NAME @"Arial-BoldMT"
 
-    #define ALERT_SHOW_SECONDS 2.0f
+    
+
+#define FONT_SIZE 16
+#define DEFAULT_FONT [UIFont fontWithName:FONT_NAME size:FONT_SIZE]
 
 
     #define RGB(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
@@ -45,7 +41,12 @@
     #define isRetina ([[UIScreen mainScreen] scale] == 2)
     #define isPadX (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     #define isPhone5 (fabs((double)[[UIScreen mainScreen] bounds].size.height-(double)568) < DBL_EPSILON)
-    #define IOS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
+
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+        #define IS_RUNNING_IOS7 ([[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue] >= 7)
+    #else
+        #define IS_RUNNING_IOS7 NO
+    #endif
 
     #ifdef DEBUG
         #define NSLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
@@ -54,3 +55,6 @@
     #endif
 
 #endif
+
+
+
