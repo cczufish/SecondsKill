@@ -19,12 +19,15 @@ PODS:
     - AFNetworking/NSURLConnection
   - AKTabBarController (1.1.0)
   - ALAlertBanner (0.3.1)
+  - AutoDescribe (1.0.0)
   - FMDB (2.1):
     - FMDB/standard
   - FMDB/common (2.1)
   - FMDB/standard (2.1):
     - FMDB/common
   - iOS7Colors (2.1.0)
+  - JSONModel (0.10.0)
+  - Nimbus/Core (1.0.0)
   - PKRevealController (2.0.6)
   - PXAlertView (0.0.6)
   - REMenu (1.7)
@@ -36,8 +39,11 @@ DEPENDENCIES:
   - AFNetworking
   - AKTabBarController
   - ALAlertBanner
+  - AutoDescribe
   - FMDB
   - iOS7Colors
+  - JSONModel
+  - Nimbus/Core
   - PKRevealController
   - PXAlertView
   - REMenu
@@ -49,8 +55,11 @@ SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
   AKTabBarController: 34443d5d028700dea1d00a6f275e8ef17fc947c2
   ALAlertBanner: 16235298226059cd876a9de0a5d7f9bac6a79459
+  AutoDescribe: 3f35faace737c4b920753deda7a1e55a552fe184
   FMDB: 3fd5aaf632ca4ed39e3f101e0398504e6d5b0918
   iOS7Colors: bde8733c6cb28db1065875dcff38667090f58779
+  JSONModel: cecca3c3a9ee1a248b56f7139e2d64b85ce536ec
+  Nimbus: 5396b75b180a4bf6fe813553d533121d42bdd9d9
   PKRevealController: 883287432cecf4cda037184eb822548b9713f8c2
   PXAlertView: 2684135028a05101d7b0f8f6d6414d3abb65368c
   REMenu: f9fb696fcc2f4a64511ffc99e251738f0ab6b945

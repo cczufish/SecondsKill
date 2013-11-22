@@ -9,6 +9,7 @@
 #import "ActivityWallViewController.h"
 #import "ActivityWallTableViewCell.h"
 
+#define kApigeeActivityWallPath @"promotions"
 #define kPadding 5.0f
 
 @interface ActivityWallViewController ()
@@ -34,22 +35,22 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(requestDatas)];
     
     self.entities = [NSMutableArray arrayWithCapacity:20];
-    self.queryString = @"select * order by end_t asc&limit=3";
+    self.queryString = @"";//select * order by end_t asc&limit=3
     
     [self requestDatas];
 }
 
 - (void)requestDatas
 {
-    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:self.queryString];
-    
-    if([clientResponse completedSuccessfully]) {
-        self.entities = (NSMutableArray *) clientResponse.entities;
-        self.cursor = clientResponse.cursor;
-        
-        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
-        [self.tableView reloadData];
-    }
+//    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByApigeeType:kApigeeActivityWallPath ql:self.queryString];
+//    
+//    if([clientResponse completedSuccessfully]) {
+//        self.entities = (NSMutableArray *) clientResponse.entities;
+//        self.cursor = clientResponse.cursor;
+//        
+//        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
+//        [self.tableView reloadData];
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,9 +78,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
     
-    NSString *title = [entity getStringProperty:@"title"];
+    NSString *title = @"";//[entity getStringProperty:@"title"];
     
     CGSize size = [title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(265.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     
@@ -90,10 +91,10 @@
 {
 	ActivityWallTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"activityWallCellID"];
 
-    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
-    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
+//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+//    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
     
-    NSString *title = [entity getStringProperty:@"title"];
+    NSString *title =@"";// [entity getStringProperty:@"title"];
     
     CGSize size = [title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
 
@@ -120,8 +121,8 @@
     VWebViewController *webVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
     webVC.navigationItem.title = self.navigationItem.title;
     
-    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
-    webVC.linkAddress = [entity getStringProperty:@"link"];
+//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+//    webVC.linkAddress = [entity getStringProperty:@"link"];
     
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];

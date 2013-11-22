@@ -19,7 +19,22 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-AutoDescribe.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-FMDB.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-JSONModel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Nimbus.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -67,62 +82,77 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1D9E97396A024B3E89214DBC</key>
+		<key>020AD9137B42496999EEC950</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>20F586E9846D4731B43F32F0</key>
+		<key>06E28DAB74D24B89815539E3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>482F908ED4514E818A52CE5E</key>
+		<key>0AE806CD924F4742A662BD95</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4F2C6B517AAD4BB79BFBE17E</key>
+		<key>149B49035A7A4947A9F83DF9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6CEFDEF8908747909A00DCE3</key>
+		<key>26AA1A6EEF024ACD9C755468</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>757DDB626F3A476CB5765B32</key>
+		<key>44155E5923204FFFA34B0965</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AF833A9FB7AA4A81AA7D2A0E</key>
+		<key>467CB3D5CCFA40119E2D5865</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C15109924BC345CEAEB5F20D</key>
+		<key>4CC2936920934A18A2480DB0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C4AA252B4D824962813654A9</key>
+		<key>873F98E3DA474406875167BA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C84FEEDF6E9549A499288CDE</key>
+		<key>8836CB12E2BE4B4A924061F0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CB3325F0938C45F196D94D52</key>
+		<key>8E2F9A5F05274918AF36F901</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F84C7BDFC34C446A84EF0167</key>
+		<key>AEA80D0BE2E74B7883C4A046</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CA8E912D3AB7428A809DF3DD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>ED50A42C44CA49D9BDA818FC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F43847EAA3734971BC8FB9DB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

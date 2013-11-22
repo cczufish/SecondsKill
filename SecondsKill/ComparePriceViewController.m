@@ -43,17 +43,24 @@
     }
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    // [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
+    //[[[UIApplication sharedApplication] keyWindow] endEditing:YES]
+    [self.view endEditing:YES];
+}
+
 - (void)requestDatas:(NSString *)queryString
 {
-    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:queryString];
-    
-    if([clientResponse completedSuccessfully]) {
-        self.entities = (NSMutableArray *) clientResponse.entities;
-        self.cursor = clientResponse.cursor;
-        self.queryString = queryString;
-        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
-        [self.tableView reloadData];
-    }
+//    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:queryString];
+//    
+//    if([clientResponse completedSuccessfully]) {
+//        self.entities = (NSMutableArray *) clientResponse.entities;
+//        self.cursor = clientResponse.cursor;
+//        self.queryString = queryString;
+//        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
+//        [self.tableView reloadData];
+//    }
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -125,9 +132,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
     
-    NSString *title = [entity getStringProperty:@"title"];
+    NSString *title =@"";// [entity getStringProperty:@"title"];
     
     CGSize size = [title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(240.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat cellHeight = size.height + kPadding;
@@ -138,10 +145,10 @@
 {
 	ComparePriceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"comparePriceCellID"];
     
-    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
-    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
-    cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"m_price"]];
-    NSString *title = [entity getStringProperty:@"title"];
+//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+//    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"pic_%@",[entity getStringProperty:@"site"]]];
+//    cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"m_price"]];
+    NSString *title = @"";//[entity getStringProperty:@"title"];
 
     CGSize size = [title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     
@@ -159,8 +166,8 @@
     VWebViewController *webVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
     webVC.navigationItem.title = self.navigationItem.title;
     
-    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
-    webVC.linkAddress = [entity getStringProperty:@"link"];
+//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+//    webVC.linkAddress = [entity getStringProperty:@"link"];
     
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];

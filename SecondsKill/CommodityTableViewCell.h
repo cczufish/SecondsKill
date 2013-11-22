@@ -15,6 +15,7 @@
 @property (nonatomic, assign) CommodityAdapterType adapterType;
 
 @property (nonatomic, weak) IBOutlet UIView *bottomView;
+@property (nonatomic, weak) IBOutlet UIView *detailView;
 
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;//商品名称
 @property (nonatomic, weak) IBOutlet StrikeThroughLabel *priceLabel;//原价格
@@ -34,7 +35,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *upBtn;//顶
 @property (nonatomic, weak) IBOutlet UIButton *linkOrAlertBtn;//直达链接
 
-@property (nonatomic, strong) ApigeeEntity *entity;//商品对象
+//@property (nonatomic, strong) ApigeeEntity *entity;//商品对象
 
 //分享
 - (IBAction)share:(id)sender;

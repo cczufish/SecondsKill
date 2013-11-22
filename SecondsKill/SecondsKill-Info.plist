@@ -6,6 +6,10 @@
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
 	<string>秒杀惠</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>MicrosoftYaHei.ttf</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CFBundleExecutable</key>

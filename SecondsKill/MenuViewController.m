@@ -52,18 +52,30 @@
 {
     [super viewWillDisappear:animated];
     
+    NSMutableString *ql = [[NSMutableString alloc] initWithCapacity:20];
+    
+    for (int i = 0; i < [self.seletedMenuItems count]; i++) {
+        NSString *params = [self.seletedMenuItems[i] objectForKey:@"params"];
+        if(![@"all" isEqualToString:params]) {
+            if (![@"" isEqualToString:ql]) {
+                [ql appendString:@" and "];
+            }
+            [ql appendString:params];
+        }
+    }
+    
     UIViewController *vc = [self currentViewController];
     
     if ([vc isKindOfClass:[KillingViewController class]]) {
         KillingViewController *killingVC = (KillingViewController *) vc;
         if (self.seletedChanged) {
-            [killingVC refreshCommoditys];
+            [killingVC selectCommoditys:ql];
         }
     }
     else if ([vc isKindOfClass:[NotBeginViewController class]]) {
         NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
         if (self.seletedChanged) {
-            [notBeginVC refreshCommoditys];
+            [notBeginVC selectCommoditys:ql];
         }
     }
     

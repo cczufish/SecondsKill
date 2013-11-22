@@ -15,7 +15,7 @@
 
 @end
 
-@interface VWebView : UIWebView
+@interface VWebView : UIWebView<UIWebViewDelegate>
 
 @property (nonatomic, weak) id<VWebViewDelegate> delegateV;
 

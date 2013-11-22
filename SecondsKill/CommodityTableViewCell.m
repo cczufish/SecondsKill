@@ -29,9 +29,7 @@
     self.nameLabel.numberOfLines = 0;
     self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.nameLabel.font = DEFAULT_FONT;
-    
-    
-    
+
     self.bottomView.layer.cornerRadius = 3;
     self.bottomView.layer.masksToBounds = YES;
 

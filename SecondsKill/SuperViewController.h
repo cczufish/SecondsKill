@@ -17,4 +17,6 @@
 
 - (UIViewController *)currentViewController;
 
+- (void)showMenuViewController;
+
 @end

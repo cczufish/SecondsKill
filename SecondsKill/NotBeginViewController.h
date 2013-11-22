@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong) NSMutableArray *seletedMenuItems;
 
-- (void)refreshCommoditys;
+- (void)selectCommoditys:(NSString *)ql;
 
 @end

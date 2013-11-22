@@ -14,7 +14,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     InitProject();
-
+    
     UITabBarController *tabBarController = (UITabBarController *) self.window.rootViewController;
 
     AKTabBarController *akTabbarController = [[AKTabBarController alloc] initWithTabBarHeight:50.0f];

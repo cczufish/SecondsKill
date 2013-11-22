@@ -39,8 +39,7 @@
 - (void)forward:(id)sender;
 - (void)action:(id)sender;
 
-- (void)startLoading;
-- (void)endLoading;
+- (void)updateLoadingStatus:(BOOL)isEndLoading;
 
 @end
 
@@ -52,6 +51,7 @@
 
 - (void)awakeFromNib
 {
+    self.delegate = self;
     self.scalesPageToFit = YES;
     
     //工具条
@@ -88,8 +88,6 @@
 {
     [super webView:view identifierForInitialRequest:initialRequest fromDataSource:dataSource];
     
-    [self startLoading];
-    
     return [NSNumber numberWithInt:++resourceCount];
 }
 
@@ -100,47 +98,52 @@
     self.progressBar.progress = ++resourceCompletedCount / (float)resourceCount;
     
     if (self.progressBar.progress == 1) {
-        [self endLoading];
+        [self updateLoadingStatus:YES];
     }
 }
 
 - (void)webView:(id)view resource:(id)resource didFinishLoadingFromDataSource:(id)dataSource
 {
+    
     [super webView:view resource:resource didFinishLoadingFromDataSource:dataSource];
 
     self.progressBar.progress = ++resourceCompletedCount / (float)resourceCount;
     
     if (self.progressBar.progress == 1) {
-        [self endLoading];
+        [self updateLoadingStatus:YES];
     }
+}
+
+#pragma mark - UIWebViewDelegate
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    [self updateLoadingStatus:NO];
+    
+    return YES;
 }
 
 #pragma mark -
 
-- (void)startLoading
+- (void)updateLoadingStatus:(BOOL)isEndLoading
 {
     self.backBarItem.enabled = self.canGoBack;
     self.forwardBarItem.enabled = self.canGoForward;
-    self.actionBarItem.enabled = NO;
     
-    self.progressBar.hidden = NO;
+    self.actionBarItem.enabled = isEndLoading;
+    self.progressBar.hidden = isEndLoading;
     
-    self.toolBar.items = self.loadingBarItems;
-}
-
-- (void)endLoading
-{
-    resourceCount = 0;
-    resourceCompletedCount = 0;
-    
-    self.progressBar.progress = 0.0f;
-    self.progressBar.hidden = YES;
-    
-    self.backBarItem.enabled = self.canGoBack;
-    self.forwardBarItem.enabled = self.canGoForward;
-    self.actionBarItem.enabled = YES;
-    
-    self.toolBar.items = self.defaultBarItems;
+    if (isEndLoading) {
+        resourceCount = 0;
+        resourceCompletedCount = 0;
+        
+        self.progressBar.progress = 0.0f;
+        
+        self.toolBar.items = self.defaultBarItems;
+    }
+    else {
+        self.toolBar.items = self.loadingBarItems;
+    }
 }
 
 #pragma mark - UIButton Action
@@ -149,7 +152,7 @@
 {
     [self stopLoading];
     
-    [self endLoading];
+    [self updateLoadingStatus:YES];
 }
 
 - (void)refresh:(id)sender

@@ -9,9 +9,6 @@
 #ifndef SecondsKill_VHeader_h
 #define SecondsKill_VHeader_h
 
-//#define BASE_URL @"https://192.168.10.16:8443/Trackup/"
-//#define DB_NAME @"secondskill.db"
-//
     #define UMENG_APPKEY @"522e80dc56240b3cbc02d78b"
 #define TENCENT_APPID @"801430933"
 #define WEIXIN_APPID @"wxwxcdef309f0d88c12b"
@@ -20,7 +17,7 @@
 #warning 用发布证书编译打包程序
 #warning 替换apigee debug sdk 为release版本
 
-#define FONT_NAME @"Arial-BoldMT"
+#define FONT_NAME @"MicrosoftYaHei"
 
     
 
@@ -53,6 +50,18 @@
     #else
         #define NSLog(...);
     #endif
+
+    #define SHARD_INSTANCE_IMPL(ClassName) \
+    \
+        + (id)shardInstance { \
+            static dispatch_once_t pred = 0; \
+            static ClassName *sharedObject = nil; \
+    \
+            dispatch_once(&pred, ^{ \
+                sharedObject = [[self alloc] init]; \
+            }); \
+            return sharedObject; \
+        } \
 
 #endif
 

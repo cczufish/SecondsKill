@@ -13,10 +13,10 @@
 @interface NotBeginViewController ()
 
 
-@property (nonatomic, strong) NSMutableArray *entities;
+@property (nonatomic, copy) NSArray *entities;
 
-@property (nonatomic, strong) NSString *cursor;
-@property (nonatomic, strong) NSString *queryString;
+@property (nonatomic, copy) NSString *cursor;
+@property (nonatomic, copy) NSString *queryString;
 
 @property (nonatomic, strong) CommodityTableViewAdapter *tableViewAdapter;
 @property (nonatomic, strong) REMenu *menu;
@@ -125,16 +125,17 @@
     
     self.entities = [NSMutableArray arrayWithCapacity:20];
     self.queryString = @"select * order by end_t asc&limit=3";
+    [self requestDatas:@"select * order by end_t asc&limit=10"];
     
-    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:self.queryString];
-    
-    if([clientResponse completedSuccessfully]) {
-        self.entities = (NSMutableArray *) clientResponse.entities;
-        self.cursor = clientResponse.cursor;
-        
-        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
-        [self.tableView reloadData];
-    }
+//    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:self.queryString];
+//    
+//    if([clientResponse completedSuccessfully]) {
+//        self.entities = (NSMutableArray *) clientResponse.entities;
+//        self.cursor = clientResponse.cursor;
+//        
+//        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
+//        [self.tableView reloadData];
+//    }
     
     _tableViewAdapter = [[CommodityTableViewAdapter alloc] init];
     _tableViewAdapter.commoditys = self.entities;
@@ -145,6 +146,12 @@
     self.tableView.dataSource = _tableViewAdapter;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
+
+- (void)requestDatas:(NSString *)queryString
+{
+
+}
+
 
 - (void)insertRowAtBottom:(SuperViewController *)weakSelf
 {
@@ -172,7 +179,7 @@
 //各个页面执行授权完成、分享完成、或者评论完成时的回调函数
 - (void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    [AlertHelper sharedUMSocialSuccess:response inView:self.view];
+    [VAlertHelper sharedUMSocialSuccess:response inView:self.view];
 }
 #pragma mark - AKTabBarController need
 

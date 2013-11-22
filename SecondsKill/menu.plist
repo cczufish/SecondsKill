@@ -35,7 +35,7 @@
 			<key>title</key>
 			<string>亚马逊</string>
 			<key>params</key>
-			<string>site=&apos;az&apos;</string>
+			<string>site=az</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -43,7 +43,7 @@
 			<key>title</key>
 			<string>京东</string>
 			<key>params</key>
-			<string>site=&apos;jd&apos;</string>
+			<string>site=jd</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -51,7 +51,7 @@
 			<key>title</key>
 			<string>苏宁</string>
 			<key>params</key>
-			<string>site=&apos;suning&apos;</string>
+			<string>site=sn</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -59,7 +59,7 @@
 			<key>title</key>
 			<string>一号店</string>
 			<key>params</key>
-			<string>site=&apos;yh&apos;</string>
+			<string>site=yh</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -67,7 +67,7 @@
 			<key>title</key>
 			<string>易迅</string>
 			<key>params</key>
-			<string>site=&apos;yx&apos;</string>
+			<string>site=yx</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -75,7 +75,7 @@
 			<key>title</key>
 			<string>国美</string>
 			<key>params</key>
-			<string>site=&apos;gm&apos;</string>
+			<string>site=gm</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -83,7 +83,7 @@
 			<key>title</key>
 			<string>新蛋</string>
 			<key>params</key>
-			<string>site=&apos;ne&apos;</string>
+			<string>site=ne</string>
 			<key>section</key>
 			<integer>1</integer>
 		</dict>
@@ -102,7 +102,31 @@
 			<key>title</key>
 			<string>手机/数码/配件</string>
 			<key>params</key>
-			<string>cate=&apos;手机/数码/配件&apos;</string>
+			<string>cate=Cate0</string>
+			<key>section</key>
+			<integer>2</integer>
+		</dict>
+        <dict>
+			<key>title</key>
+			<string>服装鞋帽/运动户外</string>
+			<key>params</key>
+			<string>cate=Cate1</string>
+			<key>section</key>
+			<integer>2</integer>
+		</dict>
+        <dict>
+			<key>title</key>
+			<string>个护化妆</string>
+			<key>params</key>
+			<string>cate=Cate2</string>
+			<key>section</key>
+			<integer>2</integer>
+		</dict>
+        <dict>
+			<key>title</key>
+			<string>食品保健/酒水饮料</string>
+			<key>params</key>
+			<string>cate=Cate3</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -110,7 +134,31 @@
 			<key>title</key>
 			<string>电脑/办公/外设</string>
 			<key>params</key>
-			<string>cate=&apos;电脑/办公/外设&apos;</string>
+			<string>cate=Cate4</string>
+			<key>section</key>
+			<integer>2</integer>
+		</dict>
+        <dict>
+			<key>title</key>
+			<string>钟表/珠宝/礼品/箱包</string>
+			<key>params</key>
+			<string>cate=Cate5</string>
+			<key>section</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>母婴/玩具</string>
+			<key>params</key>
+			<string>cate=Cate6</string>
+			<key>section</key>
+			<integer>2</integer>
+		</dict>
+        <dict>
+			<key>title</key>
+			<string>图书/音像</string>
+			<key>params</key>
+			<string>cate=Cate7</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -118,7 +166,7 @@
 			<key>title</key>
 			<string>家用电器</string>
 			<key>params</key>
-			<string>cate=&apos;家用电器&apos;</string>
+			<string>cate=Cate8</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
@@ -126,15 +174,15 @@
 			<key>title</key>
 			<string>家居/家装/厨具/汽配</string>
 			<key>params</key>
-			<string>cate=&apos;家居/家装/厨具/汽配&apos;</string>
+			<string>cate=Cate9</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>title</key>
-			<string>钟表/珠宝/礼品/箱包</string>
+			<string>苹果专区</string>
 			<key>params</key>
-			<string>cate=&apos;钟表/珠宝/礼品/箱包&apos;</string>
+			<string>cate=Cate10</string>
 			<key>section</key>
 			<integer>2</integer>
 		</dict>

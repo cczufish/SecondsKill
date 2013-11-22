@@ -21,8 +21,7 @@
     #import "UIButton+AFNetworking.h"
     #import "AKTabBarController.h"
     #import "UIViewController+AKTabBarController.h"
-    #import "AFNetworkActivityIndicatorManager.h"
-    #import "AFURLResponseSerialization.h"
+
     #import "SVPullToRefresh.h"
     #import "YLProgressBar.h"
     
@@ -32,18 +31,22 @@
 
 #import "PXAlertView+Customization.h"
 #import "UMSocial.h"
-#import "AlertHelper.h"
-
-#import "APIGeeHelper.h"
-
-#import "CLShardInstanceImpl.h"
-
-
+#import "VAlertHelper.h"
+#import "NSObject+AutoDescribe.h"
+#import "Base64.h"
+#import "AESCrypt.h"
+#import "NSString+Base64.h"
+#import "NSData+Base64.h"
+#import "NSData+CommonCrypto.h"
+#import "VNetworkHelper.h"
+#import "NSString+V.h"
     #import "UIImage+V.h"
     #import "UIView+V.h"
 
+#import "JSONModelLib.h"
+
     #import "VHeader.h"
-    #import "VHelper.h"
+    #import "VCommonHelper.h"
     #import "VRequestHelper.h"
     #import "VWebViewController.h"
 

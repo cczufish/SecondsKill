@@ -65,14 +65,14 @@
 //各个页面执行授权完成、分享完成、或者评论完成时的回调函数
 - (void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    [AlertHelper sharedUMSocialSuccess:response inView:self.view];
+    [VAlertHelper sharedUMSocialSuccess:response inView:self.view];
 }
 
 - (void)checkUpdateDelegate:(NSDictionary *)appInfo
 {
     BOOL needUpdate = [[appInfo objectForKey:@"update"] boolValue];
     
-    [AlertHelper checkUpdateAPP:needUpdate inView:self.view];
+    [VAlertHelper checkUpdateAPP:needUpdate inView:self.view];
 }
 
 #pragma mark - AKTabBarController need

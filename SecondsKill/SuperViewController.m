@@ -11,6 +11,8 @@
 
 @interface SuperViewController ()
 
+@property (nonatomic, strong) REMenu *sortMenu;
+
 @end
 
 @implementation SuperViewController
@@ -18,6 +20,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIImageView *logoIV = [[UIImageView alloc] initWithFrame:CGRectMake(10, -40, 30, 30)];
+    [logoIV setImage:[UIImage imageNamed:@"btn_hui.png"]];
+    [self.tableView addSubview:logoIV];
     
     self.tableView.backgroundColor = RGB(38.0f, 38.0f, 38.0f);
     
@@ -53,6 +59,14 @@
         }];
         
         self.tableView.infiniteScrollingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+    }
+    
+    if (YES) {
+        //初始化导航条内容
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_menu.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMenuViewController)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_sort.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showDownMenu:)];
+        
+        [self configDownMenu];//下拉菜单设置
     }
 }
 
@@ -121,6 +135,46 @@
     else {
         btn.frame = CGRectMake(0, 0, 50, 30);
     }
+}
+
+
+- (void)configDownMenu
+{
+    REMenuItem *sortTime = [[REMenuItem alloc] initWithTitle:@"按结束时间排序"
+                                                       image:nil highlightedImage:nil action:^(REMenuItem *item) {
+                                                           NSLog(@"Item: %@", item);
+                                                       }];
+    
+    REMenuItem *sortXX = [[REMenuItem alloc] initWithTitle:@"按折扣大小排序"
+                                                     image:nil highlightedImage:nil action:^(REMenuItem *item) {
+                                                         NSLog(@"Item: %@", item);
+                                                     }];
+    
+    self.sortMenu = [[REMenu alloc] initWithItems:@[sortTime, sortXX]];
+    
+    self.sortMenu.itemHeight = 30.0f;
+    self.sortMenu.backgroundColor = [UIColor lightGrayColor];
+    self.sortMenu.font = DEFAULT_FONT;
+    self.sortMenu.textColor = [UIColor whiteColor];
+    self.sortMenu.textShadowColor = [UIColor clearColor];
+}
+
+
+- (void)showDownMenu:(UIButton *)sender
+{
+    if (self.sortMenu.isOpen) {
+        [self.sortMenu close];
+    }
+    else {
+        CGRect menuRect = sender.frame;
+        menuRect.size.height *= 2;
+        [self.sortMenu showFromRect:menuRect inView:self.view];
+    }
+}
+
+- (void)showMenuViewController
+{
+    [self.revealController showViewController:self.revealController.leftViewController];
 }
 
 - (void)didReceiveMemoryWarning

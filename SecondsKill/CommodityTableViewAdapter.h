@@ -15,7 +15,7 @@ typedef enum {
 
 @interface CommodityTableViewAdapter : NSObject<UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, strong) NSMutableArray *commoditys;
+@property (nonatomic, copy) NSArray *commoditys;
 @property (nonatomic, copy) NSString *cellID;
 @property (nonatomic, assign) CommodityAdapterType adapterType;
 

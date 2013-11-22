@@ -2,32 +2,31 @@
 //  Commodity.h
 //  SecondsKill
 //
-//  Created by lijingcheng on 13-10-29.
+//  Created by lijingcheng on 13-11-22.
 //  Copyright (c) 2013年 edouglas. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface Commodity : NSObject
+@interface Commodity : JSONModel
 
-@property (nonatomic, copy) NSString *name;//商品名称
-@property (nonatomic, copy) NSString *source;//商品来源
-@property (nonatomic, copy) NSString *link;//直达链接
-@property (nonatomic, copy) NSString *surplus;//秒杀剩余时间
-@property (nonatomic, copy) NSString *detrusionTime;//秒杀推出时间
+@property (assign, nonatomic) int id;
 
-@property (nonatomic, copy) NSString *pictureURL;//商品图片
+@property (copy, nonatomic) NSString* title;
+@property (copy, nonatomic) NSString *cate;
+@property (copy, nonatomic) NSString* link;
+@property (copy, nonatomic) NSString* image;
+@property (copy, nonatomic) NSString* site;
+@property (copy, nonatomic) NSString* des;
 
-@property (nonatomic, assign) CGFloat price;//原价格
-@property (nonatomic, assign) CGFloat killPrice;//秒杀价格
-@property (nonatomic, assign) NSInteger upCount;//顶的次数
-@property (nonatomic, assign) NSInteger inventory;//剩余库存
-@property (nonatomic, assign) CGFloat alreadyOrder;//已订购比率
+@property (assign, nonatomic) CGFloat discount;
+@property (assign, nonatomic) CGFloat o_price;
+@property (assign, nonatomic) CGFloat price;
+@property (assign, nonatomic) CGFloat sku;
+@property (assign, nonatomic) NSInteger remain;
+@property (assign, nonatomic) NSInteger total;
 
-@property (nonatomic, assign) BOOL uped;
-
-- (instancetype)initWithName:(NSString *)name source:(NSString *)source price:(CGFloat)price killPrice:(CGFloat)killPrice;
-
-+ (instancetype)commodityWithName:(NSString *)name source:(NSString *)source price:(CGFloat)price killPrice:(CGFloat)killPrice;
+@property (assign, nonatomic) NSInteger end_t;
+@property (assign, nonatomic) NSInteger start_t;
 
 @end

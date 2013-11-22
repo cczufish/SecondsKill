@@ -9,6 +9,10 @@
 #import "CommodityTableViewAdapter.h"
 #import "CommodityTableViewCell.h"
 
+#define kPadding 5.0f
+#define kSourceImgHeight 44.0f
+#define kDetailViewHeight 140.0f
+
 @implementation CommodityTableViewAdapter
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -18,7 +22,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 220.0f;
+//    ApigeeEntity *entity = [self.commoditys objectAtIndex:indexPath.row];
+    
+    NSString *title = @"";//[entity getStringProperty:@"title"];
+
+    CGSize size = [title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(260.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat cellHeight = kPadding + MAX(size.height, kSourceImgHeight) + kPadding + kDetailViewHeight + kPadding + kPadding;
+
+    return MAX(cellHeight, 200.0f);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -26,18 +37,26 @@
 	CommodityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.cellID];
     cell.adapterType = self.adapterType;
 
-    ApigeeEntity *entity = [self.commoditys objectAtIndex:indexPath.row];
+    /*ApigeeEntity *entity = [self.commoditys objectAtIndex:indexPath.row];
     
     NSString *title = [entity getStringProperty:@"title"];
-    
+
     CGSize size = [title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     
     CGRect newRect = cell.nameLabel.frame;
     newRect.size.height = size.height;
     cell.nameLabel.frame = newRect;
-    
+
     cell.nameLabel.text = title;
     
+    CGRect detailRect = cell.detailView.frame;
+    detailRect.origin.y = newRect.origin.y + MAX(newRect.size.height, kSourceImgHeight) + kPadding;
+    cell.detailView.frame = detailRect;
+    
+    CGRect bottomViewRect = cell.bottomView.frame;
+    bottomViewRect.size.height = detailRect.origin.y + kDetailViewHeight + kPadding;
+    cell.bottomView.frame = bottomViewRect;
+NSLog(@"-----------%f",cell.bottomView.frame.size.height);
     cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"o_price"]];
     cell.killPriceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"m_price"]];
     cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
@@ -87,10 +106,10 @@
         [cell setButtonStyle:cell.linkOrAlertBtn imageName:@"icon_link.png"];
     }
     
-    /*"cate" : "图书/音像",
+    "cate" : "图书/音像",
      "end_t" : 1384653398218,
      "site" : "jd",
-     "start_t" : 1384646198218,*/
+     "start_t" : 1384646198218,
     
     else if (self.adapterType == CommodityAdapterTypeNotBegin) {
 //        if ([temp.detrusionTime isEqualToString:@"00:00:00"]) {
@@ -107,7 +126,7 @@
     }
     
     cell.entity = entity;
-    
+    */
     return cell;
 }
 
