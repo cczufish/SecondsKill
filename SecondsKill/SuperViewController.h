@@ -8,15 +8,28 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SuperViewController : UITableViewController
+typedef enum {
+    RefreshTableViewModePullDown = 0,
+    RefreshTableViewModePullUp
+} RefreshTableViewMode;
 
-@property (nonatomic, copy) NSArray *menus;
+typedef void (^RefreshTableViewCallBack)(NSMutableArray *datas);
+
+@interface SuperViewController : UITableViewController<UMSocialUIDelegate>
+
 @property (nonatomic, assign) BOOL canRefreshTableView;
+@property (nonatomic, assign) BOOL canShowMenuViewController;
+
+@property (nonatomic, assign) int pageNO;
+@property (nonatomic, copy) NSString *uri;
+@property (nonatomic, strong) NSMutableDictionary *params;
 
 - (void)setButtonStyle:(UIButton *)btn imageName:(NSString *)imageName;
 
 - (UIViewController *)currentViewController;
 
 - (void)showMenuViewController;
+
+- (void)refreshTableView:(RefreshTableViewMode)refreshMode callBack:(RefreshTableViewCallBack)callBack;
 
 @end

@@ -10,17 +10,8 @@
 
 @interface VAlertHelper : NSObject
 
-+ (void)requestDataSuccess:(UIView *)view;
++ (void)fail:(NSString *)message;
 
-+ (void)requestDataException:(UIView *)view;
++ (void)success:(NSString *)message;
 
-+ (void)netWorkException:(UIView *)view;
-
-+ (void)fail:(NSString *)message inView:(UIView *)view;
-
-+ (void)success:(NSString *)message inView:(UIView *)view;
-
-+ (void)sharedUMSocialSuccess:(UMSocialResponseEntity *)response inView:(UIView *)view;
-
-+ (void)checkUpdateAPP:(BOOL)needUpdate inView:(UIView *)view;
 @end

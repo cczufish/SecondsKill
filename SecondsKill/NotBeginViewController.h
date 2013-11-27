@@ -8,10 +8,11 @@
 
 #import "SuperViewController.h"
 
-@interface NotBeginViewController : SuperViewController<UMSocialUIDelegate>
+@interface NotBeginViewController : SuperViewController
 
-@property (nonatomic, strong) NSMutableArray *seletedMenuItems;
+@property (nonatomic, strong) NSMutableArray *seletedMenuItems;//用于记录当前界面数据筛选条件
 
+//从菜单界面返回时，触发此方法
 - (void)selectCommoditys:(NSString *)ql;
 
 @end

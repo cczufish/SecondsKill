@@ -10,50 +10,21 @@
 
 #import "AFNetworkActivityIndicatorManager.h"
 #define kAES256Key @"citylife20130609trackup"
+#define TENCENT_APPID @"801430933"
+#define WEIXIN_APPID @"wxwxcdef309f0d88c12b"
 
 BOOL isFirstRunAPP = NO;
-NSString* URLencode(NSString *originalString, NSStringEncoding stringEncoding)
-{
-    //!  @  $  &  (  )  =  +  ~  `  ;  '  :  ,  /  ?
-    //%21%40%24%26%28%29%3D%2B%7E%60%3B%27%3A%2C%2F%3F
-    NSArray *escapeChars = [NSArray arrayWithObjects:@";" , @"/" , @"?" , @":" ,
-                            @"@" , @"&" , @"=" , @"+" ,    @"$" , @"," ,
-                            @"!", @"'", @"(", @")", @"*", nil];
-    
-    NSArray *replaceChars = [NSArray arrayWithObjects:@"%3B" , @"%2F", @"%3F" , @"%3A" ,
-                             @"%40" , @"%26" , @"%3D" , @"%2B" , @"%24" , @"%2C" ,
-                             @"%21", @"%27", @"%28", @"%29", @"%2A", nil];
-    
-    int len = [escapeChars count];
-    
-    NSMutableString *temp = [[originalString
-                              stringByAddingPercentEscapesUsingEncoding:stringEncoding]
-                             mutableCopy];
-    
-    int i;
-    for (i = 0; i < len; i++) {
-        
-        [temp replaceOccurrencesOfString:[escapeChars objectAtIndex:i]
-                              withString:[replaceChars objectAtIndex:i]
-                                 options:NSLiteralSearch
-                                   range:NSMakeRange(0, [temp length])];
-    }
-    
-    NSString *outStr = [NSString stringWithString: temp];
-    
-    return outStr;
-}
+
 NSString *AES256AuthorizationInfo()
 {
     //授权用的“手机号“和“用户密码“暂时写死，未来考虑从"NSUserDefault"或"KeyChain"中获取。
-    NSString *crypt = [NSString stringWithFormat:@"%@:%@", @"111111", [AESCrypt encrypt:@"password" password:kAES256Key]];
-    
+    NSString *crypt = [NSString stringWithFormat:@"%@:%@", @"13691343119", [AESCrypt encrypt:@"password" password:kAES256Key]];
     return [AESCrypt encrypt:crypt password:kAES256Key];
 }
 
-NSURL *GenerateURL(NSString *baseURL, NSDictionary *params)
+NSString *GenerateURLString(NSString *baseURL, NSDictionary *params)
 {
-    __block NSMutableString *url = [NSMutableString stringWithString:baseURL];
+    __weak NSMutableString *url = [NSMutableString stringWithString:baseURL];
     if (params) {
         __block BOOL isFirstParam = YES;
         [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -66,13 +37,7 @@ NSURL *GenerateURL(NSString *baseURL, NSDictionary *params)
             };
         }];
     }
-    return [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-}
-
-NSString *PathForDocuments(NSString *fileName)
-{
-    NSString *documentsDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    return [documentsDir stringByAppendingPathComponent:fileName];
+    return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
 BOOL isFirstRun()
@@ -91,11 +56,32 @@ BOOL isFirstRun()
 
 void InitProject()
 {
+    [[BButton appearance] setButtonCornerRadius:[NSNumber numberWithFloat:3.0f]];
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    manager.securityPolicy.allowInvalidCertificates = YES;
+//    
+//    [manager GET:@"https://115.29.46.104/msitems?ql=cmVtYWluPjA=&sort=end_t&order=desc&size=4&page=1" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSLog(@"JSON: %@", responseObject);
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"Error: %@", error);
+//    }];
+//    
+
+    
+    //网络请求时提示
+    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
+
+    
+    //所有json中的id对应类中的itemID属性
+    [JSONModel setGlobalKeyMapper:[[JSONKeyMapper alloc] initWithDictionary:@{@"id":@"itemID"}]];
+    
+    
+    //时时监测网络状态
     [[VNetworkHelper shardInstance] monitorNetwork];
     
     
-    if (REUIKitIsFlatMode()) {
-        [[UINavigationBar appearance] setBarTintColor:RGB(199, 55, 33)];// only ios7
+    if (IS_RUNNING_IOS7) {
+        [[UINavigationBar appearance] setBarTintColor:NAV_BACKGROUND_COLOR];
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
         
         //        UITextAttributeFont – 字体key
@@ -146,12 +132,13 @@ void InitProject()
     //分享图文样式到微信朋友圈显示字数比较少，只显示分享标题
     [UMSocialData defaultData].extConfig.title = @"朋友圈分享内容";
     
-    //网络请求时提示
-    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
     //新浪微博：@"text/plain"  QQ:@"text/html"
-    
-    
+    //如果是第一次运行程序，需要复制数据库到沙盒
+    if (isFirstRun()) {
+        VDataBaseHelper *dbHelper = [VDataBaseHelper shardInstance];
+        [dbHelper copyDBToSandbox];
+    }
     //    //时时检测网络状态
     //    [[CLNetworkHelper shardInstance] monitorNetwork];
     //

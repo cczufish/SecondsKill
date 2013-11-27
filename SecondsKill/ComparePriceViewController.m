@@ -37,9 +37,9 @@
 
         
     if (REUIKitIsFlatMode()) {
-        self.searchBar.barTintColor = RGB(199, 55, 33);
+        self.searchBar.barTintColor = RGBCOLOR(199, 55, 33);
     } else {
-        self.searchBar.tintColor = RGB(199, 55, 33);
+        self.searchBar.tintColor = RGBCOLOR(199, 55, 33);
     }
 }
 

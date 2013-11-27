@@ -8,12 +8,29 @@
 
 #import "CommodityTableViewAdapter.h"
 #import "CommodityTableViewCell.h"
+#import "Commodity.h"
 
 #define kPadding 5.0f
 #define kSourceImgHeight 44.0f
 #define kDetailViewHeight 140.0f
 
+@interface CommodityTableViewAdapter ()
+
+@property (nonatomic, assign) CommodityAdapterType adapterType;
+
+@end
+
 @implementation CommodityTableViewAdapter
+
+- (id)initWithType:(CommodityAdapterType)adapterType
+{
+    self = [super init];
+    if (self) {
+        self.adapterType = adapterType;
+        self.commoditys = [NSMutableArray arrayWithCapacity:20];
+    }
+    return self;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -22,11 +39,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    ApigeeEntity *entity = [self.commoditys objectAtIndex:indexPath.row];
+    Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
     
-    NSString *title = @"";//[entity getStringProperty:@"title"];
-
-    CGSize size = [title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(260.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize size = [commodity.title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(260.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat cellHeight = kPadding + MAX(size.height, kSourceImgHeight) + kPadding + kDetailViewHeight + kPadding + kPadding;
 
     return MAX(cellHeight, 200.0f);
@@ -34,20 +49,19 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	CommodityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.cellID];
+	CommodityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.adapterType == CommodityAdapterTypeKilling?@"killingCellID":@"notBeginCellID"];
     cell.adapterType = self.adapterType;
 
-    /*ApigeeEntity *entity = [self.commoditys objectAtIndex:indexPath.row];
+    Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
+    cell.commodity = commodity;
     
-    NSString *title = [entity getStringProperty:@"title"];
-
-    CGSize size = [title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-    
+    CGSize size = [commodity.title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     CGRect newRect = cell.nameLabel.frame;
-    newRect.size.height = size.height;
+//    NSLog(@"_________%f",newRect.size.height);
+    newRect.size.height = size.height;// + 50 就可以，说明还是能换行，可能只是没靠上对齐的原因
     cell.nameLabel.frame = newRect;
-
-    cell.nameLabel.text = title;
+//NSLog(@"_________%f,%@",newRect.size.height,commodity.title);
+    cell.nameLabel.text = commodity.title;
     
     CGRect detailRect = cell.detailView.frame;
     detailRect.origin.y = newRect.origin.y + MAX(newRect.size.height, kSourceImgHeight) + kPadding;
@@ -56,77 +70,32 @@
     CGRect bottomViewRect = cell.bottomView.frame;
     bottomViewRect.size.height = detailRect.origin.y + kDetailViewHeight + kPadding;
     cell.bottomView.frame = bottomViewRect;
-NSLog(@"-----------%f",cell.bottomView.frame.size.height);
-    cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"o_price"]];
-    cell.killPriceLabel.text = [NSString stringWithFormat:@"￥%g", [entity getFloatProperty:@"m_price"]];
-    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
-    [cell.pictureImg setImageWithURL:[NSURL URLWithString:[entity getStringProperty:@"img_url"]] placeholderImage:nil];
-    [cell.upBtn setTitle:[NSString stringWithFormat:@"%d", [entity getIntProperty:@"likes"]] forState:UIControlStateNormal];
-   
-    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-    [fmt setDateFormat:@"HH:mm:ss"];
     
+    cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", commodity.o_price];
+    cell.killPriceLabel.text = [NSString stringWithFormat:@"￥%g", commodity.price];
+    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",commodity.site]];
+    [cell.pictureImg setImageWithURL:[NSURL URLWithString:commodity.image] placeholderImage:nil];
+    [cell.upBtn setTitle:[NSString stringWithFormat:@"%d", 2] forState:UIControlStateNormal];
+
     if (self.adapterType == CommodityAdapterTypeKilling) {
-        float alreadyOrder = 1 - [entity getFloatProperty:@"remain"]/[entity getFloatProperty:@"total"];
-
-        cell.alreadyOrderPB.indicatorTextLabel.text = [NSString stringWithFormat:@"现已订购: %g%%", alreadyOrder*100];
+        float alreadyOrder = 0.0f;
+        if (commodity.total != 0) {
+            alreadyOrder = 1 - (float)commodity.remain/commodity.total;
+        }
         
-        cell.alreadyOrderPB.type = YLProgressBarTypeFlat;
-        cell.alreadyOrderPB.progressTintColor = RGB(255, 193, 0);
-        cell.alreadyOrderPB.hideStripes = YES;
-        cell.alreadyOrderPB.trackTintColor = [UIColor clearColor];
-        cell.alreadyOrderPB.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        cell.alreadyOrderPB.layer.borderWidth = 1.0f;
-        cell.alreadyOrderPB.layer.cornerRadius = 2.0f;
-        cell.alreadyOrderPB.layer.masksToBounds = YES;
-        cell.alreadyOrderPB.indicatorTextDisplayMode = YLProgressBarIndicatorTextDisplayModeTrack;
-        cell.alreadyOrderPB.indicatorTextLabel.textAlignment = NSTextAlignmentCenter;
-        cell.alreadyOrderPB.indicatorTextLabel.font = DEFAULT_FONT;
-        cell.alreadyOrderPB.indicatorTextLabel.textColor = [UIColor blackColor];
-        
-        NSDate *endTime = [fmt dateFromString:[NSString stringWithFormat:@"%ld",[entity getLongProperty:@"end_t"]]];
-        //            NSDate *newdate = [date dateByAddingTimeInterval:-1.0f];
-
-        NSLog(@"%ld,%@",[entity getLongProperty:@"end_t"],[fmt stringFromDate:endTime]);
-        
-//        if ([temp.surplus isEqualToString:@"00:00:00"]) {
-//            cell.surplusTipLabel.text = @"已被秒杀空了";
-//            cell.surplusLabel.hidden = YES;
-//        }
-//        else {
-            cell.surplusLabel.text = [fmt stringFromDate:endTime];
-//        }
-        
+        cell.alreadyOrderPB.indicatorTextLabel.text = [NSString stringWithFormat:@"现已订购: %.3g%%", alreadyOrder*100];
         cell.alreadyOrderPB.progress = alreadyOrder;
         
         if (cell.alreadyOrderPB.progress == 1.0f) {
             cell.alreadyOrderPB.progressTintColor = [UIColor lightGrayColor];
         }
-        
-        [cell setButtonStyle:cell.linkOrAlertBtn imageName:@"icon_link.png"];
     }
-    
-    "cate" : "图书/音像",
-     "end_t" : 1384653398218,
-     "site" : "jd",
-     "start_t" : 1384646198218,
-    
     else if (self.adapterType == CommodityAdapterTypeNotBegin) {
-//        if ([temp.detrusionTime isEqualToString:@"00:00:00"]) {
-//            cell.detrusionTimeTipLabel.text = @"已被秒杀空了";
-//            cell.detrusionTimeLabel.hidden = YES;
-//        }
-//        else {
-//            cell.detrusionTimeLabel.text = temp.detrusionTime;
-//        }
-        
-        cell.inventoryLabel.text = [NSString stringWithFormat:@"%d", [entity getIntProperty:@"total"]];
-        
-        [cell setButtonStyle:cell.linkOrAlertBtn imageName:@"icon_bell_off.png"];
+        cell.inventoryLabel.text = [NSString stringWithFormat:@"%d",commodity.total];
     }
-    
-    cell.entity = entity;
-    */
+
+    [cell updateSurplusOrDetrusionTime];
+
     return cell;
 }
 

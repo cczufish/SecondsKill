@@ -16,11 +16,15 @@
 
 @interface MenuViewController ()
 
+//@property (nonatomic, copy) NSArray *menus;
+
 //根据不同源界面保存的菜单筛选条件设置菜单界面的数据选择状态，
 //第一次打开菜单界面时，菜单项的选择状态通过cellForRowAtIndexPath方法设定
 - (void)resetMenuItemStatus;
 
 @end
+
+static NSArray *menus;
 
 @implementation MenuViewController
 
@@ -28,11 +32,12 @@
 {
     [super viewDidLoad];
     
-    self.title = @"分类导航";
+    self.title = @"分类筛选";
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.allMenuItems = [NSMutableSet setWithCapacity:50];
+    
 }
 
 //打开菜单界面时重置菜单选择状态
@@ -44,7 +49,7 @@
 
     [self resetMenuItemStatus];
     
-    [MobClick beginLogPageView:@"\"分类导航\"界面"];
+    [MobClick beginLogPageView:@"\"分类筛选\"界面"];
 }
 
 //离开菜单选择界面时根据所选菜单项筛选界面数据
@@ -57,10 +62,7 @@
     for (int i = 0; i < [self.seletedMenuItems count]; i++) {
         NSString *params = [self.seletedMenuItems[i] objectForKey:@"params"];
         if(![@"all" isEqualToString:params]) {
-            if (![@"" isEqualToString:ql]) {
-                [ql appendString:@" and "];
-            }
-            [ql appendString:params];
+            [ql appendString:[NSString stringWithFormat:@"%@ and ", params]];
         }
     }
     
@@ -79,10 +81,19 @@
         }
     }
     
-    [MobClick endLogPageView:@"\"分类导航\"界面"];
+    [MobClick endLogPageView:@"\"分类筛选\"界面"];
 }
 
 #pragma mark -
+
++ (NSArray *)menus
+{
+    if (menus == nil) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"menu" ofType:@"plist"];
+        menus = [[NSArray alloc] initWithContentsOfFile:path];
+    }
+    return menus;
+}
 
 - (void)resetMenuItemStatus
 {
@@ -115,12 +126,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return [self.menus count];
+	return [menus count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int count = [[self.menus objectAtIndex:section] count] - 1;
+    int count = [[menus objectAtIndex:section] count] - 1;
     
     //前两个菜单类别，每行显示两个菜单项，所以加此判断
     if (section < 2) {
@@ -145,10 +156,10 @@
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, kHeightForSectionHeader)];
     headerView.layer.borderColor = [UIColor blackColor].CGColor;
     headerView.layer.borderWidth = 0.5f;
-    headerView.backgroundColor = RGB(43.0f, 47.0f, 51.0f);
+    headerView.backgroundColor = RGBCOLOR(43.0f, 47.0f, 51.0f);
     
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectInset(headerView.bounds, 12.0f, 5.0f)];
-    textLabel.text = [[self.menus objectAtIndex:section] objectAtIndex:0];
+    textLabel.text = [[menus objectAtIndex:section] objectAtIndex:0];
     textLabel.font = DEFAULT_FONT;
     textLabel.textColor = [UIColor lightGrayColor];
     textLabel.backgroundColor = [UIColor clearColor];
@@ -161,7 +172,7 @@
 {
 	MenuTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:indexPath.section == 2 ? @"menuCellID1" : @"menuCellID2"];
 
-    NSArray *datas = [self.menus objectAtIndex:indexPath.section];
+    NSArray *datas = [menus objectAtIndex:indexPath.section];
 
     if (indexPath.section == 2) {
         NSDictionary *menuItem = [datas objectAtIndex:(indexPath.row + 1)];

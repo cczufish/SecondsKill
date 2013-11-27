@@ -8,15 +8,17 @@
 
 #import "ActivityWallViewController.h"
 #import "ActivityWallTableViewCell.h"
+#import "ActivityWall.h"
 
-#define kApigeeActivityWallPath @"promotions"
+#define kActivityWallPath @"promotions"
+#define kStartTimeLabelHeight 20.0f
+#define kSourceImgHeight 44.0f
 #define kPadding 5.0f
 
 @interface ActivityWallViewController ()
-@property (nonatomic, strong) NSMutableArray *entities;
 
-@property (nonatomic, strong) NSString *cursor;
-@property (nonatomic, strong) NSString *queryString;
+@property (nonatomic, strong) NSMutableArray *activitys;
+
 @end
 
 @implementation ActivityWallViewController
@@ -27,30 +29,19 @@
     
     [super viewDidLoad];
     
-//    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self setButtonStyle:rightBtn imageName:nil];
-//    [rightBtn setTitle:@"刷新" forState:UIControlStateNormal];
-//    [rightBtn addTarget:self action:@selector(requestDatas) forControlEvents:UIControlEventTouchUpInside];
-//    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(requestDatas)];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     
-    self.entities = [NSMutableArray arrayWithCapacity:20];
-    self.queryString = @"";//select * order by end_t asc&limit=3
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(pullDownRefresh)];
     
-    [self requestDatas];
-}
-
-- (void)requestDatas
-{
-//    ApigeeClientResponse *clientResponse = [APIGeeHelper requestByApigeeType:kApigeeActivityWallPath ql:self.queryString];
-//    
-//    if([clientResponse completedSuccessfully]) {
-//        self.entities = (NSMutableArray *) clientResponse.entities;
-//        self.cursor = clientResponse.cursor;
-//        
-//        NSLog(@"rawResponse = %@",clientResponse.rawResponse);
-//        [self.tableView reloadData];
-//    }
+    self.activitys = [NSMutableArray arrayWithCapacity:20];
+    
+    self.pageNO = 1;
+    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"created_at",@"sort",@"desc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page", nil];
+    self.uri = GenerateURLString(kActivityWallPath, self.params);
+    
+    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+        self.activitys = datas;
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -69,49 +60,70 @@
     [MobClick endLogPageView:@"\"活动墙\"界面"];
 }
 
+#pragma mark -
+
+//下拉刷新
+- (void)pullDownRefresh
+{
+    self.pageNO = 1;
+    [self.params setObject:@"1" forKey:@"page"];
+    self.uri = GenerateURLString(kActivityWallPath, self.params);
+    
+    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+        self.activitys = datas;
+    }];
+}
+
+//上拉刷新
+- (void)pullUpRefresh
+{
+    [self.params setObject:[NSString stringWithFormat:@"%d",++self.pageNO] forKey:@"page"];
+    self.uri = GenerateURLString(kActivityWallPath, self.params);
+    
+    [self refreshTableView:RefreshTableViewModePullUp callBack:^(NSMutableArray *datas) {
+        [self.activitys addObjectsFromArray:datas];
+    }];
+}
+
 #pragma mark - UITableViewDelegate / UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [self.entities count];
+	return [self.activitys count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
+    ActivityWall *activity = [self.activitys objectAtIndex:indexPath.row];
+
+    CGSize size = [activity.title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(265.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat cellHeight = kPadding + MAX(size.height, kSourceImgHeight) + kPadding + kStartTimeLabelHeight + kPadding;
     
-    NSString *title = @"";//[entity getStringProperty:@"title"];
-    
-    CGSize size = [title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(265.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-    
-    return kPadding + size.height + kPadding + 20.0f + kPadding;
+    return MAX(cellHeight, 70.0f);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	ActivityWallTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"activityWallCellID"];
-
-//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
-//    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",[entity getStringProperty:@"site"]]];
     
-    NSString *title =@"";// [entity getStringProperty:@"title"];
+    ActivityWall *activity = [self.activitys objectAtIndex:indexPath.row];
     
-    CGSize size = [title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-
+    CGSize size = [activity.title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    
     CGRect newRect = cell.nameLabel.frame;
     newRect.size.height = size.height;
     cell.nameLabel.frame = newRect;
-
-    cell.nameLabel.text = title;
     
-    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-    [fmt setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    cell.nameLabel.text = activity.title;
     
-    CGRect startTimeLabelRect = cell.startTimeLabel.frame;
-    startTimeLabelRect.origin.y = newRect.origin.y + newRect.size.height + kPadding;
+    CGRect createTimeLabelRect = cell.createTimeLabel.frame;
+    createTimeLabelRect.origin.y = newRect.origin.y + MAX(newRect.size.height, kSourceImgHeight) + kPadding;
+    cell.createTimeLabel.frame = createTimeLabelRect;
     
-    cell.startTimeLabel.frame = startTimeLabelRect;
-    cell.startTimeLabel.text = [fmt stringFromDate:[NSDate date]];
+    NSDate *createDate = [NSDate dateWithTimeIntervalSince1970:[activity.created_at doubleValue]/1000];
+    cell.createTimeLabel.text = [VDateTimeHelper formatDateToString:createDate];
+    
+    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",activity.site]];
     
     return cell;
 }
@@ -121,13 +133,13 @@
     VWebViewController *webVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
     webVC.navigationItem.title = self.navigationItem.title;
     
-//    ApigeeEntity *entity = [self.entities objectAtIndex:indexPath.row];
-//    webVC.linkAddress = [entity getStringProperty:@"link"];
+    ActivityWall *activity = [self.activitys objectAtIndex:indexPath.row];
+    webVC.linkAddress = activity.link;
     
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];
     
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];//取消当前行被选择后的样式
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - AKTabBarController need

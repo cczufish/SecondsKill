@@ -12,9 +12,6 @@
 
 - (void)awakeFromNib
 {
-    self.backgroundColor = [UIColor whiteColor];
-    self.contentView.backgroundColor = [UIColor whiteColor];
-    
     self.nameLabel.numberOfLines = 0;
     self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.nameLabel.font = DEFAULT_FONT;

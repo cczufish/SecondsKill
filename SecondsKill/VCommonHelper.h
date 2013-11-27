@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-NSString* URLencode(NSString *originalString, NSStringEncoding stringEncoding);
-NSString *AES256AuthorizationInfo();
 
-//返回文件在documents目录下的全路径名
-NSString *PathForDocuments(NSString *fileName);
+#if defined __cplusplus
+extern "C" {
+#endif
+    
+NSString *AES256AuthorizationInfo();
 
 //App是否是第一次运行
 BOOL isFirstRun();
@@ -20,4 +21,8 @@ BOOL isFirstRun();
 void InitProject();
 
 //根据baseurl和参数拼接url
-NSURL *GenerateURL(NSString *baseURL, NSDictionary *params);
+NSString *GenerateURLString(NSString *baseURL, NSDictionary *params);
+
+#if defined __cplusplus
+};
+#endif

@@ -8,7 +8,7 @@
 
 #import "SuperViewController.h"
 
-@interface KillingViewController : SuperViewController<UMSocialUIDelegate>
+@interface KillingViewController : SuperViewController
 
 @property (nonatomic, strong) NSMutableArray *seletedMenuItems;//用于记录当前界面数据筛选条件
 

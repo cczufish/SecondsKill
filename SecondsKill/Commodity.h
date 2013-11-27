@@ -10,23 +10,27 @@
 
 @interface Commodity : JSONModel
 
-@property (assign, nonatomic) int id;
-
-@property (copy, nonatomic) NSString* title;
+@property (copy, nonatomic) NSString *itemID;
+@property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *cate;
-@property (copy, nonatomic) NSString* link;
-@property (copy, nonatomic) NSString* image;
-@property (copy, nonatomic) NSString* site;
-@property (copy, nonatomic) NSString* des;
+@property (copy, nonatomic) NSString *link;
+@property (copy, nonatomic) NSString *image;
+@property (copy, nonatomic) NSString *site;
+@property (copy, nonatomic) NSString *des;
+@property (copy, nonatomic) NSString *discount;
+@property (copy, nonatomic) NSString *sku;
 
-@property (assign, nonatomic) CGFloat discount;
 @property (assign, nonatomic) CGFloat o_price;
 @property (assign, nonatomic) CGFloat price;
-@property (assign, nonatomic) CGFloat sku;
 @property (assign, nonatomic) NSInteger remain;
 @property (assign, nonatomic) NSInteger total;
 
-@property (assign, nonatomic) NSInteger end_t;
-@property (assign, nonatomic) NSInteger start_t;
+@property (copy, nonatomic) NSString *end_t;
+@property (copy, nonatomic) NSString *start_t;
+@property (copy, nonatomic) NSString *created_at;
+@property (copy, nonatomic) NSString *updated_at;
+
+@property (copy, nonatomic) NSString<Ignore> *surplusTime;
+@property (copy, nonatomic) NSString<Ignore> *detrusionTime;
 
 @end

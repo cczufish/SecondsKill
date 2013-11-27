@@ -10,8 +10,8 @@
 
 @interface ActivityWallTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) IBOutlet UILabel *nameLabel;//商品名称
-@property (nonatomic, weak) IBOutlet UILabel *startTimeLabel;//开始时间
-@property (nonatomic, weak) IBOutlet UIImageView *sourceImg;//商品来源
+@property (nonatomic, weak) IBOutlet UILabel *nameLabel;
+@property (nonatomic, weak) IBOutlet UILabel *createTimeLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *sourceImg;
 
 @end

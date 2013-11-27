@@ -10,9 +10,6 @@
 #import "KillingViewController.h"
 #import "NotBeginViewController.h"
 
-#define kDateFormat @"HH:mm:ss"
-#define kNullTime @"00:00:00"
-
 @interface CommodityTableViewCell ()
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -23,13 +20,13 @@
 
 - (void)awakeFromNib
 {
-    self.backgroundColor =  RGB(38.0f, 38.0f, 38.0f);
+    self.backgroundColor =  RGBCOLOR(38.0f, 38.0f, 38.0f);
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
     self.nameLabel.numberOfLines = 0;
     self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.nameLabel.font = DEFAULT_FONT;
-
+    self.nameLabel.backgroundColor = [UIColor redColor];
     self.bottomView.layer.cornerRadius = 3;
     self.bottomView.layer.masksToBounds = YES;
 
@@ -37,11 +34,30 @@
     self.pictureImg.contentMode = UIViewContentModeScaleAspectFit;//自适应图片宽高比例
     self.priceLabel.strikeThroughEnabled = YES;//删除线
     
+    if (self.adapterType == CommodityAdapterTypeKilling) {
+        self.alreadyOrderPB.type = YLProgressBarTypeFlat;
+        self.alreadyOrderPB.progressTintColor = RGBCOLOR(255, 193, 0);
+        self.alreadyOrderPB.hideStripes = YES;
+        self.alreadyOrderPB.trackTintColor = [UIColor clearColor];
+        self.alreadyOrderPB.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.alreadyOrderPB.layer.borderWidth = 1.0f;
+        self.alreadyOrderPB.layer.cornerRadius = 2.0f;
+        self.alreadyOrderPB.layer.masksToBounds = YES;
+        self.alreadyOrderPB.indicatorTextDisplayMode = YLProgressBarIndicatorTextDisplayModeTrack;
+        self.alreadyOrderPB.indicatorTextLabel.textAlignment = NSTextAlignmentCenter;
+        self.alreadyOrderPB.indicatorTextLabel.font = DEFAULT_FONT;
+        self.alreadyOrderPB.indicatorTextLabel.textColor = [UIColor blackColor];
+
+        [self setButtonStyle:self.linkOrAlertBtn imageName:@"icon_link.png"];
+     }
+    else if (self.adapterType == CommodityAdapterTypeNotBegin) {
+        [self setButtonStyle:self.linkOrAlertBtn imageName:@"icon_bell_off.png"];
+    }
+    
     [self setButtonStyle:self.shareBtn imageName:@"icon_share.png"];
     [self setButtonStyle:self.upBtn imageName:@"icon_bell_off.png"];
 
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(changeSurplusTime) userInfo:nil repeats:YES];
-
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateSurplusOrDetrusionTime) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
@@ -59,43 +75,34 @@
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)];
 }
 
-- (void)changeSurplusTime
+- (void)updateSurplusOrDetrusionTime
 {
-    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-    [fmt setDateFormat:kDateFormat];
-    
-//    if (self.adapterType == CommodityAdapterTypeKilling) {
-//        if (![self.surplusTipLabel.text isEqualToString:@"秒杀已结束"]) {
-//            NSDate *date = [fmt dateFromString:self.surplusLabel.text];
-//            NSDate *newdate = [date dateByAddingTimeInterval:-1.0f];
-//            
-//            self.surplusLabel.text = [fmt stringFromDate:newdate];
-//            self.commodity.surplus = [fmt stringFromDate:newdate];
-//            
-//            if ([self.commodity.surplus isEqualToString:kNullTime]) {
-//                self.surplusTipLabel.text = @"秒杀已结束";
-//                self.surplusLabel.hidden = YES;
-//                self.commodity.surplus = self.surplusLabel.text;
-//                self.alreadyOrderPB.hidden = YES;
-//            }
-//        }
-//    }
-//    else if (self.adapterType == CommodityAdapterTypeNotBegin) {
-//        if (![self.detrusionTimeTipLabel.text isEqualToString:@"可以开始秒杀了"]) {
-//            NSDate *date = [fmt dateFromString:self.detrusionTimeLabel.text];
-//            NSDate *newdate = [date dateByAddingTimeInterval:-1.0f];
-//            
-//            self.detrusionTimeLabel.text = [fmt stringFromDate:newdate];
-//            self.commodity.detrusionTime = [fmt stringFromDate:newdate];
-//            
-//            if ([self.commodity.detrusionTime isEqualToString:kNullTime]) {
-//                self.detrusionTimeTipLabel.text = @"可以开始秒杀了";
-//                self.detrusionTimeLabel.hidden = YES;
-//                self.commodity.detrusionTime = self.detrusionTimeLabel.text;
-//            }
-//        }
-//    }
+    if (self.adapterType == CommodityAdapterTypeKilling) {
+        if ([self.commodity.surplusTime isEqualToString:@"00:00:00"]) {
+            self.surplusTipLabel.text = @"秒杀已经结束";
+            self.surplusLabel.hidden = YES;
+            self.alreadyOrderPB.hidden = YES;
+            
+            [self.timer invalidate];
+        }
+        else {
+            self.surplusLabel.text = self.commodity.surplusTime;
+        }
+    }
+    else if (self.adapterType == CommodityAdapterTypeNotBegin) {
+        if ([self.commodity.detrusionTime isEqualToString:@"00:00:00"]) {
+            self.detrusionTimeTipLabel.text = @"秒杀已经开始";
+            self.detrusionTimeLabel.hidden = YES;
+            
+            [self.timer invalidate];
+        }
+        else {
+            self.detrusionTimeLabel.text = self.commodity.detrusionTime;
+        }
+    }
 }
+
+#pragma mark - IBAction
 
 - (IBAction)share:(id)sender
 {
@@ -141,7 +148,7 @@
         VWebViewController *webVC = [vc.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
         webVC.navigationItem.title = vc.tabTitle;
 
-        webVC.linkAddress = @"http://tudou.com";// [self.entity getStringProperty:@"link"];
+        webVC.linkAddress = self.commodity.link;
         [webVC setHidesBottomBarWhenPushed:YES];
         [vc.navigationController pushViewController:webVC animated:YES];
     }

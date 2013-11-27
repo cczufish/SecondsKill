@@ -14,6 +14,7 @@
 
 - (void)removeLayerWithName:(NSString *)name;
 
+//获取视图所在的viewController
 - (UIViewController*)viewController;
 
 @end

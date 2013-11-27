@@ -59,7 +59,11 @@
 //各个页面执行授权完成、分享完成、或者评论完成时的回调函数
 - (void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    [VAlertHelper sharedUMSocialSuccess:response inView:self.view];
+    if (response.responseType == UMSResponseShareToMutilSNS) {
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            [VAlertHelper success:[NSString stringWithFormat:@"成功分享至%@!",[[response.data allKeys] objectAtIndex:0]]];
+        }
+    }
 }
 
 @end

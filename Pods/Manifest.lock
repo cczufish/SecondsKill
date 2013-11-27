@@ -20,6 +20,7 @@ PODS:
   - AKTabBarController (1.1.0)
   - ALAlertBanner (0.3.1)
   - AutoDescribe (1.0.0)
+  - BButton (3.2.3)
   - FMDB (2.1):
     - FMDB/standard
   - FMDB/common (2.1)
@@ -40,6 +41,7 @@ DEPENDENCIES:
   - AKTabBarController
   - ALAlertBanner
   - AutoDescribe
+  - BButton
   - FMDB
   - iOS7Colors
   - JSONModel
@@ -56,6 +58,7 @@ SPEC CHECKSUMS:
   AKTabBarController: 34443d5d028700dea1d00a6f275e8ef17fc947c2
   ALAlertBanner: 16235298226059cd876a9de0a5d7f9bac6a79459
   AutoDescribe: 3f35faace737c4b920753deda7a1e55a552fe184
+  BButton: b405745cd7ccc9444c696b8690fb79541623766a
   FMDB: 3fd5aaf632ca4ed39e3f101e0398504e6d5b0918
   iOS7Colors: bde8733c6cb28db1065875dcff38667090f58779
   JSONModel: cecca3c3a9ee1a248b56f7139e2d64b85ce536ec

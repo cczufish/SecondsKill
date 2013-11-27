@@ -1,15 +1,15 @@
 //
-//  NSString+V.h
+//  NSDictionary+V.h
 //  SecondsKill
 //
-//  Created by lijingcheng on 13-11-22.
+//  Created by lijingcheng on 13-11-26.
 //  Copyright (c) 2013年 edouglas. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (V)
+@interface NSDictionary (V)
 
-- (BOOL)isEmail;
+- (NSString *)toString;
 
 @end

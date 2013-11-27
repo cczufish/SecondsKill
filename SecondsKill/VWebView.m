@@ -75,7 +75,7 @@
     //网页加载进度条
     _progressBar = [[YLProgressBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, 5.0f)];
     _progressBar.type = YLProgressBarTypeFlat;
-    _progressBar.progressTintColor = RGB(51, 153, 255);
+    _progressBar.progressTintColor = RGBCOLOR(51, 153, 255);
     _progressBar.hideStripes = YES;
     _progressBar.trackTintColor = [UIColor clearColor];
     

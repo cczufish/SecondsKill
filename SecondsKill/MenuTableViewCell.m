@@ -14,7 +14,7 @@
 
 - (void)awakeFromNib
 {
-    self.backgroundColor = RGB(30.0f, 30.0f, 30.0f);
+    self.backgroundColor = RGBCOLOR(30.0f, 30.0f, 30.0f);
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 

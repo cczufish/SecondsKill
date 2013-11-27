@@ -18,19 +18,5 @@
             locations[i] = 0;
         }
         
-2､AES256
-    (1)、修改"AESCrypt.m"中的"+ (NSString *)encrypt:password:"方法，对password转码后不用"SHA256Hash"
-    (2)、修改"AESCrypt.m"中的"+ (NSString *)decrypt:password:"方法，对password转码后不用"SHA256Hash"
-    (3)、修改"NSData (CommonCryptor).m"中的"- (NSData *) dataEncryptedUsingAlgorithm:key:initializationVector:options:error:"方法
-        将"CCCryptorCreate( kCCEncrypt, algorithm, options,[keyData bytes], [keyData length], [ivData bytes],&cryptor );"修改成
-        "CCCryptorCreate( kCCEncrypt, algorithm, options,[keyData bytes], MIN([keyData length], 16), [ivData bytes],&cryptor );"
-    (4)、修改"NSData (CommonCryptor).m"中的"- (NSData *) decryptedDataUsingAlgorithm:key:initializationVector:options:error:"方法
-        将"CCCryptorCreate( kCCEncrypt, algorithm, options,[keyData bytes], [keyData length], [ivData bytes],&cryptor );"修改成
-        "CCCryptorCreate( kCCEncrypt, algorithm, options,[keyData bytes], MIN([keyData length], 16), [ivData bytes],&cryptor );"
-    (5)、修改"NSData (CommonCryptor).m"中的"- (NSData *)AES256EncryptedDataUsingKey:error:"方法
-        将"[self dataEncryptedUsingAlgorithm: kCCAlgorithmAES128 key: key options: kCCOptionPKCS7Padding error: &status];"修改成
-        "[self dataEncryptedUsingAlgorithm: kCCAlgorithmAES128 key: key options: kCCOptionPKCS7Padding|kCCOptionECBMode error: &status];"
-    (6)、修改"NSData (CommonCryptor).m"中的"- (NSData *)decryptedAES256DataUsingKey:error:"方法
-        将"[self decryptedDataUsingAlgorithm: kCCAlgorithmAES128 key: key options: kCCOptionPKCS7Padding error: &status];"修改成
-        "[self decryptedDataUsingAlgorithm: kCCAlgorithmAES128 key: key options: kCCOptionPKCS7Padding|kCCOptionECBMode error: &status];"
+2､AES256和Base64类针对SecondsKill做过修改
         

@@ -16,4 +16,6 @@
 
 @property (nonatomic, weak) NSMutableArray *seletedMenuItems;//临时记录所选菜单项，由于这里不是copy，所以修改它的同时也修改了它的源数据
 
++ (NSArray *)menus;
+
 @end

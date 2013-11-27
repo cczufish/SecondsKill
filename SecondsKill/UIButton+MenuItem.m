@@ -27,12 +27,12 @@ static const void *menuSelectedKey;
 - (void)setMenuSelected:(BOOL)menuSelected
 {
     if (menuSelected) {
-        [self setBackgroundColor:RGB(20.0f, 20.0f, 20.0f)];
+        [self setBackgroundColor:RGBCOLOR(20.0f, 20.0f, 20.0f)];
         
         if(![self hasLayer:kMenuItemLayerName]) {
             CALayer *newLayer = [CALayer layer];
             newLayer.name = kMenuItemLayerName;
-            newLayer.backgroundColor = RGB(199, 55, 33).CGColor;
+            newLayer.backgroundColor = RGBCOLOR(199, 55, 33).CGColor;
             newLayer.frame = CGRectMake(0, 0, 5, 50);
             [self.layer addSublayer:newLayer];
         }

@@ -8,7 +8,7 @@
 
 #import "VRequestHelper.h"
 
-#define kBaseURL @"http://192.168.40.182:8080/"
+#define kBaseURL @"https://115.29.46.104/"
 #define kAppKey @"dGVzdDp0ZXN0"
 #define kUserInfoKey @"uri"
 
@@ -51,7 +51,7 @@
     NSString *urlStr = [NSString stringWithFormat:@"%@%@", kBaseURL, self.uri];
     NSURL *url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
+
     [request setHTTPMethod:self.httpMethod];
     
     [request addValue:@"application/json;charset=UTF-8" forHTTPHeaderField:@"Accept"];
@@ -62,20 +62,20 @@
     if ([self.httpMethod isEqualToString:@"PUT"] || [self.httpMethod isEqualToString:@"POST"]) {
         [request setHTTPBody:[self.httpBody dataUsingEncoding:NSUTF8StringEncoding]];
     }
-
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    operation.userInfo = @{kUserInfoKey: self.uri};
-
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates = YES;
+    
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (completionBlock) {
-            completionBlock(operation.response, responseObject, nil);
+             completionBlock(operation.response, responseObject, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (![operation isCancelled] && completionBlock) {
             completionBlock(operation.response, nil, error);
         }
     }];
+    operation.userInfo = @{kUserInfoKey: self.uri};
     
     [[NSOperationQueue mainQueue] addOperation:operation];
 }

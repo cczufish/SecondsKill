@@ -8,6 +8,7 @@
 
 #import "SuperViewController.h"
 #import "AppDelegate.h"
+#import "Commodity.h"
 
 @interface SuperViewController ()
 
@@ -20,55 +21,69 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     UIImageView *logoIV = [[UIImageView alloc] initWithFrame:CGRectMake(10, -40, 30, 30)];
     [logoIV setImage:[UIImage imageNamed:@"btn_hui.png"]];
     [self.tableView addSubview:logoIV];
     
-    self.tableView.backgroundColor = RGB(38.0f, 38.0f, 38.0f);
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"menu" ofType:@"plist"];
-    _menus = [[NSArray alloc] initWithContentsOfFile:path];
+    self.tableView.backgroundColor = RGBCOLOR(38.0f, 38.0f, 38.0f);
     
     if (self.revealController == nil) {
-        AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+        AppDelegate *appDelegate = (AppDelegate *) [UIApplication sharedApplication].delegate;
         self.revealController = (PKRevealController *) appDelegate.window.rootViewController;
     }
 
     self.navigationItem.title = @"秒杀惠";
-    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
-    if (!REUIKitIsFlatMode()) {
-        self.navigationController.navigationBar.tintColor = RGB(199, 55, 33);
+    if (!IS_RUNNING_IOS7) {
+        self.navigationController.navigationBar.tintColor = NAV_BACKGROUND_COLOR;
     }
  
-    
-    //下/上拉刷新
     if (self.canRefreshTableView) {
         self.refreshControl = [[UIRefreshControl alloc] init];
         self.refreshControl.tintColor = [UIColor orangeColor];
-//        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新" attributes:@{NSForegroundColorAttributeName: [UIColor orangeColor]}];
-
-        [self.refreshControl addTarget:self action:@selector(refreshTableView) forControlEvents:UIControlEventValueChanged];
+        [self.refreshControl addTarget:self action:@selector(pullDownRefresh) forControlEvents:UIControlEventValueChanged];
    
         __typeof (self) __weak weakSelf = self;
-        
         [self.tableView addInfiniteScrollingWithActionHandler:^{
-            [weakSelf insertRowAtBottom:weakSelf];
+            [weakSelf pullUpRefresh];
         }];
         
         self.tableView.infiniteScrollingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
     }
     
-    if (YES) {
-        //初始化导航条内容
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_menu.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMenuViewController)];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_sort.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showDownMenu:)];
+    if (self.canShowMenuViewController) {
+        BButton *menuBtn = [BButton awesomeButtonWithOnlyIcon:FAIconReorder color:[UIColor clearColor] style:BButtonStyleBootstrapV3];//V2有阴影
+        menuBtn.titleLabel.textColor = [UIColor whiteColor];
+        [menuBtn addTarget:self action:@selector(showMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuBtn];
         
-        [self configDownMenu];//下拉菜单设置
+        BButton *sortBtn = [BButton awesomeButtonWithOnlyIcon:FAIconSort color:[UIColor clearColor] style:BButtonStyleBootstrapV3];
+        sortBtn.titleLabel.textColor = [UIColor whiteColor];
+        [sortBtn addTarget:self action:@selector(showSortMenuView:) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:sortBtn];
+        
+        [self configSortMenuView];
     }
 }
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+#pragma mark -
 
 - (UIViewController *)currentViewController
 {
@@ -78,40 +93,66 @@
     return navigationController.topViewController;
 }
 
-//- (void)requestDatas:(NSString *)ql
-//{
-//    [self.refreshControl beginRefreshing];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        ApigeeClientResponse *clientResponse = [APIGeeHelper requestByQL:ql];
-//        if([clientResponse completedSuccessfully]) {
-//            self.entities = (NSMutableArray *) clientResponse.entities;
-//            self.cursor = clientResponse.cursor;
-//            
-//            self.tableViewAdapter.commoditys = self.entities;
-//            NSLog(@"%@",clientResponse.rawResponse);
-//        }
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.refreshControl endRefreshing];
-//            [self.tableView reloadData];
-//            
-//            ALAlertBanner *banner = [ALAlertBanner alertBannerForView:self.view style:ALAlertBannerStyleNotify position:ALAlertBannerPositionTop title:[NSString stringWithFormat:@"%d条新数据", 20] subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
-//                [alertBanner hide];
-//            }];
-//            banner.secondsToShow = ALERT_SHOW_SECONDS;
-//            [banner show];
-//        });
-//    });
-//}
-- (void)refreshTableView
+- (void)showMenuViewController
 {
-
+    [self.revealController showViewController:self.revealController.leftViewController];
 }
 
-- (void)insertRowAtBottom:(SuperViewController *)weakSelf
+- (void)refreshTableView:(RefreshTableViewMode)refreshMode callBack:(RefreshTableViewCallBack)callBack
 {
-    
+    if ([VNetworkHelper hasNetWork]) {
+        __typeof (self) __weak weakSelf = self;
+        
+        if (refreshMode == RefreshTableViewModePullDown) {
+            [self.refreshControl beginRefreshing];
+        }
+        else {
+            [weakSelf.tableView.infiniteScrollingView startAnimating];
+        }
+        
+        VRequestHelper *requestHelper = [[VRequestHelper alloc] initWithURI:self.uri];
+        
+        [requestHelper requestWithCompletionBlock:^(NSHTTPURLResponse *response, id json, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([response statusCode] == 200) {
+                    NSLog(@"%@",json);
+                    
+                    if ([json count] > 0) {
+                        NSMutableArray *commoditys = [NSMutableArray arrayWithCapacity:20];
+                        
+                        for (int i = 0; i < [json count]; i++) {
+                            Commodity *temp = [[Commodity alloc] initWithDictionary:json[i] error:nil];
+                            [commoditys addObject:temp];
+                        }
+                        
+                        if (callBack) {
+                            callBack(commoditys);
+                        }
+                        
+                        [weakSelf.tableView reloadData];
+                        
+                        [VAlertHelper success:[NSString stringWithFormat:@"成功请求%d条数据!", [json count]]];
+                    }
+                    else {
+                        [VAlertHelper success:@"没有更多数据!"];
+                    }
+                }
+                else {
+                    [VAlertHelper fail:@"数据请求失败，请重试!"];
+                }
+                
+                if (refreshMode == RefreshTableViewModePullDown) {
+                    [weakSelf.refreshControl endRefreshing];
+                }
+                else {
+                    [weakSelf.tableView.infiniteScrollingView stopAnimating];
+                }
+            });
+        }];
+    }
+    else {
+        [VAlertHelper fail:@"网络异常！"];
+    }
 }
 
 - (void)setButtonStyle:(UIButton *)btn imageName:(NSString *)imageName
@@ -120,8 +161,8 @@
     btn.layer.masksToBounds = YES;
     
     btn.layer.borderWidth = 1;
-    btn.layer.borderColor = RGB(170, 42, 25).CGColor;
-
+    btn.layer.borderColor = RGBCOLOR(170, 42, 25).CGColor;
+    
     btn.titleLabel.font = DEFAULT_FONT;
     
     if (imageName) {
@@ -137,8 +178,17 @@
     }
 }
 
+#pragma mark - 需要子类重写的方法
 
-- (void)configDownMenu
+//下拉刷新
+- (void)pullDownRefresh{}
+
+//上拉刷新
+- (void)pullUpRefresh{}
+
+#pragma mark - 菜单
+
+- (void)configSortMenuView
 {
     REMenuItem *sortTime = [[REMenuItem alloc] initWithTitle:@"按结束时间排序"
                                                        image:nil highlightedImage:nil action:^(REMenuItem *item) {
@@ -160,7 +210,7 @@
 }
 
 
-- (void)showDownMenu:(UIButton *)sender
+- (void)showSortMenuView:(UIButton *)sender
 {
     if (self.sortMenu.isOpen) {
         [self.sortMenu close];
@@ -171,29 +221,15 @@
         [self.sortMenu showFromRect:menuRect inView:self.view];
     }
 }
+#pragma mark - UMSocialUIDelegate
 
-- (void)showMenuViewController
+//各个页面执行授权完成、分享完成、或者评论完成时的回调函数
+- (void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    [self.revealController showViewController:self.revealController.leftViewController];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    
-}
-
-- (BOOL)shouldAutorotate
-{
-    return YES;
-}
-
-- (NSUInteger)supportedInterfaceOrientations
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return UIInterfaceOrientationMaskAllButUpsideDown;
-    } else {
-        return UIInterfaceOrientationMaskAll;
+    if (response.responseType == UMSResponseShareToMutilSNS) {
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            [VAlertHelper success:[NSString stringWithFormat:@"成功分享至%@!",[[response.data allKeys] objectAtIndex:0]]];
+        }
     }
 }
 
