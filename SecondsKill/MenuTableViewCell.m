@@ -33,11 +33,11 @@
 
 - (IBAction)buttonPressed:(UIButton *)btn
 {
-    MenuViewController *menuVC = (MenuViewController *) self.viewController;
+    MenuViewController *menuVC = (MenuViewController *)[self inViewController];
     
     int section = [[btn.menuInfo objectForKey:@"section"] integerValue];
     
-    NSDictionary *seletedMenuItem = menuVC.seletedMenuItems[section];
+    NSDictionary *seletedMenuItem = menuVC.seletedMenuTemp[section];
 
     for (UIButton *menuBtn in menuVC.allMenuItems) {
         if ([[menuBtn.menuInfo objectForKey:@"title"] isEqualToString:[seletedMenuItem objectForKey:@"title"]]
@@ -47,12 +47,9 @@
         }
     }
     
-    if (![[btn.menuInfo objectForKey:@"title"] isEqualToString:[seletedMenuItem objectForKey:@"title"]]) {
-        menuVC.seletedChanged = YES;
-    }
-    
     btn.menuSelected = YES;
-    [menuVC.seletedMenuItems replaceObjectAtIndex:section withObject:btn.menuInfo];
+
+    [menuVC.seletedMenuTemp replaceObjectAtIndex:section withObject:btn.menuInfo];
 }
 
 @end

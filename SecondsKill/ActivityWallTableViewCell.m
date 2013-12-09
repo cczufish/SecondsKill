@@ -12,6 +12,7 @@
 
 - (void)awakeFromNib
 {
+    self.nameLabel.verticalTextAlignment = SSLabelVerticalTextAlignmentTop;
     self.nameLabel.numberOfLines = 0;
     self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.nameLabel.font = DEFAULT_FONT;

@@ -10,7 +10,6 @@
 #import "UMFeedback.h"
 #import "PXAlertView.h"
 
-
 #warning 在App Store新建应用后，将appid添加到进来。
 #define APP_ID @""
 
@@ -48,12 +47,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0 && indexPath.row == 0) {
-        [UMSocialSnsService presentSnsIconSheetView:self
-                                             appKey:UMENG_APPKEY
-                                          shareText:@"邀请好友来和你一起秒！"
-                                         shareImage:[UIImage imageNamed:@"icon_bell_on.png"]
-                                    shareToSnsNames:nil
-                                           delegate:self];
+        [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY shareText:UM_SHARED_TEXT
+                                         shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:self];
     }
     else if (indexPath.row == 1) {
         [UMFeedback showFeedback:self withAppkey:UMENG_APPKEY];
@@ -70,8 +65,7 @@
 - (void)checkUpdateDelegate:(NSDictionary *)appInfo
 {
     BOOL needUpdate = [[appInfo objectForKey:@"update"] boolValue];
-    
-#warning 有时间时把跳转改成程序内跳
+
     if (needUpdate) {
         PXAlertView *alert = [PXAlertView showAlertWithTitle:@"检查更新" message:@"您的应用不是最新版!" cancelTitle:@"跳过此版本" otherTitle:@"去更新" completion:^(BOOL cancelled, NSInteger buttonIndex) {
             if (!cancelled) {
@@ -91,7 +85,7 @@
 
 - (NSString *)tabImageName
 {
-    return @"icon_more_normal.png";
+    return @"icon_more.png";
 }
 
 - (NSString *)tabTitle

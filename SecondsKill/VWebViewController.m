@@ -44,14 +44,16 @@
 
 #pragma mark - VWebViewDelegate
 
+- (void)dismissWebViewController:(VWebView *)webView
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)actionUp:(VWebView *)webView
 {
-    [UMSocialSnsService presentSnsIconSheetView:self
-                                         appKey:UMENG_APPKEY
-                                      shareText:self.linkAddress
-                                     shareImage:[UIImage imageNamed:@"icon_bell_on.png"]
-                                shareToSnsNames:nil
-                                       delegate:self];
+    [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY
+                                      shareText:[NSString stringWithFormat:@"%@:%@",UM_SHARED_TEXT,self.linkAddress]
+                                     shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:self];
 }
 
 #pragma mark - UMSocialUIDelegate

@@ -16,12 +16,6 @@
 
 @interface MenuViewController ()
 
-//@property (nonatomic, copy) NSArray *menus;
-
-//根据不同源界面保存的菜单筛选条件设置菜单界面的数据选择状态，
-//第一次打开菜单界面时，菜单项的选择状态通过cellForRowAtIndexPath方法设定
-- (void)resetMenuItemStatus;
-
 @end
 
 static NSArray *menus;
@@ -37,17 +31,38 @@ static NSArray *menus;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.allMenuItems = [NSMutableSet setWithCapacity:50];
-    
 }
 
 //打开菜单界面时重置菜单选择状态
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.seletedChanged = NO;
 
-    [self resetMenuItemStatus];
+    UIViewController *vc = [self currentViewController];
+    
+    if ([vc isKindOfClass:[KillingViewController class]]) {
+        KillingViewController *killingVC = (KillingViewController *) vc;
+        self.seletedMenuTemp = [killingVC.seletedMenuItems deepMutableCopy];
+    }
+    else if ([vc isKindOfClass:[NotBeginViewController class]]) {
+        NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
+        self.seletedMenuTemp = [notBeginVC.seletedMenuItems deepMutableCopy];
+    }
+    
+    for (UIButton *menuBtn in self.allMenuItems) {
+        for (NSDictionary *seletedMenu in self.seletedMenuTemp) {
+            if ([[menuBtn.menuInfo objectForKey:@"title"] isEqualToString:[seletedMenu objectForKey:@"title"]]
+                && [[menuBtn.menuInfo objectForKey:@"section"] integerValue] == [[seletedMenu objectForKey:@"section"] integerValue]) {
+                menuBtn.menuSelected = YES;
+                break;
+            }
+            else {
+                menuBtn.menuSelected = NO;
+            }
+        }
+    }
+    
+    [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
     
     [MobClick beginLogPageView:@"\"分类筛选\"界面"];
 }
@@ -59,29 +74,45 @@ static NSArray *menus;
     
     NSMutableString *ql = [[NSMutableString alloc] initWithCapacity:20];
     
-    for (int i = 0; i < [self.seletedMenuItems count]; i++) {
-        NSString *params = [self.seletedMenuItems[i] objectForKey:@"params"];
+    for (int i = 0; i < [self.seletedMenuTemp count]; i++) {
+        NSString *params = [self.seletedMenuTemp[i] objectForKey:@"params"];
         if(![@"all" isEqualToString:params]) {
             [ql appendString:[NSString stringWithFormat:@"%@ and ", params]];
         }
     }
-    
+
     UIViewController *vc = [self currentViewController];
     
     if ([vc isKindOfClass:[KillingViewController class]]) {
         KillingViewController *killingVC = (KillingViewController *) vc;
-        if (self.seletedChanged) {
+        if ([self selectedChanged:killingVC.seletedMenuItems]) {
+            killingVC.seletedMenuItems = self.seletedMenuTemp;
             [killingVC selectCommoditys:ql];
         }
     }
     else if ([vc isKindOfClass:[NotBeginViewController class]]) {
         NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
-        if (self.seletedChanged) {
+        if ([self selectedChanged:notBeginVC.seletedMenuItems]) {
+            notBeginVC.seletedMenuItems = self.seletedMenuTemp;
             [notBeginVC selectCommoditys:ql];
         }
     }
     
     [MobClick endLogPageView:@"\"分类筛选\"界面"];
+}
+
+- (BOOL)selectedChanged:(NSMutableArray *)target
+{
+    int flag = 0;
+    int count = [self.seletedMenuTemp count];
+
+    for (int i = 0; i < count; i ++) {
+        if ([[self.seletedMenuTemp[i] objectForKey:@"title"] isEqualToString:[target[i] objectForKey:@"title"]]) {
+            flag++;
+        }
+    }
+    
+    return (flag != count);
 }
 
 #pragma mark -
@@ -93,33 +124,6 @@ static NSArray *menus;
         menus = [[NSArray alloc] initWithContentsOfFile:path];
     }
     return menus;
-}
-
-- (void)resetMenuItemStatus
-{
-    UIViewController *vc = [self currentViewController];
-    
-    if ([vc isKindOfClass:[KillingViewController class]]) {
-        KillingViewController *killingVC = (KillingViewController *) vc;
-        self.seletedMenuItems = killingVC.seletedMenuItems;
-    }
-    else if ([vc isKindOfClass:[NotBeginViewController class]]) {
-        NotBeginViewController *notBeginVC = (NotBeginViewController *) vc;
-        self.seletedMenuItems = notBeginVC.seletedMenuItems;
-    }
-    
-    for (UIButton *menuBtn in self.allMenuItems) {
-        for (NSDictionary *seletedMenu in self.seletedMenuItems) {
-            if ([[menuBtn.menuInfo objectForKey:@"title"] isEqualToString:[seletedMenu objectForKey:@"title"]]
-                && [[menuBtn.menuInfo objectForKey:@"section"] integerValue] == [[seletedMenu objectForKey:@"section"] integerValue]) {
-                menuBtn.menuSelected = YES;
-                break;
-            }
-            else {
-                menuBtn.menuSelected = NO;
-            }
-        }
-    }
 }
 
 #pragma mark - UITableViewDelegate / UITableViewDataSource
@@ -179,6 +183,8 @@ static NSArray *menus;
         [cell.centerMenuItem setTitle:[menuItem objectForKey:@"title"] forState:UIControlStateNormal];
         cell.centerMenuItem.menuInfo = menuItem;
         [self.allMenuItems addObject:cell.centerMenuItem];
+        
+        [self setMenuBtnSeleted:menuItem menuBtn:cell.centerMenuItem sectionIndex:indexPath.section];
     }
     else {
         int index = indexPath.row * 2 + 1;//因为一行显示两个菜单数据，所以加此处理
@@ -186,28 +192,38 @@ static NSArray *menus;
         NSDictionary *menuItem = [datas objectAtIndex:index];
         [cell.leftMenuItem setTitle:[menuItem objectForKey:@"title"] forState:UIControlStateNormal];
         cell.leftMenuItem.menuInfo = menuItem;
-        [self.allMenuItems addObject:cell.leftMenuItem];
+
+        [self setMenuBtnSeleted:menuItem menuBtn:cell.leftMenuItem sectionIndex:indexPath.section];
         
         //一行显示两个菜单项，如果数据不够填充两个菜单项时，右侧菜单项不显示内容
         if ((index + 1) > [datas indexOfObject:[datas lastObject]]) {
             [cell.rightMenuItem setTitle:@"" forState:UIControlStateNormal];
             cell.rightMenuItem.enabled = NO;
+            cell.rightMenuItem.menuSelected = NO;
         }
         else {
             NSDictionary *menuItem = [datas objectAtIndex:(index + 1)];
             [cell.rightMenuItem setTitle:[menuItem objectForKey:@"title"] forState:UIControlStateNormal];
             cell.rightMenuItem.enabled = YES;
             cell.rightMenuItem.menuInfo = menuItem;
+            
+            [self setMenuBtnSeleted:menuItem menuBtn:cell.rightMenuItem sectionIndex:indexPath.section];
         }
+        [self.allMenuItems addObject:cell.leftMenuItem];
         [self.allMenuItems addObject:cell.rightMenuItem];
     }
-    
-    //只要新的菜单组(section)中有一个菜单项能够显示出来便设置菜单选择状态
-    if (indexPath.row == 0) {
-        [self resetMenuItemStatus];
-    }
-    
+
     return cell;
+}
+
+- (void)setMenuBtnSeleted:(NSDictionary *)menuInfo menuBtn:(UIButton *)menuBtn sectionIndex:(int)section
+{
+    if ([[menuInfo objectForKey:@"title"] isEqualToString:[[self.seletedMenuTemp objectAtIndex:section] objectForKey:@"title"]]) {
+        menuBtn.menuSelected = YES;
+    }
+    else {
+        menuBtn.menuSelected = NO;
+    }
 }
 
 @end

@@ -12,10 +12,16 @@
 
 + (VDataBaseHelper *)shardInstance;
 
-//复制数据库到沙盒
 - (void)copyDBToSandbox;
 
-//批量更新表数据（删除后再添加）
-- (void)batchDeleteAndInsert:(NSString *)tableName datas:(NSArray *)datas;
++ (void)insert:(NSObject *)obj;
+
++ (void)update:(NSObject *)obj;
+
++ (void)remove:(NSObject *)obj;
+
++ (NSDictionary *)queryById:(NSString *)itemId from:(NSString *)tableName;
+
++ (NSMutableArray *)query:(NSString *)sql, ... ;
 
 @end

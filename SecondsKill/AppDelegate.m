@@ -8,12 +8,13 @@
 
 #import "AppDelegate.h"
 #import "MenuViewController.h"
+#import "AKTabBarController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    InitProject();
+    InitializeProject();
     
     UITabBarController *tabBarController = (UITabBarController *) self.window.rootViewController;
 
@@ -27,18 +28,15 @@
     revealController.animationDuration = 0.3f;
     
     self.window.rootViewController = revealController;
-    
-    // 注册APNS类型
+
     [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-    // 初始化
     [APService setupWithOption:launchOptions];
- 
+
     return YES;
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    // 向服务器上报Device Token
     [APService registerDeviceToken:deviceToken];
 
     NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -46,70 +44,75 @@
     [version replaceOccurrencesOfString:@"." withString:@"_" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [version length])];
     
     [APService setTags:[NSSet setWithObjects:version, nil] alias:[APService openUDID] callbackSelector:nil object:self];
+    
+    //把deviceId放到NSUserDefaults里
+    NSString *deviceId = [[[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]]
+                          stringByReplacingOccurrencesOfString:@" " withString:@""];//以<>作为分割条件进行分割，并替换空格
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:deviceId forKey:DEVICE_KEY];
+    [userDefaults synchronize];
+    
+    [APService setAlias:deviceId callbackSelector:nil object:nil];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    // 取得 APNs 标准信息内容
     NSDictionary *aps = [userInfo valueForKey:@"aps"];
-    NSString *content = [aps valueForKey:@"alert"]; //推送显示的内容
-    NSInteger badge = [[aps valueForKey:@"badge"] integerValue]; //badge数量
-    NSString *sound = [aps valueForKey:@"sound"]; //播放的声音
+    NSString *content = [aps valueForKey:@"alert"];
+    NSInteger badge = [[aps valueForKey:@"badge"] integerValue];
+    NSString *sound = [aps valueForKey:@"sound"];
     
-    // 取得自定义字段内容
     NSString *customizeField1 = [userInfo valueForKey:@"customizeField1"]; //自定义参数，key是自己定义的
     NSLog(@"content =[%@], badge=[%ld], sound=[%@], customize field =[%@]",content,(long)badge,sound,customizeField1);
 
     // 处理收到的APNS消息，向服务器上报收到APNS消息
     [APService handleRemoteNotification:userInfo];
+    
+    PXAlertView *alert = [PXAlertView showAlertWithTitle:@"通知" message:content cancelTitle:@"知道了" otherTitle:nil completion:nil];
+    [alert setCancelButtonBackgroundColor:[UIColor orangeColor]];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error
 {
-    NSLog(@"did Fail To Register For Remote Notifications With Error: %@", error);
+    NSLog(@"注册推送通知功能失败: %@", error);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [application setApplicationIconBadgeNumber:0];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [application setApplicationIconBadgeNumber:0];
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-/**
- 这里处理新浪微博SSO授权之后跳转回来，和微信分享完成之后跳转回来
- */
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
-}
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
-}
-/**
- 这里处理新浪微博SSO授权进入新浪微博客户端后进入后台，再返回原来应用
- */
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    [UMSocialSnsService  applicationDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+}
+
+#pragma mark - 单点登录会用到的相关代理方法
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [UMSocialSnsService  applicationDidBecomeActive];
 }
 
 @end

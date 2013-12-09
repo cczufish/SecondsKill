@@ -7,29 +7,40 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "REMenu.h"
 
 typedef enum {
     RefreshTableViewModePullDown = 0,
     RefreshTableViewModePullUp
 } RefreshTableViewMode;
 
+typedef enum {
+    SortTableViewTypeTime = 0,
+    SortTableViewTypeDiscount
+} SortTableViewType;
+
 typedef void (^RefreshTableViewCallBack)(NSMutableArray *datas);
 
 @interface SuperViewController : UITableViewController<UMSocialUIDelegate>
 
+@property (nonatomic, strong) NSMutableArray *timers;
+
 @property (nonatomic, assign) BOOL canRefreshTableView;
-@property (nonatomic, assign) BOOL canShowMenuViewController;
 
 @property (nonatomic, assign) int pageNO;
 @property (nonatomic, copy) NSString *uri;
 @property (nonatomic, strong) NSMutableDictionary *params;
-
-- (void)setButtonStyle:(UIButton *)btn imageName:(NSString *)imageName;
 
 - (UIViewController *)currentViewController;
 
 - (void)showMenuViewController;
 
 - (void)refreshTableView:(RefreshTableViewMode)refreshMode callBack:(RefreshTableViewCallBack)callBack;
+
+//下拉刷新
+- (void)pullDownRefresh;
+
+//上拉刷新
+- (void)pullUpRefresh;
 
 @end

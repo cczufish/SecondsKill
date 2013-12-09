@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface User : NSObject
+@interface User : JSONModel
+
+@property (nonatomic, copy) NSString *itemID;
+@property (nonatomic, copy) NSString *phone_num;
+@property (nonatomic, copy) NSString *username;
+@property (nonatomic, copy) NSString *password;
+@property (nonatomic, assign) NSInteger role;
+@property (nonatomic, copy) NSString *deviceId;
+
+@property (nonatomic, copy) NSString *created_at;
+@property (nonatomic, copy) NSString *updated_at;
 
 @end

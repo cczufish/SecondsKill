@@ -8,29 +8,46 @@
 
 #import "VAlertHelper.h"
 #import "AppDelegate.h"
-#import "ALAlertBanner.h"
 
-#define ALERT_SHOW_SECONDS 2.0f
+#define ALERT_SHOW_SECONDS 1.5f
 
 @implementation VAlertHelper
 
 + (void)success:(NSString *)message
 {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [self success:message position:ALAlertBannerPositionUnderNavBar];
+}
 
-    ALAlertBanner *banner = [ALAlertBanner alertBannerForView:appDelegate.window style:ALAlertBannerStyleNotify position:ALAlertBannerPositionUnderNavBar title:message subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
-        [alertBanner hide];
-    }];
-    
-    banner.secondsToShow = ALERT_SHOW_SECONDS;
-    [banner show];
++ (void)success:(NSString *)message position:(ALAlertBannerPosition)position
+{
+    [self alert:message style:ALAlertBannerStyleNotify position:position];
+}
+
++ (void)success:(NSString *)message style:(ALAlertBannerStyle)style
+{
+    [self alert:message style:style position:ALAlertBannerPositionUnderNavBar];
 }
 
 + (void)fail:(NSString *)message
 {
+    [self fail:message position:ALAlertBannerPositionUnderNavBar];
+}
+
++ (void)fail:(NSString *)message position:(ALAlertBannerPosition)position
+{
+    [self alert:message style:ALAlertBannerStyleFailure position:position];
+}
+
++ (void)fail:(NSString *)message style:(ALAlertBannerStyle)style
+{
+    [self alert:message style:style position:ALAlertBannerPositionUnderNavBar];
+}
+
++ (void)alert:(NSString *)message style:(ALAlertBannerStyle)style position:(ALAlertBannerPosition)position
+{
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    ALAlertBanner *banner = [ALAlertBanner alertBannerForView:appDelegate.window style:ALAlertBannerStyleFailure position:ALAlertBannerPositionUnderNavBar title:message subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
+    ALAlertBanner *banner = [ALAlertBanner alertBannerForView:appDelegate.window style:style position:position title:message subtitle:nil tappedBlock:^(ALAlertBanner *alertBanner) {
         [alertBanner hide];
     }];
     

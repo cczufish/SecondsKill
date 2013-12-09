@@ -7,14 +7,13 @@
 //
 
 #import "KillingViewController.h"
-#import "CommodityTableViewAdapter.h"
 #import "MenuViewController.h"
-
-#define kKillingPath @"msitems"
+#import "User.h"
+#import "UserManager.h"
+#import "Commodity.h"
+#import "NSTimer+V.h"
 
 @interface KillingViewController ()
-
-@property (nonatomic, strong) CommodityTableViewAdapter *tableViewAdapter;
 
 @end
 
@@ -23,9 +22,22 @@
 - (void)viewDidLoad
 {
     self.canRefreshTableView = YES;
-    self.canShowMenuViewController = YES;
     
     [super viewDidLoad];
+    
+    BButton *menuBtn = [BButton awesomeButtonWithOnlyIcon:FAIconReorder color:[UIColor clearColor] style:BButtonStyleBootstrapV3];//V2有阴影
+    menuBtn.titleLabel.textColor = [UIColor whiteColor];
+    menuBtn.showsTouchWhenHighlighted = YES;
+    [menuBtn addTarget:self action:@selector(showMenuViewController) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:menuBtn];
+    
+    BButton *sortBtn = [BButton awesomeButtonWithOnlyIcon:FAIconSort color:[UIColor clearColor] style:BButtonStyleBootstrapV3];
+    sortBtn.titleLabel.textColor = [UIColor whiteColor];
+    sortBtn.showsTouchWhenHighlighted = YES;
+    [sortBtn addTarget:self action:@selector(showSortMenuView:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:sortBtn];
+    
+    [self configSortMenuView];
 
     NSArray *menus = [MenuViewController menus];
     self.seletedMenuItems = [NSMutableArray arrayWithCapacity:[menus count]];
@@ -37,14 +49,53 @@
     self.tableView.delegate = _tableViewAdapter;
     self.tableView.dataSource = _tableViewAdapter;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+    self.tableView.indicatorStyle=UIScrollViewIndicatorStyleWhite;
+    
     self.pageNO = 1;
     self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self defaultQL] base64EncodedString], @"ql", @"end_t",@"sort",@"asc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page", nil];
-    self.uri = GenerateURLString(kKillingPath, self.params);
+    self.uri = [self.params toURLString:DEFAULT_URI];
     
-    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
-        self.tableViewAdapter.commoditys = datas;
-    }];
+    //模拟注册、登录
+    while (YES) {
+        #if TARGET_IPHONE_SIMULATOR
+            [[NSUserDefaults standardUserDefaults] setObject:@"e5e1a6cb5cd41bc46db89995073ae0daf4636c199cbe9fc06c7bfd666457a591" forKey:DEVICE_KEY];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        #endif
+        
+        NSString *deviceId = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_KEY];
+        NSLog(@"lsdjflsdjf");
+        //获取到deviceId后才能够进行注册或登录操作
+        if(deviceId != nil) {
+
+            //当NSUserDefaults中不存在session时，说明用户没登录过，所以在此注册并登录
+            if ([[NSUserDefaults standardUserDefaults] objectForKey:SESSION_KEY] == nil) {
+                [SVProgressHUD show];
+                
+                NSDictionary *userInfo = @{@"phone_num": [APService openUDID], @"username": @"iOSUser", @"password": [AESCrypt encrypt:@"password" password:AES256_KEY], @"role": @2, @"deviceId": deviceId};
+                
+                //获取不到session的原因有可能是因为用户注册过但没登录，在这种情况下会注册失败，此处不多做处理，等做注册登录界面功能后再做处理
+                [[UserManager shardInstance] registerUser:[userInfo toJSONString:nil] completion:^(User *user, NSString *msg) {
+                    
+                    //如果登录失败，session仍然会为空，所以下面请求数据时会出401错误，出401错误后会重新登录，以后有界面时会弹出登录界面，但此时不多做处理
+                    [[UserManager shardInstance] login:[userInfo toJSONString:nil] completion:^(User *user, NSString *msg) {
+                        [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+                            self.tableViewAdapter.commoditys = datas;
+                            [SVProgressHUD dismiss];
+                        }];
+                    }];
+                }];
+            }
+            else {
+                [SVProgressHUD show];
+                [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+                    self.tableViewAdapter.commoditys = datas;
+                    [SVProgressHUD dismiss];
+                }];
+            }
+            
+            break;
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -56,6 +107,9 @@
     [MobClick beginLogPageView:@"\"秒杀中\"界面"];
     
     //所有 timer 开始
+    for (NSTimer *timer in self.timers) {
+        [timer resume];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -66,7 +120,12 @@
     
     [MobClick endLogPageView:@"\"秒杀中\"界面"];
     
+    [self.sortMenu close];
+    
     //所有 timer 暂停
+    for (NSTimer *timer in self.timers) {
+        [timer pause];
+    }
 }
 
 #pragma mark -
@@ -75,7 +134,7 @@
 {
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
     long long currentTime = (long long)(time * 1000);
-    return [NSString stringWithFormat:@"start_t<=%lld and end_t>%lld and remain>0",currentTime,currentTime];
+    return [NSString stringWithFormat:@"start_t<=%lld and end_t>%lld",currentTime,currentTime];
 }
 
 - (void)selectCommoditys:(NSString *)ql
@@ -85,43 +144,101 @@
     NSString *newQL = [NSString stringWithFormat:@"%@%@",ql,[self defaultQL]];
     [self.params setObject:[newQL base64EncodedString] forKey:@"ql"];
     [self.params setObject:@"1" forKey:@"page"];
-    self.uri = GenerateURLString(kKillingPath, self.params);
+    self.uri = [self.params toURLString:DEFAULT_URI];
     
+    [SVProgressHUD show];
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
         self.tableViewAdapter.commoditys = datas;
+        [SVProgressHUD dismiss];
     }];
-    
-    [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
 }
 
-//下拉刷新
 - (void)pullDownRefresh
 {
-    self.pageNO = 1;
-    [self.params setObject:@"1" forKey:@"page"];
-    self.uri = GenerateURLString(kKillingPath, self.params);
+    [super pullDownRefresh];
     
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
         self.tableViewAdapter.commoditys = datas;
     }];
 }
 
-//上拉刷新
 - (void)pullUpRefresh
 {
-    [self.params setObject:[NSString stringWithFormat:@"%d",++self.pageNO] forKey:@"page"];
-    self.uri = GenerateURLString(kKillingPath, self.params);
+    [super pullUpRefresh];
 
     [self refreshTableView:RefreshTableViewModePullUp callBack:^(NSMutableArray *datas) {
         [self.tableViewAdapter.commoditys addObjectsFromArray:datas];
     }];
 }
 
+- (void)sortTableView:(SortTableViewType)sortType
+{
+    if (sortType == SortTableViewTypeTime) {
+        [self.params setObject:@"end_t" forKey:@"sort"];
+    }
+    else {
+        [self.params setObject:@"discount" forKey:@"sort"];
+    }
+    
+    [super pullDownRefresh];//设置查询条件
+    
+    [SVProgressHUD show];
+    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+        self.tableViewAdapter.commoditys = datas;
+        [SVProgressHUD dismiss];
+    }];
+}
+
+#pragma mark - 菜单
+
+- (void)configSortMenuView
+{
+    UILabel *sortLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    sortLabel.text = @"按时间";
+    sortLabel.backgroundColor = RGBCOLOR(38.0f, 38.0f, 38.0f);
+    sortLabel.textAlignment = NSTextAlignmentCenter;
+    sortLabel.textColor = [UIColor orangeColor];
+    
+    UILabel *discountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    discountLabel.text = @"按折扣";
+    discountLabel.backgroundColor = RGBCOLOR(38.0f, 38.0f, 38.0f);
+    discountLabel.textAlignment = NSTextAlignmentCenter;
+    discountLabel.textColor = [UIColor whiteColor];
+    
+    REMenuItem *sortTime = [[REMenuItem alloc] initWithCustomView:sortLabel action:^(REMenuItem *item) {
+        sortLabel.textColor = [UIColor orangeColor];
+        discountLabel.textColor = [UIColor whiteColor];
+        [self sortTableView:SortTableViewTypeTime];
+    }];
+    
+    REMenuItem *sortDiscount = [[REMenuItem alloc] initWithCustomView:discountLabel action:^(REMenuItem *item) {
+        sortLabel.textColor = [UIColor whiteColor];
+        discountLabel.textColor = [UIColor orangeColor];
+        [self sortTableView:SortTableViewTypeDiscount];
+    }];
+    
+    _sortMenu = [[REMenu alloc] initWithItems:@[sortTime, sortDiscount]];
+    _sortMenu.itemHeight = 40.0f;
+    _sortMenu.font = [UIFont fontWithName:FONT_NAME size:14];
+    _sortMenu.textShadowColor = [UIColor clearColor];
+}
+
+- (void)showSortMenuView:(UIButton *)sender
+{
+    if (self.sortMenu.isOpen) {
+        [self.sortMenu close];
+    }
+    else {
+        int padding = 10;
+        [self.sortMenu showFromRect:CGRectMake(SCREEN_WIDTH - 80 - padding, self.tableView.contentOffset.y, 80, 85) inView:self.view];
+    }
+}
+
 #pragma mark - AKTabBarController
 
 - (NSString *)tabImageName
 {
-    return @"icon_energy_normal.png";
+    return @"icon_energy.png";
 }
 
 - (NSString *)tabTitle

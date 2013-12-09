@@ -29,7 +29,8 @@
     
     [super viewDidLoad];
     
-    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.backgroundColor = [UIColor blackColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(pullDownRefresh)];
     
@@ -37,10 +38,13 @@
     
     self.pageNO = 1;
     self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"created_at",@"sort",@"desc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page", nil];
-    self.uri = GenerateURLString(kActivityWallPath, self.params);
+    self.uri = [self.params toURLString:kActivityWallPath];
     
+    [SVProgressHUD show];
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
         self.activitys = datas;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        [SVProgressHUD dismiss];
     }];
 }
 
@@ -62,23 +66,21 @@
 
 #pragma mark -
 
-//下拉刷新
 - (void)pullDownRefresh
 {
     self.pageNO = 1;
     [self.params setObject:@"1" forKey:@"page"];
-    self.uri = GenerateURLString(kActivityWallPath, self.params);
+    self.uri = [self.params toURLString:kActivityWallPath];
     
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
         self.activitys = datas;
     }];
 }
 
-//上拉刷新
 - (void)pullUpRefresh
 {
     [self.params setObject:[NSString stringWithFormat:@"%d",++self.pageNO] forKey:@"page"];
-    self.uri = GenerateURLString(kActivityWallPath, self.params);
+    self.uri = [self.params toURLString:kActivityWallPath];
     
     [self refreshTableView:RefreshTableViewModePullUp callBack:^(NSMutableArray *datas) {
         [self.activitys addObjectsFromArray:datas];
@@ -97,9 +99,9 @@
     ActivityWall *activity = [self.activitys objectAtIndex:indexPath.row];
 
     CGSize size = [activity.title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(265.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-    CGFloat cellHeight = kPadding + MAX(size.height, kSourceImgHeight) + kPadding + kStartTimeLabelHeight + kPadding;
-    
-    return MAX(cellHeight, 70.0f);
+    CGFloat cellHeight = kPadding + MAX(size.height, 30) + kPadding + kStartTimeLabelHeight + kPadding;
+
+    return MAX(cellHeight, 60.0f);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -117,14 +119,14 @@
     cell.nameLabel.text = activity.title;
     
     CGRect createTimeLabelRect = cell.createTimeLabel.frame;
-    createTimeLabelRect.origin.y = newRect.origin.y + MAX(newRect.size.height, kSourceImgHeight) + kPadding;
+    createTimeLabelRect.origin.y = newRect.origin.y + MAX(newRect.size.height, 30) + kPadding;
     cell.createTimeLabel.frame = createTimeLabelRect;
     
     NSDate *createDate = [NSDate dateWithTimeIntervalSince1970:[activity.created_at doubleValue]/1000];
     cell.createTimeLabel.text = [VDateTimeHelper formatDateToString:createDate];
     
     cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",activity.site]];
-    
+
     return cell;
 }
 
@@ -146,7 +148,7 @@
 
 - (NSString *)tabImageName
 {
-    return @"icon_calendar_normal.png";
+    return @"icon_calendar.png";
 }
 
 - (NSString *)tabTitle

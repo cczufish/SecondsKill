@@ -38,6 +38,16 @@
                ReferencedContainer = "container:SecondsKill.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8296618518519A0200F46DB9"
+               BuildableName = "XTests.xctest"
+               BlueprintName = "XTests"
+               ReferencedContainer = "container:SecondsKill.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

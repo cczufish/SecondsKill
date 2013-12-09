@@ -7,16 +7,35 @@
 //
 
 #import "NSDictionary+V.h"
+#import "NSString+V.h"
 
 @implementation NSDictionary (V)
 
-- (NSString *)toString
+- (NSString *)toURLString:(NSString *)baseURL
 {
     __block NSMutableArray *params = [NSMutableArray array];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [params addObject:[NSString stringWithFormat:@"%@=%@", key, [obj stringByAddingPercentEscapesForURLParameter]]];
+        [params addObject:[NSString stringWithFormat:@"%@=%@", key, [obj URLParameterSupportEqualSign]]];
     }];
-    return [params componentsJoinedByString:@"&"];
+    
+    NSString *url = nil;
+    
+    if (baseURL) {
+        url = [NSString stringWithFormat:@"%@?%@", baseURL, [params componentsJoinedByString:@"&"]];
+    }
+    else {
+        url = [params componentsJoinedByString:@"&"];
+    }
+    
+    return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (NSString *)toJSONString:(NSError *__autoreleasing*)error
+{
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:error];
+    NSString *httpBody = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    return httpBody;
 }
 
 @end

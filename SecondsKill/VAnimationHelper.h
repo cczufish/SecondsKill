@@ -52,6 +52,9 @@
 // 旋转同时缩小放大效果
 + (void)animationRotateAndScaleDownUp:(UIView *)view;
 
+//先放大再恢复
++ (void)animationScaleAndRestore:(UIView *)view;
+
 #pragma mark - 私有API
 
 //上下左右翻转效果

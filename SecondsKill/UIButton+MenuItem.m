@@ -7,7 +7,6 @@
 //
 
 #import "UIButton+MenuItem.h"
-#import <objc/runtime.h>
 
 static const void *menuInfoKey;
 static const void *menuSelectedKey;

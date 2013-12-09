@@ -51,16 +51,15 @@
 {
 	CommodityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.adapterType == CommodityAdapterTypeKilling?@"killingCellID":@"notBeginCellID"];
     cell.adapterType = self.adapterType;
+    cell.tableView = tableView;
 
     Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
     cell.commodity = commodity;
     
     CGSize size = [commodity.title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     CGRect newRect = cell.nameLabel.frame;
-//    NSLog(@"_________%f",newRect.size.height);
-    newRect.size.height = size.height;// + 50 就可以，说明还是能换行，可能只是没靠上对齐的原因
+    newRect.size.height = size.height;
     cell.nameLabel.frame = newRect;
-//NSLog(@"_________%f,%@",newRect.size.height,commodity.title);
     cell.nameLabel.text = commodity.title;
     
     CGRect detailRect = cell.detailView.frame;
@@ -75,26 +74,93 @@
     cell.killPriceLabel.text = [NSString stringWithFormat:@"￥%g", commodity.price];
     cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",commodity.site]];
     [cell.pictureImg setImageWithURL:[NSURL URLWithString:commodity.image] placeholderImage:nil];
-    [cell.upBtn setTitle:[NSString stringWithFormat:@"%d", 2] forState:UIControlStateNormal];
+    
+    [cell.upBtn setTitle:commodity.likingCount forState:UIControlStateNormal];
+    [cell.upBtn setImage:[cell.upBtn.imageView.image tintColor:[UIColor blackColor]] forState:UIControlStateNormal];
+    [cell.linkOrAlertBtn setImage:[cell.linkOrAlertBtn.imageView.image tintColor:[UIColor blackColor]] forState:UIControlStateNormal];
+    
+    NSDictionary *dict = [VDataBaseHelper queryById:commodity.itemID from:[commodity tableName]];
+    
+    if (dict) {
+        if ([@"YES" isEqualToString:[dict objectForKey:@"isUp"]]) {
+            commodity.isUp = @"YES";
+            [cell.upBtn setImage:[cell.upBtn.imageView.image tintColor:NAV_BACKGROUND_COLOR] forState:UIControlStateNormal];
+        }
+    }
 
     if (self.adapterType == CommodityAdapterTypeKilling) {
-        float alreadyOrder = 0.0f;
-        if (commodity.total != 0) {
-            alreadyOrder = 1 - (float)commodity.remain/commodity.total;
+        
+        //京东的剩余库存没数据，所以做此处理
+        if ([@"jd" isEqualToString:commodity.site]) {
+            cell.alreadyOrderPB.hidden = YES;
+        }
+        else {
+            cell.alreadyOrderPB.hidden = NO;
+            
+            float alreadyOrder = 0.0f;
+            if (commodity.total != 0) {
+                alreadyOrder = 1 - (float)commodity.remain/commodity.total;
+            }
+            
+            cell.alreadyOrderPB.type = YLProgressBarTypeFlat;
+            cell.alreadyOrderPB.progressTintColor = RGBCOLOR(255, 193, 0);
+            cell.alreadyOrderPB.hideStripes = YES;
+            cell.alreadyOrderPB.trackTintColor = [UIColor clearColor];
+            cell.alreadyOrderPB.layer.borderColor = [UIColor lightGrayColor].CGColor;
+            cell.alreadyOrderPB.layer.borderWidth = 1.0f;
+            cell.alreadyOrderPB.layer.cornerRadius = 2.0f;
+            cell.alreadyOrderPB.layer.masksToBounds = YES;
+            cell.alreadyOrderPB.indicatorTextDisplayMode = YLProgressBarIndicatorTextDisplayModeTrack;
+            cell.alreadyOrderPB.indicatorTextLabel.textAlignment = NSTextAlignmentCenter;
+            cell.alreadyOrderPB.indicatorTextLabel.font = DEFAULT_FONT;
+            cell.alreadyOrderPB.indicatorTextLabel.textColor = [UIColor blackColor];
+            
+            cell.alreadyOrderPB.indicatorTextLabel.text = [NSString stringWithFormat:@"现已订购: %d%%", (int)(alreadyOrder * 100)];
+            cell.alreadyOrderPB.progress = alreadyOrder;
+            
+            if (cell.alreadyOrderPB.progress == 1.0f) {
+                cell.alreadyOrderPB.progressTintColor = [UIColor lightGrayColor];
+                cell.surplusLabel.hidden = YES;
+                cell.surplusTipLabel.hidden = YES;
+            }
+            else {
+                cell.surplusLabel.hidden = NO;
+                cell.surplusTipLabel.hidden = NO;
+            }
         }
         
-        cell.alreadyOrderPB.indicatorTextLabel.text = [NSString stringWithFormat:@"现已订购: %.3g%%", alreadyOrder*100];
-        cell.alreadyOrderPB.progress = alreadyOrder;
-        
-        if (cell.alreadyOrderPB.progress == 1.0f) {
-            cell.alreadyOrderPB.progressTintColor = [UIColor lightGrayColor];
-        }
+        [cell setButtonStyle:cell.linkOrAlertBtn imageName:@"icon_link.png"];
     }
     else if (self.adapterType == CommodityAdapterTypeNotBegin) {
-        cell.inventoryLabel.text = [NSString stringWithFormat:@"%d",commodity.total];
-    }
 
+        [cell setButtonStyle:cell.linkOrAlertBtn imageName:@"icon_bell.png"];
+        
+        //京东的剩余库存没数据，所以做此处理
+        if ([@"jd" isEqualToString:commodity.site]) {
+            cell.inventoryLabel.text = @"有库存";
+        }
+        else {
+            cell.inventoryLabel.text = [NSString stringWithFormat:@"%d",commodity.total];
+        }
+        
+        //有些商品拿不到秒杀价格，所以价格就是0，又因为拿不到价格真的为0的商品，所以做此处理
+        if (commodity.price == 0.0f) {
+            cell.killPriceLabel.text = @"暂未公布";
+        }
+        
+        if (dict) {
+            if ([@"YES" isEqualToString:[dict objectForKey:@"isAlert"]]) {
+                commodity.isAlert = @"YES";
+                [cell.linkOrAlertBtn setImage:[cell.linkOrAlertBtn.imageView.image tintColor:NAV_BACKGROUND_COLOR] forState:UIControlStateNormal];
+            }
+        }
+    }
+    
     [cell updateSurplusOrDetrusionTime];
+
+    UINavigationController *nav = (UINavigationController *)[tableView inViewController];
+    SuperViewController *superVC = (SuperViewController *)nav.topViewController;
+    [superVC.timers addObject:cell.timer];
 
     return cell;
 }

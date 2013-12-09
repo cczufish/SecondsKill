@@ -12,12 +12,16 @@
 
 - (void)awakeFromNib
 {
-    self.backgroundColor = [UIColor whiteColor];
-    self.contentView.backgroundColor = [UIColor whiteColor];
-    
+    self.nameLabel.verticalTextAlignment = SSLabelVerticalTextAlignmentTop;
     self.nameLabel.numberOfLines = 0;
     self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.nameLabel.font = DEFAULT_FONT;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    //[self.view endEditing:YES];
 }
 
 @end

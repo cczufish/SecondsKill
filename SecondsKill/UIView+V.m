@@ -8,6 +8,12 @@
 
 #import "UIView+V.h"
 
+@interface UIView (private)
+
+- (CALayer *)layerByName:(NSString *)name;
+
+@end
+
 @implementation UIView (V)
 
 - (void)removeLayerWithName:(NSString *)name
@@ -29,10 +35,27 @@
     }
 }
 
+- (UIViewController *)inViewController
+{
+    UIViewController *vc = nil;
+
+    for (UIView *next = self.superview; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            vc = (UIViewController *)nextResponder;
+            break;
+        }
+    }
+    
+    return vc;
+}
+
+#pragma mark - private method
+
 - (CALayer *)layerByName:(NSString *)name
 {
     CALayer *layer = nil;
-
+    
     NSArray *subLayers = [self.layer sublayers];
     
     for (int i = 0; i < [subLayers count]; i++) {
@@ -44,21 +67,6 @@
     }
     
     return layer;
-}
-
-- (UIViewController*)viewController
-{
-    UIViewController *vc = nil;
-    
-    for (UIView *next = self.superview; next; next = next.superview) {
-        UIResponder *nextResponder = [next nextResponder];
-        if ([nextResponder isKindOfClass:[UIViewController class]]) {
-            vc = (UIViewController *)nextResponder;
-            break;
-        }
-    }
-    
-    return vc;
 }
 
 @end

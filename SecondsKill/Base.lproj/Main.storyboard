@@ -47,7 +47,7 @@
                                             <rect key="frame" x="5" y="5" width="310" height="193"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="商品名字" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UOD-RG-B3g">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="商品名字" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UOD-RG-B3g" customClass="SSLabel">
                                                     <rect key="frame" x="50" y="3" width="260" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -317,7 +317,7 @@
                                             <rect key="frame" x="5" y="5" width="310" height="193"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="商品名字" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KtE-EN-BbU">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="商品名字" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KtE-EN-BbU" customClass="SSLabel">
                                                     <rect key="frame" x="50" y="3" width="260" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -377,7 +377,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:01:02" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="J5D-X4-1UP">
-                                                            <rect key="frame" x="194" y="75" width="91" height="21"/>
+                                                            <rect key="frame" x="194" y="75" width="116" height="21"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -395,7 +395,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥10" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7YV-I3-j26">
-                                                            <rect key="frame" x="181" y="30" width="61" height="18"/>
+                                                            <rect key="frame" x="181" y="30" width="109" height="21"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                             <color key="textColor" red="1" green="0.56967673870000002" blue="0.1499749957" alpha="1" colorSpace="calibratedRGB"/>
@@ -409,7 +409,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="50" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hmv-O6-bv6">
-                                                            <rect key="frame" x="194" y="52" width="35" height="21"/>
+                                                            <rect key="frame" x="194" y="52" width="89" height="21"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -439,7 +439,6 @@
                                     <outlet property="bottomView" destination="Ywl-tJ-0zR" id="QRJ-1B-yxH"/>
                                     <outlet property="detailView" destination="3eF-3x-ga5" id="EdS-e2-UKn"/>
                                     <outlet property="detrusionTimeLabel" destination="J5D-X4-1UP" id="ZFo-Pb-C2r"/>
-                                    <outlet property="detrusionTimeTipLabel" destination="YaN-Gb-vcQ" id="653-cK-E9m"/>
                                     <outlet property="inventoryLabel" destination="hmv-O6-bv6" id="h7Q-qU-hsn"/>
                                     <outlet property="killPriceLabel" destination="7YV-I3-j26" id="bkt-yc-aUo"/>
                                     <outlet property="linkOrAlertBtn" destination="5MD-JJ-6xQ" id="iRB-Z0-Zoc"/>
@@ -464,19 +463,19 @@
         <scene sceneID="AZk-WK-M9a">
             <objects>
                 <tableViewController id="Dbz-cj-mF5" customClass="ActivityWallViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" id="Po8-Ep-78w">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="Po8-Ep-78w">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="activityWallCellID" rowHeight="70" id="ycg-Li-g02" customClass="ActivityWallTableViewCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="70"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="activityWallCellID" rowHeight="60" id="ycg-Li-g02" customClass="ActivityWallTableViewCell">
+                                <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ycg-Li-g02" id="o5u-Jw-bOL">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MINO米诺蝙蝠袖保暖披肩" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cJ8-ud-eG2">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="图书 全场5折" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cJ8-ud-eG2" customClass="SSLabel">
                                             <rect key="frame" x="50" y="5" width="265" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -484,7 +483,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2013-11-19 9:42" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Xqj-Kn-Y48">
-                                            <rect key="frame" x="50" y="45" width="175" height="20"/>
+                                            <rect key="frame" x="50" y="39" width="175" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -495,10 +494,12 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="createTimeLabel" destination="Xqj-Kn-Y48" id="TpK-x6-dJU"/>
-                                    <outlet property="nameLabel" destination="cJ8-ud-eG2" id="Muy-1X-sQX"/>
+                                    <outlet property="nameLabel" destination="cJ8-ud-eG2" id="ptg-oY-2nv"/>
                                     <outlet property="sourceImg" destination="VXf-CQ-Qxr" id="OHO-3J-J3j"/>
                                 </connections>
                             </tableViewCell>
@@ -515,81 +516,64 @@
         <scene sceneID="K55-j0-Bv4">
             <objects>
                 <tableViewController id="CHh-eY-etC" customClass="ComparePriceViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZcT-8K-L6n">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZcT-8K-L6n">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="vau-xf-4y4">
+                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="搜索" id="vau-xf-4y4">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <outlet property="delegate" destination="CHh-eY-etC" id="25b-z0-w4y"/>
+                                <outlet property="delegate" destination="CHh-eY-etC" id="4lt-gu-UL9"/>
                             </connections>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="comparePriceCellID" rowHeight="70" id="bKH-6Y-5pD" customClass="ComparePriceTableViewCell">
-                                <rect key="frame" x="0.0" y="66" width="320" height="70"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bKH-6Y-5pD" id="sOy-uJ-18d">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="comparePriceCellID" id="IC7-I1-wXy" customClass="ComparePriceTableViewCell">
+                                <rect key="frame" x="0.0" y="66" width="320" height="65"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IC7-I1-wXy" id="CNK-lX-1Oa">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="京东iPhone5打折促销" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ft6-Yf-fEZ">
-                                            <rect key="frame" x="72" y="5" width="240" height="27"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="京东iPhone5打折促销" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pii-du-uvK" customClass="SSLabel">
+                                            <rect key="frame" x="90" y="5" width="222" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥2500.5" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fBu-ch-370">
-                                            <rect key="frame" x="5" y="49" width="88" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥2500.5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uus-lm-mPS">
+                                            <rect key="frame" x="5" y="35" width="90" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="0hR-pD-gJl">
-                                            <rect key="frame" x="5" y="5" width="44" height="44"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="XSc-up-nvO">
+                                            <rect key="frame" x="10" y="10" width="70" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="nameLabel" destination="Ft6-Yf-fEZ" id="12X-vf-o53"/>
-                                    <outlet property="priceLabel" destination="fBu-ch-370" id="INo-n4-wwz"/>
-                                    <outlet property="sourceImg" destination="0hR-pD-gJl" id="1yg-JY-RnK"/>
+                                    <outlet property="nameLabel" destination="pii-du-uvK" id="eZS-CM-LJi"/>
+                                    <outlet property="priceLabel" destination="Uus-lm-mPS" id="vHq-bf-gsp"/>
+                                    <outlet property="sourceImg" destination="XSc-up-nvO" id="iaq-yt-qFy"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
-                            <outlet property="dataSource" destination="CHh-eY-etC" id="XJs-NE-Wdq"/>
-                            <outlet property="delegate" destination="CHh-eY-etC" id="Q7V-mJ-PLZ"/>
+                            <outlet property="dataSource" destination="CHh-eY-etC" id="B0c-4m-U8x"/>
+                            <outlet property="delegate" destination="CHh-eY-etC" id="jJg-DX-vU6"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="rsw-hD-GSE"/>
                     <connections>
-                        <outlet property="searchBar" destination="vau-xf-4y4" id="Q1f-36-Ft3"/>
-                        <outlet property="searchDisplayController" destination="GuM-3x-bgy" id="6fD-yl-Zbh"/>
+                        <outlet property="searchBar" destination="vau-xf-4y4" id="gwC-0y-aN0"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ed-H9-Lck" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="jQV-nt-b4f">
-                    <connections>
-                        <outlet property="delegate" destination="CHh-eY-etC" id="zVW-b3-R1F"/>
-                        <outlet property="searchContentsController" destination="CHh-eY-etC" id="MgY-9e-DUd"/>
-                        <outlet property="searchResultsDataSource" destination="CHh-eY-etC" id="6wM-EZ-64d"/>
-                        <outlet property="searchResultsDelegate" destination="CHh-eY-etC" id="Z0R-yU-Lhr"/>
-                    </connections>
-                </searchDisplayController>
-                <searchDisplayController id="GuM-3x-bgy">
-                    <connections>
-                        <outlet property="delegate" destination="CHh-eY-etC" id="ezQ-L4-sEa"/>
-                        <outlet property="searchContentsController" destination="CHh-eY-etC" id="8Ye-0H-pMd"/>
-                        <outlet property="searchResultsDataSource" destination="CHh-eY-etC" id="0Nc-Q1-5cG"/>
-                        <outlet property="searchResultsDelegate" destination="CHh-eY-etC" id="1li-IZ-xws"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1195" y="43"/>
         </scene>
@@ -600,7 +584,7 @@
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="DbG-O3-7Be">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
                             <tableViewSection id="pmS-zk-EP6">
                                 <cells>
@@ -658,26 +642,26 @@
                             </tableViewSection>
                             <tableViewSection id="YOT-Yr-cFF">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="identityCell5" rowHeight="212" id="Gr5-JG-yFq">
-                                        <rect key="frame" x="0.0" y="187" width="320" height="212"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="identityCell5" rowHeight="190" id="Gr5-JG-yFq">
+                                        <rect key="frame" x="0.0" y="187" width="320" height="190"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Gr5-JG-yFq" id="4j6-TX-mIv">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="211"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="189"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="       秒杀惠是一款专注于汇集电商秒杀信息的移动应用，让给力的限时特价信息尽在您的掌握。" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uCy-pL-7VQ">
-                                                    <rect key="frame" x="30" y="99" width="260" height="70"/>
+                                                    <rect key="frame" x="30" y="88" width="260" height="70"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="btn_hui.png" id="uoY-dh-I1u">
-                                                    <rect key="frame" x="122" y="8" width="77" height="77"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="uoY-dh-I1u">
+                                                    <rect key="frame" x="122" y="8" width="72" height="72"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="contact@athui.com" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TmY-eL-zkT">
-                                                    <rect key="frame" x="136" y="177" width="164" height="21"/>
+                                                    <rect key="frame" x="136" y="160" width="164" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -777,9 +761,6 @@
             <point key="canvasLocation" x="-1489" y="43"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="btn_hui.png" width="30" height="31"/>
-    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

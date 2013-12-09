@@ -13,6 +13,8 @@
 
 - (void)actionUp:(VWebView *)webView;
 
+- (void)dismissWebViewController:(VWebView *)webView;
+
 @end
 
 @interface VWebView : UIWebView<UIWebViewDelegate>

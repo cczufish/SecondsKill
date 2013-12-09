@@ -48,6 +48,8 @@
 
 - (void)requestWithCompletionBlock:(CompletionRequest)completionBlock
 {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
     NSString *urlStr = [NSString stringWithFormat:@"%@%@", kBaseURL, self.uri];
     NSURL *url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -57,7 +59,13 @@
     [request addValue:@"application/json;charset=UTF-8" forHTTPHeaderField:@"Accept"];
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request addValue:kAppKey forHTTPHeaderField:@"AppKey"];
-    [request addValue:AES256AuthorizationInfo() forHTTPHeaderField:@"Authorization"];
+    [request addValue:[userDefaults objectForKey:SESSION_KEY] forHTTPHeaderField:@"X-SESSION"];
+    
+    NSString *etagForURL = [[VURLCache shardInstance] getETagWithURL:self.uri];
+
+    if (etagForURL) {
+        [request addValue:etagForURL forHTTPHeaderField:@"If-None-Match"];
+    }
 
     if ([self.httpMethod isEqualToString:@"PUT"] || [self.httpMethod isEqualToString:@"POST"]) {
         [request setHTTPBody:[self.httpBody dataUsingEncoding:NSUTF8StringEncoding]];
@@ -67,8 +75,15 @@
     manager.securityPolicy.allowInvalidCertificates = YES;
     
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *session = [[operation.response allHeaderFields] objectForKey:@"X-SESSION"];
+
+        if (session != nil) {
+            [userDefaults setObject:session forKey:SESSION_KEY];
+            [userDefaults synchronize];
+        }
+        
         if (completionBlock) {
-             completionBlock(operation.response, responseObject, nil);
+            completionBlock(operation.response, responseObject, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (![operation isCancelled] && completionBlock) {

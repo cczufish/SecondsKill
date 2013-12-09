@@ -10,7 +10,7 @@
 
 @interface ComparePriceTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) IBOutlet UILabel *nameLabel;
+@property (nonatomic, weak) IBOutlet SSLabel *nameLabel;
 @property (nonatomic, weak) IBOutlet UILabel *priceLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *sourceImg;
 

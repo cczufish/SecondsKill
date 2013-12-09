@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Commodity : JSONModel
+@interface Commodity : JSONModel<NSCoding>
 
 @property (copy, nonatomic) NSString *itemID;
 @property (copy, nonatomic) NSString *title;
@@ -19,6 +19,7 @@
 @property (copy, nonatomic) NSString *des;
 @property (copy, nonatomic) NSString *discount;
 @property (copy, nonatomic) NSString *sku;
+@property (copy, nonatomic) NSString *deal_id;
 
 @property (assign, nonatomic) CGFloat o_price;
 @property (assign, nonatomic) CGFloat price;
@@ -32,5 +33,10 @@
 
 @property (copy, nonatomic) NSString<Ignore> *surplusTime;
 @property (copy, nonatomic) NSString<Ignore> *detrusionTime;
+
+@property (copy, nonatomic) NSString<Ignore> *isUp;
+@property (copy, nonatomic) NSString<Ignore> *likingCount;
+
+@property (copy, nonatomic) NSString<Ignore> *isAlert;
 
 @end

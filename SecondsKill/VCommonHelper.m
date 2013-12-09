@@ -7,77 +7,40 @@
 //
 
 #import "VCommonHelper.h"
-
 #import "AFNetworkActivityIndicatorManager.h"
-#define kAES256Key @"citylife20130609trackup"
+
 #define TENCENT_APPID @"801430933"
 #define WEIXIN_APPID @"wxwxcdef309f0d88c12b"
 
+//通过NSUserDefaults中的值判断app是否第一次运行，主要适用于用户在第二次运行程序时。
+//而isFirstRunAPP是用于用户第一次运行程序，并且设置完NSUserDefaults后，仍然能够知道此次是第一次运行程序。
+BOOL isFirstRun();
 BOOL isFirstRunAPP = NO;
 
-NSString *AES256AuthorizationInfo()
+void InitializeProject()
 {
-    //授权用的“手机号“和“用户密码“暂时写死，未来考虑从"NSUserDefault"或"KeyChain"中获取。
-    NSString *crypt = [NSString stringWithFormat:@"%@:%@", @"13691343119", [AESCrypt encrypt:@"password" password:kAES256Key]];
-    return [AESCrypt encrypt:crypt password:kAES256Key];
-}
-
-NSString *GenerateURLString(NSString *baseURL, NSDictionary *params)
-{
-    __weak NSMutableString *url = [NSMutableString stringWithString:baseURL];
-    if (params) {
-        __block BOOL isFirstParam = YES;
-        [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            if (isFirstParam) {
-                [url appendFormat:@"?%@=%@", key, obj];
-                isFirstParam = NO;
-            }
-            else {
-                [url appendFormat:@"&%@=%@", key, obj];
-            };
-        }];
-    }
-    return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-}
-
-BOOL isFirstRun()
-{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults boolForKey:@"runed"]) {
-        return NO;
-    }
-    else {
-        isFirstRunAPP = YES;
-        [userDefaults setBool:YES forKey:@"runed"];
-        [userDefaults synchronize];
-        return YES;
-    }
-}
-
-void InitProject()
-{
-    [[BButton appearance] setButtonCornerRadius:[NSNumber numberWithFloat:3.0f]];
-//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//    manager.securityPolicy.allowInvalidCertificates = YES;
-//    
-//    [manager GET:@"https://115.29.46.104/msitems?ql=cmVtYWluPjA=&sort=end_t&order=desc&size=4&page=1" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"JSON: %@", responseObject);
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-//    }];
-//    
-
+    [[VURLCache shardInstance] createDiskCachePath];
+    [[VURLCache shardInstance] clearDiskCacheWithDay:7];
+    //把自己数据库里的也清一下
     
+    
+    
+    //使用自己的缓存类
+	[NSURLCache setSharedURLCache:[VURLCache shardInstance]];
+
+    [[BButton appearance] setButtonCornerRadius:[NSNumber numberWithFloat:3.0f]];
+
     //网络请求时提示
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
-
     
     //所有json中的id对应类中的itemID属性
     [JSONModel setGlobalKeyMapper:[[JSONKeyMapper alloc] initWithDictionary:@{@"id":@"itemID"}]];
     
-    
-    //时时监测网络状态
     [[VNetworkHelper shardInstance] monitorNetwork];
+ 
+
+    //时时监测网络状态
+    
     
     
     if (IS_RUNNING_IOS7) {
@@ -97,11 +60,6 @@ void InitProject()
         //修改状态栏颜色为亮色,前提是在info.plist增加key"View controller-based status bar appearance"并设置值为NO
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     }
-    
-    
-    //    APIGeeHelper *apigeeHelper = [APIGeeHelper shardInstance];
-    //    [apigeeHelper initialize];
-    //
     
     //使用友盟统计分析,此方式每次启动app时向服务器发送上次数据。
     [MobClick startWithAppkey:UMENG_APPKEY];
@@ -139,12 +97,28 @@ void InitProject()
         VDataBaseHelper *dbHelper = [VDataBaseHelper shardInstance];
         [dbHelper copyDBToSandbox];
     }
-    //    //时时检测网络状态
-    //    [[CLNetworkHelper shardInstance] monitorNetwork];
-    //
-    //    //如果是第一次运行程序，需要复制数据库到沙盒
-    //    if (isFirstRun()) {
-    //        CLDataBaseHelper *dbHelper = [CLDataBaseHelper shardInstance];
-    //        [dbHelper copyDBToSandbox];
-    //    }
+}
+
+NSString *AES256AuthorizationInfo()
+{
+    NSString *crypt = [NSString stringWithFormat:@"%@:%@", @"13691343119", [AESCrypt encrypt:@"password" password:AES256_KEY]];
+    return [AESCrypt encrypt:crypt password:AES256_KEY];
+}
+
+#pragma mark - private method
+
+BOOL isFirstRun()
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([userDefaults boolForKey:@"runed"]) {
+        return NO;
+    }
+    else {
+        [userDefaults setBool:YES forKey:@"runed"];
+        [userDefaults synchronize];
+        
+        isFirstRunAPP = YES;
+        
+        return YES;
+    }
 }

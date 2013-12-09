@@ -9,18 +9,30 @@
 #ifndef SecondsKill_VGlobalHeader_h
 #define SecondsKill_VGlobalHeader_h
 
+    #define DEFAULT_URI @"msitems"
+    #define NETWORK_ERROR @"网络异常!"
+
+    #define UM_SHARED_TEXT @""
+    #define UM_SHARED_IMAGE nil
+
     #define UMENG_APPKEY @"522e80dc56240b3cbc02d78b"
+
+    #define AES256_KEY @"citylife20130609trackup"
+
+    #define DEVICE_KEY @"deviceIdKey"
+    #define SESSION_KEY @"sessionKey"
 
     #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
     #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
 
+#warning default page change 20
     #define DEFAULT_PAGE_SIZE 10
     #define NAV_BACKGROUND_COLOR RGBCOLOR(199, 55, 33)
 
-    #define FONT_NAME @"MicrosoftYaHei"
+    #define FONT_NAME @"HelveticaNeue"
     #define DEFAULT_FONT [UIFont fontWithName:FONT_NAME size:16]
 
-    #define isPhone5 (fabs((double)[[UIScreen mainScreen] bounds].size.height-(double)568) < DBL_EPSILON)
+    #define IS_IPHONE5 (fabs((double)[[UIScreen mainScreen] bounds].size.height-(double)568) < DBL_EPSILON)
 
     #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
         #define IS_RUNNING_IOS7 ([[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue] >= 7)

@@ -9,20 +9,17 @@
 #import <Foundation/Foundation.h>
 
 #if defined __cplusplus
-extern "C" {
+    extern "C" {
 #endif
-    
+
+typedef void (^CompletionOperation)(BOOL success, NSString *msg);
+        
+//App每次启动时初始化一些设置
+void InitializeProject();
+        
+//目前已用session代替authorization方式进行用户权限认证
 NSString *AES256AuthorizationInfo();
 
-//App是否是第一次运行
-BOOL isFirstRun();
-
-//App每次启动时初始化一些设置
-void InitProject();
-
-//根据baseurl和参数拼接url
-NSString *GenerateURLString(NSString *baseURL, NSDictionary *params);
-
 #if defined __cplusplus
-};
+    };
 #endif

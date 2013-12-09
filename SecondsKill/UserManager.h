@@ -7,7 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "User.h"
+
+typedef void (^CompletionUserOperation)(User *user, NSString *msg);
 
 @interface UserManager : NSObject
+
++ (UserManager *)shardInstance;
+
+- (void)registerUser:(NSString *)userInfo completion:(CompletionUserOperation)completionBlock;
+
+- (void)login:(NSString *)userInfo completion:(CompletionUserOperation)completionBlock;
 
 @end

@@ -7,11 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ALAlertBanner.h"
 
 @interface VAlertHelper : NSObject
 
 + (void)fail:(NSString *)message;
 
++ (void)fail:(NSString *)message position:(ALAlertBannerPosition)position;
+
++ (void)fail:(NSString *)message style:(ALAlertBannerStyle)style;
+
 + (void)success:(NSString *)message;
+
++ (void)success:(NSString *)message position:(ALAlertBannerPosition)position;
+
++ (void)success:(NSString *)message style:(ALAlertBannerStyle)style;
+
++ (void)alert:(NSString *)message style:(ALAlertBannerStyle)style position:(ALAlertBannerPosition)position;
 
 @end

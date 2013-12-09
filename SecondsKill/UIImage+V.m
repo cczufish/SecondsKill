@@ -12,12 +12,28 @@
 
 - (UIImage *)imageWithNewSize:(CGSize)newSize
 {
-    UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0f);
     [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+- (UIImage *)tintColor:(UIColor *)color
+{
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
+    
+    CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
+    [self drawInRect:rect];
+    
+    [color set];
+    
+    UIRectFillUsingBlendMode(rect, kCGBlendModeSourceAtop);
+    UIImage *tintedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return tintedImage;
 }
 
 - (UIImage *)scaleImage:(float)scale
@@ -29,7 +45,7 @@
 - (UIImage *)drawText:(NSString *)text
               atPoint:(CGPoint)point
 {
-    UIGraphicsBeginImageContext(self.size);
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
     
     [[UIColor blackColor] set];

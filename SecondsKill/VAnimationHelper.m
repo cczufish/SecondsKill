@@ -196,6 +196,15 @@
     }];
 }
 
++ (void)animationScaleAndRestore:(UIView *)view
+{
+    CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];//缩放
+    scaleAnimation.toValue = [NSNumber numberWithFloat:1.5];
+    scaleAnimation.duration = kAnimationDuration;
+    scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    [view.layer addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+}
+
 + (void)animationRotateAndScaleDownUp:(UIView *)view
 {
     CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];//绕z轴旋转,单位:弧度

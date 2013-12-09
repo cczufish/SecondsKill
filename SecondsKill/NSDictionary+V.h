@@ -10,6 +10,8 @@
 
 @interface NSDictionary (V)
 
-- (NSString *)toString;
+- (NSString *)toURLString:(NSString *)baseURL;
+
+- (NSString *)toJSONString:(NSError *__autoreleasing*)error;
 
 @end

@@ -17,4 +17,21 @@
     return [emailTest evaluateWithObject:self];
 }
 
+- (NSString *)URLParameterSupportEqualSign
+{
+    
+    CFStringRef buffer =
+    CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                            (__bridge CFStringRef)self,
+                                            NULL,
+                                            (__bridge CFStringRef)@";/?:@&+$,",
+                                            kCFStringEncodingUTF8);
+    
+    NSString *result = [NSString stringWithString:(__bridge NSString *)buffer];
+    
+    CFRelease(buffer);
+    
+    return result;
+}
+
 @end

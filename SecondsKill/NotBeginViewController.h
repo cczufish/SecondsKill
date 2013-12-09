@@ -7,8 +7,11 @@
 //
 
 #import "SuperViewController.h"
+#import "CommodityTableViewAdapter.h"
 
 @interface NotBeginViewController : SuperViewController
+
+@property (nonatomic, strong) CommodityTableViewAdapter *tableViewAdapter;
 
 @property (nonatomic, strong) NSMutableArray *seletedMenuItems;//用于记录当前界面数据筛选条件
 

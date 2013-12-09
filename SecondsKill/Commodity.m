@@ -10,6 +10,42 @@
 
 @implementation Commodity
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super init]) {
+        unsigned int outCount, i;
+        objc_property_t *properties = class_copyPropertyList([self class], &outCount);
+        
+        for (i = 0; i < outCount; i++) {
+            NSString *p = [NSString stringWithFormat:@"%s", property_getName(properties[i])];
+            [self setValue:[aDecoder decodeObjectForKey:p] forKey:p];
+        }
+        
+        free(properties);
+    }
+    
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    unsigned int outCount, i;
+    objc_property_t *properties = class_copyPropertyList([self class], &outCount);
+    
+    for (i = 0; i < outCount; i++) {
+        NSString *p = [NSString stringWithFormat:@"%s", property_getName(properties[i])];
+        [aCoder encodeObject:[self valueForKey:p] forKey:p];
+    }
+    
+    free(properties);
+}
+
+
+- (NSString *)tableName
+{
+    return @"SK_Commodity";
+}
+
 + (BOOL)propertyIsOptional:(NSString*)propertyName
 {
     return YES;
@@ -30,7 +66,7 @@
 {
     NSDate *targetDate = [NSDate dateWithTimeIntervalSince1970:targetTime/1000];
     NSDate *currentDate = [NSDate date];
-    
+//    NSLog(@"%@,%@,%@",targetDate,currentDate,[NSDate dateWithTimeIntervalSince1970:([self.start_t doubleValue]/1000)]);
     NSDateComponents *comp = [VDateTimeHelper dateBetween:currentDate toDate:targetDate];
     
     if (comp.day <= 0 && comp.hour <= 0 && comp.minute <= 0 && comp.second <= 0) {
