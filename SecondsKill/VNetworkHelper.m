@@ -8,7 +8,13 @@
 
 #import "VNetworkHelper.h"
 
+#define kMonitorNetworkSuccessNotification @"monitorNetworkSuccessNotification"
+
 static BOOL hasNetWork;
+static BOOL monitorSuccess;
+
+//防止重复注册通知
+static id networkObserver;
 
 @implementation VNetworkHelper
 
@@ -16,11 +22,21 @@ SHARD_INSTANCE_IMPL(VNetworkHelper)
 
 - (void)monitorNetwork
 {
-    hasNetWork = YES;
+    [[NSNotificationCenter defaultCenter] removeObserver:networkObserver];
+    
+    networkObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMonitorNetworkSuccessNotification object:self queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        monitorSuccess = YES;
+    }];
     
     AFNetworkReachabilityManager *networkManager = [AFNetworkReachabilityManager sharedManager];
     
     [networkManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        static dispatch_once_t pred = 0;
+
+        dispatch_once(&pred, ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:kMonitorNetworkSuccessNotification object:self userInfo:nil];
+        });
+
         if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi) {
             hasNetWork = YES;
         }
@@ -35,6 +51,16 @@ SHARD_INSTANCE_IMPL(VNetworkHelper)
 + (BOOL)hasNetWork
 {
     return hasNetWork;
+}
+
++ (BOOL)monitorSuccess
+{
+    return monitorSuccess;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:networkObserver];
 }
 
 @end

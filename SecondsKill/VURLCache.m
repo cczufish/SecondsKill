@@ -84,7 +84,23 @@ SHARD_INSTANCE_IMPL(VURLCache)
 
 - (NSString *)cacheFileName:(NSURL *)url
 {
-    NSString *fileName = [url lastPathComponent];
+    NSMutableString *fileName = [[NSMutableString alloc] initWithString:[url lastPathComponent]];
+    NSString *query = [url query];
+
+    if (query) {
+        if ([query containsString:@"model"]) {
+            NSArray *params = [query componentsSeparatedByString:@"&"];
+            for (int i =0; i < [params count]; i++) {
+                if ([params[i] containsString:@"model"]) {
+                    [fileName appendString:[params[i] componentsSeparatedByString:@"="][1]];
+                }
+                if ([params[i] containsString:@"page"]) {
+                    [fileName appendString:[params[i] componentsSeparatedByString:@"="][1]];
+                }
+            }
+        }
+    }
+    
     //就通用性考虑还是注释的这段代码好些，因为秒杀应用中每次生成的url都设及当前时间，所以不适用
 //    if([url query]) {
 //        fileName = [fileName stringByAppendingFormat:@"?%@",[url query]];
@@ -152,7 +168,7 @@ SHARD_INSTANCE_IMPL(VURLCache)
     
     self.dbDir = [cachePath stringByAppendingPathComponent:kCacheDBName];
     self.fileDir = [cachePath stringByAppendingPathComponent:@"files"];
-    
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if(![fileManager fileExistsAtPath:cachePath])
     {

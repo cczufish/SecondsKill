@@ -92,10 +92,10 @@
         
         //京东的剩余库存没数据，所以做此处理
         if ([@"jd" isEqualToString:commodity.site]) {
-            cell.alreadyOrderPB.hidden = YES;
+            cell.alreadyOrderPB.alpha = 0.0f;
         }
         else {
-            cell.alreadyOrderPB.hidden = NO;
+            cell.alreadyOrderPB.alpha = 1.0f;
             
             float alreadyOrder = 0.0f;
             if (commodity.total != 0) {

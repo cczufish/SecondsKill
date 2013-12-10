@@ -11,7 +11,8 @@
 
 typedef enum {
     RefreshTableViewModePullDown = 0,
-    RefreshTableViewModePullUp
+    RefreshTableViewModePullUp,
+    RefreshTableViewModeNone
 } RefreshTableViewMode;
 
 typedef enum {
@@ -42,5 +43,7 @@ typedef void (^RefreshTableViewCallBack)(NSMutableArray *datas);
 
 //上拉刷新
 - (void)pullUpRefresh;
+
+- (void)endRefresh:(NSString *)msg style:(ALAlertBannerStyle)style refreshMode:(RefreshTableViewMode)refreshMode;
 
 @end

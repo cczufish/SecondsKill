@@ -27,7 +27,7 @@
         url = [params componentsJoinedByString:@"&"];
     }
     
-    return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return url;
 }
 
 - (NSString *)toJSONString:(NSError *__autoreleasing*)error

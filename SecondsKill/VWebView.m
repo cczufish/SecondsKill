@@ -59,7 +59,7 @@
 {
     self.delegate = self;
     self.scalesPageToFit = YES;
-    
+
     //工具条
     _backBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
     _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"forward.png"] style:UIBarButtonItemStylePlain target:self action:@selector(forward:)];
@@ -72,12 +72,12 @@
     self.defaultBarItems = @[_backBarItem, flexibleBarItem, _forwardBarItem, flexibleBarItem, _refreshBarItem, flexibleBarItem, _actionBarItem];
     self.self.loadingBarItems = @[_backBarItem, flexibleBarItem, _forwardBarItem, flexibleBarItem, _stopBarItem, flexibleBarItem, _actionBarItem];
     
-    _toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, SCREEN_HEIGHT - 64.0f - 44.0f, SCREEN_WIDTH, 44.0f)];
+    _toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, self.superview.frame.size.height - 44.0f, SCREEN_WIDTH, 44.0f)];
     _toolBar.barStyle = UIBarStyleBlackTranslucent;
     self.toolBar.items = self.defaultBarItems;
     
     [self.superview addSubview:self.toolBar];
-    
+
     //网页加载进度条
 //    _progressBar = [[YLProgressBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, 5.0f)];
 //    _progressBar.type = YLProgressBarTypeFlat;
@@ -101,7 +101,6 @@
 
     [self inViewController].navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_activityView];
 }
-
 #pragma mark - overrides
 
 //- (id)webView:(id)view identifierForInitialRequest:(id)initialRequest fromDataSource:(id)dataSource
@@ -139,7 +138,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     [self updateLoadingStatus:NO];
-    
+  
     return YES;
 }
 

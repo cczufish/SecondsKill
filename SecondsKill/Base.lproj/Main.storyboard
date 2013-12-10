@@ -19,13 +19,91 @@
                         <segue destination="BV2-Q4-bFS" kind="relationship" relationship="viewControllers" id="flS-6m-Zwm"/>
                         <segue destination="Wf9-JI-2K9" kind="relationship" relationship="viewControllers" id="tAw-VP-cvg"/>
                         <segue destination="Ib4-Jn-NEr" kind="relationship" relationship="viewControllers" id="CdH-AT-uhb"/>
-                        <segue destination="vbv-3h-Gol" kind="relationship" relationship="viewControllers" id="J3z-Bf-aPW"/>
-                        <segue destination="xGV-SZ-pMu" kind="relationship" relationship="viewControllers" id="Er8-CX-oX1"/>
+                        <segue destination="Iju-hJ-aIc" kind="relationship" relationship="viewControllers" id="Bw9-G1-y75"/>
+                        <segue destination="xGV-SZ-pMu" kind="relationship" relationship="viewControllers" id="GVg-Iv-iKM"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FNP-y4-bzi" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="262" y="-660"/>
+        </scene>
+        <!--Compare Price View Controller - Root View Controller-->
+        <scene sceneID="Sci-1w-PP3">
+            <objects>
+                <tableViewController id="ek9-Nn-ccj" customClass="ComparePriceViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="22" sectionFooterHeight="22" id="3UI-1o-OCf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="搜索" id="mfs-04-nSb">
+                            <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="ek9-Nn-ccj" id="ga1-zH-ZXw"/>
+                            </connections>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="comparePriceCellID" rowHeight="65" id="QrH-bm-31e" customClass="ComparePriceTableViewCell">
+                                <rect key="frame" x="0.0" y="130" width="320" height="65"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QrH-bm-31e" id="TdX-1Y-G0d">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥2500.5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cKe-Qg-Ctx">
+                                            <rect key="frame" x="5" y="32" width="90" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" red="0.90382982339999995" green="0.14612152219999999" blue="0.080280340170000006" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="京东iPhone5打折促销" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0AT-Xx-Yag" customClass="SSLabel">
+                                            <rect key="frame" x="92" y="7" width="222" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="HGm-PB-RJY">
+                                            <rect key="frame" x="5" y="5" width="85" height="25"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="nameLabel" destination="0AT-Xx-Yag" id="cl7-0P-7bl"/>
+                                    <outlet property="priceLabel" destination="cKe-Qg-Ctx" id="ir3-nb-4g4"/>
+                                    <outlet property="sourceImg" destination="HGm-PB-RJY" id="l12-de-FjO"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="Dfl-br-fgd"/>
+                    <connections>
+                        <outlet property="searchBar" destination="mfs-04-nSb" id="BwO-7m-vNF"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1MS-mY-Ygr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1177" y="43"/>
+        </scene>
+        <!--Navigation Controller - 去比价-->
+        <scene sceneID="aYR-z8-sW5">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="Iju-hJ-aIc" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="去比价" id="Tba-qh-5hN"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="60I-M0-cgG">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ek9-Nn-ccj" kind="relationship" relationship="rootViewController" id="z3t-wP-Stf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FkU-gF-LL4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="800" y="43"/>
         </scene>
         <!--Killing View Controller - Root View Controller-->
         <scene sceneID="kkA-o4-qkE">
@@ -512,71 +590,6 @@
             </objects>
             <point key="canvasLocation" x="415" y="43"/>
         </scene>
-        <!--Compare Price View Controller - Root View Controller-->
-        <scene sceneID="K55-j0-Bv4">
-            <objects>
-                <tableViewController id="CHh-eY-etC" customClass="ComparePriceViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZcT-8K-L6n">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="搜索" id="vau-xf-4y4">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                            <connections>
-                                <outlet property="delegate" destination="CHh-eY-etC" id="4lt-gu-UL9"/>
-                            </connections>
-                        </searchBar>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="comparePriceCellID" id="IC7-I1-wXy" customClass="ComparePriceTableViewCell">
-                                <rect key="frame" x="0.0" y="66" width="320" height="65"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IC7-I1-wXy" id="CNK-lX-1Oa">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="京东iPhone5打折促销" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pii-du-uvK" customClass="SSLabel">
-                                            <rect key="frame" x="90" y="5" width="222" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥2500.5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uus-lm-mPS">
-                                            <rect key="frame" x="5" y="35" width="90" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="XSc-up-nvO">
-                                            <rect key="frame" x="10" y="10" width="70" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
-                                    </subviews>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="nameLabel" destination="pii-du-uvK" id="eZS-CM-LJi"/>
-                                    <outlet property="priceLabel" destination="Uus-lm-mPS" id="vHq-bf-gsp"/>
-                                    <outlet property="sourceImg" destination="XSc-up-nvO" id="iaq-yt-qFy"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="CHh-eY-etC" id="B0c-4m-U8x"/>
-                            <outlet property="delegate" destination="CHh-eY-etC" id="jJg-DX-vU6"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="rsw-hD-GSE"/>
-                    <connections>
-                        <outlet property="searchBar" destination="vau-xf-4y4" id="gwC-0y-aN0"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8ed-H9-Lck" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1195" y="43"/>
-        </scene>
         <!--More View Controller - Root View Controller-->
         <scene sceneID="Ltu-hk-Yvc">
             <objects>
@@ -695,22 +708,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zfS-iu-pkc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1579" y="43"/>
-        </scene>
-        <!--Navigation Controller - 去比价-->
-        <scene sceneID="CeQ-Bj-KJG">
-            <objects>
-                <navigationController definesPresentationContext="YES" id="vbv-3h-Gol" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="去比价" id="j8k-Q5-0GR"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="ct6-of-NPD">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="CHh-eY-etC" kind="relationship" relationship="rootViewController" id="dDj-P8-75o"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="f04-u8-C0e" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="797" y="43"/>
         </scene>
         <!--Navigation Controller - 活动墙-->
         <scene sceneID="i8o-aV-r77">

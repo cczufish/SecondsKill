@@ -18,6 +18,8 @@
 {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.translucent = NO;
+    
     self.webView.delegateV = self;
 
     if (![self.linkAddress hasPrefix:@"http://"] && ![self.linkAddress hasPrefix:@"https://"]) {
@@ -52,7 +54,7 @@
 - (void)actionUp:(VWebView *)webView
 {
     [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY
-                                      shareText:[NSString stringWithFormat:@"%@:%@",UM_SHARED_TEXT,self.linkAddress]
+                                      shareText:[NSString stringWithFormat:@"%@ %@",UM_SHARED_TEXT,self.linkAddress]
                                      shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:self];
 }
 

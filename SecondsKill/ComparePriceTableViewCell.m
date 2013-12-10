@@ -7,6 +7,7 @@
 //
 
 #import "ComparePriceTableViewCell.h"
+#import "ComparePriceViewController.h"
 
 @implementation ComparePriceTableViewCell
 
@@ -20,8 +21,10 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    //必须调用super....否则cell不响应事件
+    [super touchesBegan:touches withEvent:event];
+    
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-    //[self.view endEditing:YES];
 }
 
 @end

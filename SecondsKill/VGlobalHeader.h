@@ -24,7 +24,7 @@
 
     #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
     #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
-
+#warning 打包时把.git除去试试，看看ipa会不会小
 #warning default page change 20
     #define DEFAULT_PAGE_SIZE 10
     #define NAV_BACKGROUND_COLOR RGBCOLOR(199, 55, 33)

@@ -104,8 +104,7 @@
 {
     id vc = [self inViewController];
 
-    [UMSocialSnsService presentSnsIconSheetView:vc appKey:UMENG_APPKEY shareText:UM_SHARED_TEXT
-                                     shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:vc];
+    [UMSocialSnsService presentSnsIconSheetView:vc appKey:UMENG_APPKEY shareText:[NSString stringWithFormat:@"%@ %@",UM_SHARED_TEXT,self.commodity.link] shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:vc];
 }
 
 - (IBAction)up:(id)sender

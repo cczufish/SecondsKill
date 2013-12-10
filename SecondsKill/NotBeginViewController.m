@@ -12,6 +12,8 @@
 
 @interface NotBeginViewController ()
 
+@property (nonatomic, copy) NSString *ql;
+
 @end
 
 @implementation NotBeginViewController
@@ -22,7 +24,9 @@
     
     [super viewDidLoad];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(pullDownRefresh)];
+    self.ql = @"";
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
 
     NSArray *menus = [MenuViewController menus];
     self.seletedMenuItems = [NSMutableArray arrayWithCapacity:[menus count]];
@@ -37,7 +41,7 @@
     self.tableView.indicatorStyle=UIScrollViewIndicatorStyleWhite;
     
     self.pageNO = 1;
-    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self defaultQL] base64EncodedString], @"ql", @"start_t",@"sort",@"asc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page", nil];
+    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self defaultQL] base64EncodedString], @"ql", @"start_t",@"sort",@"asc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page",@"NotBeginViewController",@"model", nil];
     self.uri = [self.params toURLString:DEFAULT_URI];
     
     [SVProgressHUD show];
@@ -81,17 +85,26 @@
 {
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
     long long currentTime = (long long)(time * 1000);
-    return [NSString stringWithFormat:@"start_t>%lld",currentTime];
+   
+    return [NSString stringWithFormat:@"%@start_t>%lld",self.ql,currentTime];
 }
 
 - (void)selectCommoditys:(NSString *)ql
 {
-    self.pageNO = 1;
+    self.ql = ql;
     
-    NSString *newQL = [NSString stringWithFormat:@"%@%@",ql,[self defaultQL]];
-    [self.params setObject:[newQL base64EncodedString] forKey:@"ql"];
-    [self.params setObject:@"1" forKey:@"page"];
-    self.uri = [self.params toURLString:DEFAULT_URI];
+    [super pullDownRefresh];
+    
+    [SVProgressHUD show];
+    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+        self.tableViewAdapter.commoditys = datas;
+        [SVProgressHUD dismiss];
+    }];
+}
+
+- (void)refresh
+{
+    [super pullDownRefresh];
     
     [SVProgressHUD show];
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {

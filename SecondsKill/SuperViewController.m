@@ -14,8 +14,6 @@
 #import "KillingViewController.h"
 #import "NotBeginViewController.h"
 #import "ActivityWallViewController.h"
-#import "ComparePriceViewController.h"
-#import "ComparePrice.h"
 #import "SVPullToRefresh.h"
 #import "AKTabBarController.h"
 
@@ -56,7 +54,12 @@
    
         __typeof (self) __weak weakSelf = self;
         [self.tableView addInfiniteScrollingWithActionHandler:^{
-            [weakSelf pullUpRefresh];
+            if (weakSelf.tableView.contentSize.height > SCREEN_HEIGHT) {
+                [weakSelf pullUpRefresh];
+            }
+            else {
+                [weakSelf.tableView.infiniteScrollingView stopAnimating];
+            }
         }];
         
         self.tableView.infiniteScrollingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
@@ -128,10 +131,6 @@
                                 ActivityWall *temp = [[ActivityWall alloc] initWithDictionary:json[i] error:nil];
                                 [commoditys addObject:temp];
                             }
-                            else if ([vc isKindOfClass:[ComparePriceViewController class]]) {
-                                ComparePrice *temp = [[ComparePrice alloc] initWithDictionary:json[i] error:nil];
-                                [commoditys addObject:temp];
-                            }
                         }
                         
                         if (callBack) {
@@ -154,13 +153,13 @@
                             
                             [weakSelf.tableView reloadData];
                         }
+                        
                         [weakSelf endRefresh:@"没有相关数据!" style:ALAlertBannerStyleWarning refreshMode:refreshMode];
                     }
                 }
                 else {
-                    //-1004表示连接不上服务器，通常是因为没有网络造成，加载缓存数据
                     if ([error code] == -1004) {
-                        [weakSelf loadDiskCacheDatas:refreshMode callBack:callBack];
+                        [self loadDiskCacheDatas:refreshMode callBack:callBack];//没网，加载缓存数据
                     }
                     else {
                         //401错误是因为没权限访问数据造成，在本应用中是因为session不存在，或session失效造成，此时模拟登录处理，以后弹出登录界面
@@ -194,30 +193,39 @@
 
 - (void)loadDiskCacheDatas:(RefreshTableViewMode)refreshMode callBack:(RefreshTableViewCallBack)callBack
 {
-    NSURL *url = [NSURL URLWithString:self.uri];
-    NSData *fileData = [NSData dataWithContentsOfFile:[[VURLCache shardInstance] cacheFileName:url]];
-
-    if (fileData) {
-        NSMutableArray *commoditys = [NSMutableArray arrayWithCapacity:20];
-        NSArray * dic = [NSJSONSerialization JSONObjectWithData:fileData options:NSJSONReadingMutableContainers error:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *url = [NSURL URLWithString:self.uri];
         
-        for (int i = 0; i < [dic count]; i++) {
-            Commodity *temp = [[Commodity alloc] initWithDictionary:dic[i] error:nil];
-            [commoditys addObject:temp];
+        NSData *fileData = [NSData dataWithContentsOfFile:[[VURLCache shardInstance] cacheFileName:url]];
+        
+        if (fileData) {
+            NSMutableArray *commoditys = [NSMutableArray arrayWithCapacity:20];
+            NSArray *dic = [NSJSONSerialization JSONObjectWithData:fileData options:NSJSONReadingMutableContainers error:nil];
+            NSLog(@"%@",dic);
+            for (int i = 0; i < [dic count]; i++) {
+                Commodity *temp = [[Commodity alloc] initWithDictionary:dic[i] error:nil];
+                [commoditys addObject:temp];
+            }
+            
+            if (callBack) {
+                callBack(commoditys);
+            }
+            
+            if (refreshMode != RefreshTableViewModePullUp) {
+                [self.tableView setContentOffset:CGPointMake(0,0) animated:NO];
+            }
+            
+            [self.tableView reloadData];
+            
+            [self endRefresh:@"正在加载本地缓存数据，该数据已过期!" style:ALAlertBannerStyleWarning refreshMode:refreshMode];
         }
-        
-        if (callBack) {
-            callBack(commoditys);
+        else {
+            if (callBack) {
+                callBack(nil);
+            }
+            [self endRefresh:NETWORK_ERROR style:ALAlertBannerStyleFailure refreshMode:refreshMode];
         }
-        
-        [self.tableView reloadData];
-        
-        [self endRefresh:@"正在加载本地缓存数据，该数据已过期!" style:ALAlertBannerStyleWarning refreshMode:refreshMode];
-    }
-    else {
-        [self endRefresh:NETWORK_ERROR style:ALAlertBannerStyleFailure refreshMode:refreshMode];
-    }
-
+    });
 }
 
 - (void)endRefresh:(NSString *)msg style:(ALAlertBannerStyle)style refreshMode:(RefreshTableViewMode)refreshMode

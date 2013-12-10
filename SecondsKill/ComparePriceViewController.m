@@ -8,9 +8,9 @@
 
 #import "ComparePriceViewController.h"
 #import "ComparePriceTableViewCell.h"
-#import "Commodity.h"
+#import "ComparePrice.h"
 
-#define kComparePricePath @"msitems"
+#define kComparePricePath @"http://api.box-z.com/api/search.ldo"
 #define kPadding 5.0f
 #define kSearchBGViewTag 8080
 
@@ -18,13 +18,21 @@
 
 @property (nonatomic, strong) NSMutableArray *commoditys;
 
+@property (nonatomic, assign) int maxResult;
+@property (nonatomic, assign) int begin;
+
 @end
 
 @implementation ComparePriceViewController
-//http://api.box-z.com/api/search.ldo?keyword=%E8%8B%B9%E6%9E%9C&maxResult=10&begin=0
+
 - (void)viewDidLoad
 {
+    self.canRefreshTableView = YES;
+    
     [super viewDidLoad];
+    
+    self.maxResult = 50;
+    self.begin = 0;
     
     if (IS_RUNNING_IOS7) {
         self.searchBar.barTintColor = NAV_BACKGROUND_COLOR;
@@ -33,10 +41,6 @@
     }
     
     self.commoditys = [NSMutableArray arrayWithCapacity:20];
-    
-    self.pageNO = 1;
-    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"created_at",@"sort",@"desc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page", nil];
-    self.uri = [self.params toURLString:kComparePricePath];
     
     UIToolbar *keyBoardBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
     keyBoardBar.barStyle = UIBarStyleBlack;
@@ -58,6 +62,7 @@
     
     self.searchBar.inputAccessoryView = keyBoardBar;
     
+    self.tableView.tableHeaderView = self.searchBar;
     self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
@@ -87,7 +92,7 @@
 
 - (void)ok:(id)sender
 {
-    [self searchCommodityByKeyWord:self.searchBar.text];
+    [self searchCommodityByKeyWord:RefreshTableViewModeNone];
 }
 
 - (void)cancel:(id)sender
@@ -95,18 +100,104 @@
     [self.searchBar resignFirstResponder];
 }
 
-- (void)searchCommodityByKeyWord:(NSString *)keyWord
+- (void)refresh:(RefreshTableViewMode)refreshMode
 {
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    [[self.tableView viewWithTag:kSearchBGViewTag] removeFromSuperview];
-    
+    if ([VNetworkHelper hasNetWork]) {
+        __typeof (self) __weak weakSelf = self;
+        
+        weakSelf.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:weakSelf.searchBar.text,@"keyword", [NSString stringWithFormat:@"%d",weakSelf.maxResult],@"maxResult",[NSString stringWithFormat:@"%d",weakSelf.begin],@"begin", nil];
+
+        NSURL *url = [NSURL URLWithString:[weakSelf.params toURLString:kComparePricePath]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        
+        if (refreshMode == RefreshTableViewModeNone) {
+            [SVProgressHUD show];
+        }
+
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        
+        AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (refreshMode == RefreshTableViewModeNone) {
+                    [SVProgressHUD dismiss];
+                }
+            });
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([operation.response statusCode] == 200) {
+                    NSMutableArray *commoditys = [[NSMutableArray alloc] initWithCapacity:20];
+                    
+                    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableContainers error:nil];
+                    NSArray *items = [[dict objectForKey:@"bean"] objectForKey:@"items"];
+
+                    for (int i = 0; i < [items count]; i++) {
+                        ComparePrice *temp = [[ComparePrice alloc] initWithDictionary:items[i] error:nil];
+
+                        if (temp.vendorId > 0 && temp.vendorId < 8) {
+                            [commoditys addObject:temp];
+                        }
+                    }
+
+                    if (refreshMode == RefreshTableViewModePullUp) {
+                        [self.commoditys addObjectsFromArray:commoditys];
+                    }
+                    else {
+                        self.commoditys = commoditys;
+                    }
+
+                    if ([self.commoditys count] > 0) {
+                        self.tableView.backgroundColor = RGBCOLOR(38.0f, 38.0f, 38.0f);
+                        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                        [self.tableView viewWithTag:kSearchBGViewTag].hidden = YES;
+                    }
+                    else {
+                        self.tableView.backgroundColor = [UIColor whiteColor];
+                        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                        [self.tableView viewWithTag:kSearchBGViewTag].hidden = NO;
+                    }
+                    
+                    [weakSelf.tableView reloadData];
+                    
+                    [weakSelf endRefresh:[NSString stringWithFormat:@"成功请求%d条数据!", [commoditys count]] style:ALAlertBannerStyleNotify refreshMode:refreshMode];
+                }
+                else {
+                    NSLog(@"%@",error);
+                    [weakSelf endRefresh:@"数据请求失败，请重试!" style:ALAlertBannerStyleFailure refreshMode:refreshMode];
+                }
+                
+                if (refreshMode == RefreshTableViewModeNone) {
+                    [SVProgressHUD dismiss];
+                }
+            });
+        }];
+        
+        [operation start];
+    }
+    else {
+        if (refreshMode == RefreshTableViewModeNone) {
+            refreshMode = RefreshTableViewModePullDown;
+        }
+        [self endRefresh:NETWORK_ERROR style:ALAlertBannerStyleFailure refreshMode:refreshMode];
+    }
+}
+
+- (void)pullDownRefresh
+{
+    [self searchCommodityByKeyWord:RefreshTableViewModePullDown];
+}
+
+- (void)pullUpRefresh
+{
+    self.begin += self.maxResult;
+    [self refresh:RefreshTableViewModePullUp];
+}
+
+- (void)searchCommodityByKeyWord:(RefreshTableViewMode)refreshMode
+{
     [self.searchBar resignFirstResponder];
-    
-    [SVProgressHUD show];
-    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
-        self.commoditys = datas;
-        [SVProgressHUD dismiss];
-    }];
+
+    self.begin = 0;
+    [self refresh:refreshMode];
 }
 
 #pragma mark - UITableViewDelegate / UITableViewDataSource
@@ -118,9 +209,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
+    ComparePrice *commodity = [self.commoditys objectAtIndex:indexPath.row];
     
-    CGSize size = [commodity.title sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(222.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize size = [commodity.name sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(222.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat cellHeight = kPadding + size.height + kPadding;
     
     return MAX(cellHeight, 65.0f);
@@ -130,18 +221,18 @@
 {
 	ComparePriceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"comparePriceCellID"];
     
-    Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
+    ComparePrice *commodity = [self.commoditys objectAtIndex:indexPath.row];
     
-    CGSize size = [commodity.title sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize size = [commodity.name sizeWithFont:cell.nameLabel.font constrainedToSize:CGSizeMake(cell.nameLabel.frame.size.width, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
     
     CGRect newRect = cell.nameLabel.frame;
     newRect.size.height = size.height;
     cell.nameLabel.frame = newRect;
     
-    cell.nameLabel.text = commodity.title;
+    cell.nameLabel.text = commodity.name;
     
     cell.priceLabel.text = [NSString stringWithFormat:@"￥%g",commodity.price];
-    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"pic_%@", commodity.site]];
+    cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"vendor%d", commodity.vendorId]];
     
     return cell;
 }
@@ -151,8 +242,8 @@
     VWebViewController *webVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
     webVC.navigationItem.title = self.navigationItem.title;
     
-    Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
-    webVC.linkAddress = commodity.link;
+    ComparePrice *commodity = [self.commoditys objectAtIndex:indexPath.row];
+    webVC.linkAddress = commodity.url;
     
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];
@@ -164,7 +255,7 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    [self searchCommodityByKeyWord:self.searchBar.text];
+    [self searchCommodityByKeyWord:RefreshTableViewModeNone];
 }
 
 #pragma mark - AKTabBarController need

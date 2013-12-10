@@ -16,4 +16,7 @@
 
 + (BOOL)hasNetWork;
 
+//监测成功表明，成功监测到网络当前状态是可用还是不可用
++ (BOOL)monitorSuccess;
+
 @end

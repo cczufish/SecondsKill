@@ -29,15 +29,14 @@
     
     [super viewDidLoad];
     
-    self.tableView.backgroundColor = [UIColor blackColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(pullDownRefresh)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
     
     self.activitys = [NSMutableArray arrayWithCapacity:20];
     
     self.pageNO = 1;
-    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"created_at",@"sort",@"desc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page", nil];
+    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"created_at",@"sort",@"desc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page",@"ActivityWallViewController",@"model", nil];
     self.uri = [self.params toURLString:kActivityWallPath];
     
     [SVProgressHUD show];
@@ -65,6 +64,19 @@
 }
 
 #pragma mark -
+
+- (void)refresh
+{
+    self.pageNO = 1;
+    [self.params setObject:@"1" forKey:@"page"];
+    self.uri = [self.params toURLString:kActivityWallPath];
+    
+    [SVProgressHUD show];
+    [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
+        self.activitys = datas;
+        [SVProgressHUD dismiss];
+    }];
+}
 
 - (void)pullDownRefresh
 {

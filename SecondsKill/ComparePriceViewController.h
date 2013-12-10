@@ -10,6 +10,6 @@
 
 @interface ComparePriceViewController : SuperViewController<UISearchBarDelegate>
 
-@property (nonatomic, weak) IBOutlet UISearchBar *searchBar;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end
