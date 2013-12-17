@@ -33,7 +33,7 @@
     self.nameLabel.numberOfLines = 0;//自动换行
     self.pictureImg.contentMode = UIViewContentModeScaleAspectFit;//自适应图片宽高比例
     self.priceLabel.strikeThroughEnabled = YES;//删除线
-
+    
     [self setButtonStyle:self.shareBtn imageName:@"icon_share.png"];
     [self setButtonStyle:self.upBtn imageName:@"icon_up.png"];
 
@@ -43,30 +43,10 @@
 
 - (void)setButtonStyle:(UIButton *)btn imageName:(NSString *)imageName
 {
-    btn.layer.cornerRadius = 2;
-    btn.layer.masksToBounds = YES;
-    
-    btn.layer.borderWidth = 1;
-    btn.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    
-    btn.titleLabel.font = DEFAULT_FONT;
-    
-    if(btn.titleLabel.frame.size.width < 50.0f) {
-        if (btn.titleLabel.frame.size.width < 30.0f) {
-            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 20.0, 0.0, 0.0)];
-            [btn setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 50.0)];
-        }
-        else {
-            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 20.0, 0.0, 0.0)];
-            [btn setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 30.0)];
-        }
-    }
-    else {
-        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)];
-        [btn setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 10.0)];
-    }
-    
-    [btn setImage:[[UIImage imageNamed:imageName] imageWithNewSize:CGSizeMake(18, 18)] forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont fontWithName:FONT_NAME size:15];
+    [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)];
+    [btn setImage:[[[UIImage imageNamed:imageName] imageWithNewSize:CGSizeMake(16, 16)] tintColor:[UIColor darkGrayColor]] forState:UIControlStateNormal];
 }
 
 - (void)updateSurplusOrDetrusionTime
@@ -90,6 +70,10 @@
                 NotBeginViewController *notBeginVC = (NotBeginViewController *)[self inViewController];
                 [notBeginVC.tableViewAdapter.commoditys removeObject:self.commodity];
                 [self.tableView reloadData];
+                
+                if ([notBeginVC.tableViewAdapter.commoditys count] == 0) {
+                    [notBeginVC refresh];
+                }
             }
             else {
                 self.detrusionTimeLabel.text = self.commodity.detrusionTime;
@@ -100,11 +84,39 @@
 
 #pragma mark - IBAction
 
+- (NSString *)shareText
+{
+    NSString *msg = @"";
+    
+    if (self.adapterType == CommodityAdapterTypeNotBegin) {
+        //2天
+        //3个多小时
+        //15分钟  不要秒
+        //只有秒   即刻开始秒杀
+        NSString *info = [NSString stringWithFormat:@"还有。。。。开始秒杀"];
+        
+        if (self.commodity.price > 0) {
+            info = [NSString stringWithFormat:@"只要%g元哟，%@",self.commodity.price,info];
+        }
+        msg = [NSString stringWithFormat:@"#秒杀惠# %@，%@，快来看看吧! %@",self.commodity.title, info, self.commodity.link];
+    }
+    else {
+        NSString *info = [NSString stringWithFormat:@"只要%g元哟", self.commodity.price];
+        
+        if ([self.commodity.discount floatValue] < 7 && [self.commodity.discount floatValue] > 0) {
+            info = [NSString stringWithFormat:@"只要%@折哟",self.commodity.discount];
+        }
+        msg = [NSString stringWithFormat:@"#秒杀惠# %@，%@，快来看看吧! %@",self.commodity.title, info, self.commodity.link];
+    }
+
+    return msg;
+}
+
 - (IBAction)share:(id)sender
 {
     id vc = [self inViewController];
-
-    [UMSocialSnsService presentSnsIconSheetView:vc appKey:UMENG_APPKEY shareText:[NSString stringWithFormat:@"%@ %@",UM_SHARED_TEXT,self.commodity.link] shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:vc];
+    
+    [UMSocialSnsService presentSnsIconSheetView:vc appKey:UMENG_APPKEY shareText:[self shareText] shareImage:self.commodityImage shareToSnsNames:nil delegate:vc];
 }
 
 - (IBAction)up:(id)sender
@@ -113,8 +125,15 @@
         if ([VNetworkHelper hasNetWork]) {
             [VAnimationHelper animationScaleAndRestore:self.upBtn.imageView];
             [self.upBtn setImage:[self.upBtn.imageView.image tintColor:NAV_BACKGROUND_COLOR] forState:UIControlStateNormal];
-            [self.upBtn setTitle:[NSString stringWithFormat:@"%d",[self.commodity.likingCount intValue] + 1] forState:UIControlStateNormal];
             
+            //没有网时，数据会从本地加载，所以为了防止upBtn.title为空或空字符串时用户还要点此按钮，所以做此操作
+            if (self.commodity.likingCount && ![@"" isEqualToString:self.commodity.likingCount]) {
+               [self.upBtn setTitle:[NSString stringWithFormat:@"%d",[self.commodity.likingCount intValue] + 1] forState:UIControlStateNormal];
+            }
+            else {
+                [self.upBtn setTitle:@"1" forState:UIControlStateNormal];
+            }
+
             self.commodity.isUp = @"YES";
             [VDataBaseHelper update:self.commodity];
 
@@ -131,7 +150,8 @@
 {
     UIViewController *vc = [self inViewController];
     if ([vc isKindOfClass:[KillingViewController class]]) {
-       [((KillingViewController *)vc).sortMenu close];
+        KillingViewController *killingVC = (KillingViewController *)vc;
+        [killingVC showSortMenuView:nil];
     }
 }
 
@@ -142,7 +162,12 @@
         VWebViewController *webVC = [vc.storyboard instantiateViewControllerWithIdentifier:@"VWebViewController"];
         webVC.navigationItem.title = vc.tabTitle;
 
+        webVC.commodity = self.commodity;
+        webVC.adapterType = self.adapterType;
         webVC.linkAddress = self.commodity.link;
+        webVC.shareImage = self.commodityImage;
+        webVC.shareText = [self shareText];
+        
         [webVC setHidesBottomBarWhenPushed:YES];
         [vc.navigationController pushViewController:webVC animated:YES];
     }

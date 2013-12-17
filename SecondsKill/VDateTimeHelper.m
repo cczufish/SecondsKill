@@ -86,7 +86,10 @@
 
 + (NSDate *)formatStringToDate:(NSString *)date dateFormat:(NSString *)dateFormat
 {
-    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+    static NSDateFormatter *fmt = nil;
+    if (!fmt) {
+        fmt = [[NSDateFormatter alloc] init];
+    }
     [fmt setDateFormat:dateFormat];
     return [fmt dateFromString:date];
 }
@@ -98,7 +101,10 @@
 
 + (NSString *)formatDateToString:(NSDate *)date dateFormat:(NSString *)dateFormat
 {
-    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+    static NSDateFormatter *fmt = nil;
+    if (!fmt) {
+        fmt = [[NSDateFormatter alloc] init];
+    }
     [fmt setDateFormat:dateFormat];
     return [fmt stringFromDate:date];
 }

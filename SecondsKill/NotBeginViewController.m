@@ -26,7 +26,11 @@
     
     self.ql = @"";
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
+    BButton *refreshBtn = [BButton awesomeButtonWithOnlyIcon:FAIconRepeat color:[UIColor clearColor] style:BButtonStyleBootstrapV3];//V2有阴影
+    refreshBtn.titleLabel.textColor = [UIColor whiteColor];
+    refreshBtn.showsTouchWhenHighlighted = YES;
+    [refreshBtn addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshBtn];
 
     NSArray *menus = [MenuViewController menus];
     self.seletedMenuItems = [NSMutableArray arrayWithCapacity:[menus count]];
@@ -41,9 +45,9 @@
     self.tableView.indicatorStyle=UIScrollViewIndicatorStyleWhite;
     
     self.pageNO = 1;
-    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self defaultQL] base64EncodedString], @"ql", @"start_t",@"sort",@"asc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page",@"NotBeginViewController",@"model", nil];
+    self.params = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self defaultQL] base64EncodedString], @"ql", @"start_t,liking",@"sort",@"asc,desc",@"order",[NSString stringWithFormat:@"%d",DEFAULT_PAGE_SIZE],@"size",@"1",@"page",@"NotBeginViewController",@"model", nil];
     self.uri = [self.params toURLString:DEFAULT_URI];
-    
+
     [SVProgressHUD show];
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
         self.tableViewAdapter.commoditys = datas;

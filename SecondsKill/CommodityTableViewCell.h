@@ -37,6 +37,8 @@
 
 @property (nonatomic, strong) Commodity *commodity;//商品对象
 
+@property (nonatomic, strong) UIImage *commodityImage;//商品图片，用于分享
+
 @property (nonatomic, strong) NSTimer *timer;
 
 @property (nonatomic, strong) UITableView *tableView;

@@ -8,11 +8,22 @@
 
 #import "SuperViewController.h"
 #import "VWebView.h"
+#import "CommodityTableViewAdapter.h"
+#import "Commodity.h"
 
 @interface VWebViewController : UIViewController<UMSocialUIDelegate, VWebViewDelegate>
 
+@property (nonatomic, assign) CommodityAdapterType adapterType;
+
+@property (nonatomic, strong) Commodity *commodity;
+
 @property (nonatomic, copy) NSString *linkAddress;
 
-@property (nonatomic, weak) IBOutlet VWebView *webView;
+@property (nonatomic, strong) UIImage *shareImage;//分享用的图片
+
+@property (nonatomic, copy) NSString *shareText;//分享用的文字
+
+
+@property (nonatomic, strong) VWebView *webView;
 
 @end

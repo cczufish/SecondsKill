@@ -59,4 +59,28 @@
     return newImage;
 }
 
++ (UIImage *)getWebSiteIcon:(NSString *)website
+{
+    NSString *fixedWeb = [[NSString alloc] initWithString:website];
+
+    if (![website hasPrefix:@"http://"] && ![website hasPrefix:@"https://"]) {
+        fixedWeb = [NSString stringWithFormat:@"http://%@", website];
+    }
+    
+    NSString *basicCode = [NSString stringWithFormat:@"http://g.etfv.co/%@", fixedWeb];
+    NSData *myData = [NSData dataWithContentsOfURL:[NSURL URLWithString: basicCode]];
+    UIImage *myImage = [UIImage imageWithData:myData];
+
+    CGSize imageSize = CGSizeMake(25, 25);
+    UIGraphicsBeginImageContext(imageSize);
+    [myImage drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
+    UIImage *iconImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    NSData *iconData = [NSData dataWithData:UIImagePNGRepresentation(iconImage)];
+    iconImage = [UIImage imageWithData:iconData];
+    
+    return iconImage;
+}
+
 @end

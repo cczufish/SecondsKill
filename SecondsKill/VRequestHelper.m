@@ -8,7 +8,6 @@
 
 #import "VRequestHelper.h"
 
-#define kBaseURL @"https://115.29.46.104/"
 #define kAppKey @"dGVzdDp0ZXN0"
 #define kUserInfoKey @"uri"
 
@@ -94,5 +93,37 @@
     
     [[NSOperationQueue mainQueue] addOperation:operation];
 }
+
+- (void)requestSimpleWithCompletionBlock:(CompletionRequest)completionBlock
+{
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.uri]];
+    [request setHTTPMethod:self.httpMethod];
+
+    if ([self.httpMethod isEqualToString:@"PUT"] || [self.httpMethod isEqualToString:@"POST"]) {
+        [request setHTTPBody:[self.httpBody dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    operation.userInfo = @{kUserInfoKey: self.uri};
+
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (completionBlock) {
+            completionBlock(operation.response, responseObject, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (![operation isCancelled] && completionBlock) {
+            if ([error code] == NSURLErrorCannotDecodeContentData) {
+                completionBlock(operation.response, [operation responseString], error);
+            }
+            else {
+                completionBlock(operation.response, nil, error);
+            }
+        }
+    }];
+
+    [[NSOperationQueue mainQueue] addOperation:operation];
+}
+
 
 @end

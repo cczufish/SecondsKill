@@ -49,7 +49,7 @@ SHARD_INSTANCE_IMPL(VDataBaseHelper)
     NSMutableString *sql = [[NSMutableString alloc] initWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", [obj tableName], [columns componentsJoinedByString:@","], [placeholder componentsJoinedByString:@","]];
     
     FMDatabase *db = [FMDatabase databaseWithPath:NIPathForDocumentsResource(DB_NAME)];
-    
+
     if ([db open]) {
         [db executeUpdate:sql withArgumentsInArray:values];
     }

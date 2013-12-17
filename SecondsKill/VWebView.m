@@ -72,7 +72,7 @@
     self.defaultBarItems = @[_backBarItem, flexibleBarItem, _forwardBarItem, flexibleBarItem, _refreshBarItem, flexibleBarItem, _actionBarItem];
     self.self.loadingBarItems = @[_backBarItem, flexibleBarItem, _forwardBarItem, flexibleBarItem, _stopBarItem, flexibleBarItem, _actionBarItem];
     
-    _toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, self.superview.frame.size.height - 44.0f, SCREEN_WIDTH, 44.0f)];
+    _toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - 20.0f - 44.0f, SCREEN_WIDTH, 44.0f)];
     _toolBar.barStyle = UIBarStyleBlackTranslucent;
     self.toolBar.items = self.defaultBarItems;
     

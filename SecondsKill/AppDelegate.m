@@ -14,6 +14,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [NSThread sleepForTimeInterval:1.0f];
+    
     InitializeProject();
     
     UITabBarController *tabBarController = (UITabBarController *) self.window.rootViewController;
@@ -38,7 +40,7 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     [APService registerDeviceToken:deviceToken];
-
+    
     NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSMutableString *version = [NSMutableString stringWithFormat:@"version_ios_%@", appVersion];
     [version replaceOccurrencesOfString:@"." withString:@"_" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [version length])];
@@ -52,8 +54,6 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:deviceId forKey:DEVICE_KEY];
     [userDefaults synchronize];
-    
-    [APService setAlias:deviceId callbackSelector:nil object:nil];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -69,7 +69,7 @@
     // 处理收到的APNS消息，向服务器上报收到APNS消息
     [APService handleRemoteNotification:userInfo];
     
-    PXAlertView *alert = [PXAlertView showAlertWithTitle:@"通知" message:content cancelTitle:@"知道了" otherTitle:nil completion:nil];
+    PXAlertView *alert = [PXAlertView showAlertWithTitle:@"秒杀惠" message:content cancelTitle:@"知道了" otherTitle:nil completion:nil];
     [alert setCancelButtonBackgroundColor:[UIColor orangeColor]];
 }
 

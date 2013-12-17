@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    CommodityAdapterTypeKilling = 0,
+    CommodityAdapterTypeKilling = 100,
     CommodityAdapterTypeNotBegin,
 } CommodityAdapterType;
 

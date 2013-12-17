@@ -132,7 +132,8 @@
 
                     for (int i = 0; i < [items count]; i++) {
                         ComparePrice *temp = [[ComparePrice alloc] initWithDictionary:items[i] error:nil];
-
+                        temp.price = temp.price/100;
+                        
                         if (temp.vendorId > 0 && temp.vendorId < 8) {
                             [commoditys addObject:temp];
                         }
@@ -174,9 +175,6 @@
         [operation start];
     }
     else {
-        if (refreshMode == RefreshTableViewModeNone) {
-            refreshMode = RefreshTableViewModePullDown;
-        }
         [self endRefresh:NETWORK_ERROR style:ALAlertBannerStyleFailure refreshMode:refreshMode];
     }
 }
@@ -212,7 +210,7 @@
     ComparePrice *commodity = [self.commoditys objectAtIndex:indexPath.row];
     
     CGSize size = [commodity.name sizeWithFont:DEFAULT_FONT constrainedToSize:CGSizeMake(222.0f, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-    CGFloat cellHeight = kPadding + size.height + kPadding;
+    CGFloat cellHeight = kPadding + size.height + kPadding + kPadding;
     
     return MAX(cellHeight, 65.0f);
 }
@@ -244,7 +242,9 @@
     
     ComparePrice *commodity = [self.commoditys objectAtIndex:indexPath.row];
     webVC.linkAddress = commodity.url;
-    
+    webVC.shareImage = [UIImage imageNamed:@"logo@2x.png"];
+    webVC.shareText = [NSString stringWithFormat:@"#秒杀惠# %g元的%@，亮瞎了有木有? %@", commodity.price, self.searchBar.text, commodity.url];
+
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];
     

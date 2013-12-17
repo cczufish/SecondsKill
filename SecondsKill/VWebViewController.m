@@ -53,9 +53,7 @@
 
 - (void)actionUp:(VWebView *)webView
 {
-    [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY
-                                      shareText:[NSString stringWithFormat:@"%@ %@",UM_SHARED_TEXT,self.linkAddress]
-                                     shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:self];
+    [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY shareText:self.shareText shareImage:self.shareImage shareToSnsNames:nil delegate:self];
 }
 
 #pragma mark - UMSocialUIDelegate
@@ -65,7 +63,7 @@
 {
     if (response.responseType == UMSResponseShareToMutilSNS) {
         if (response.responseCode == UMSResponseCodeSuccess) {
-            [VAlertHelper success:[NSString stringWithFormat:@"成功分享至%@!",[[response.data allKeys] objectAtIndex:0]]];
+            [VAlertHelper success:[NSString stringWithFormat:@"分享成功!"]];
         }
     }
 }

@@ -6,14 +6,14 @@
 //  Copyright (c) 2013年 edouglas. All rights reserved.
 //
 
+#warning 打包时把.git除去试试，看看ipa会不会小
+
 #ifndef SecondsKill_VGlobalHeader_h
 #define SecondsKill_VGlobalHeader_h
 
+    #define kBaseURL @"https://115.29.46.104/"
     #define DEFAULT_URI @"msitems"
-    #define NETWORK_ERROR @"网络异常!"
-
-    #define UM_SHARED_TEXT @""
-    #define UM_SHARED_IMAGE nil
+    #define NETWORK_ERROR @"网络错误!"
 
     #define UMENG_APPKEY @"522e80dc56240b3cbc02d78b"
 
@@ -21,12 +21,12 @@
 
     #define DEVICE_KEY @"deviceIdKey"
     #define SESSION_KEY @"sessionKey"
+    #define USER_ID_KEY @"userIdKey"
 
     #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
     #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
-#warning 打包时把.git除去试试，看看ipa会不会小
-#warning default page change 20
-    #define DEFAULT_PAGE_SIZE 10
+
+    #define DEFAULT_PAGE_SIZE 20
     #define NAV_BACKGROUND_COLOR RGBCOLOR(199, 55, 33)
 
     #define FONT_NAME @"HelveticaNeue"

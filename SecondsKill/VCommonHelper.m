@@ -33,11 +33,7 @@ void InitializeProject()
     [JSONModel setGlobalKeyMapper:[[JSONKeyMapper alloc] initWithDictionary:@{@"id":@"itemID"}]];//所有json中的id对应类中的itemID属性
     
     if (IS_RUNNING_IOS7) {
-        NSShadow *shadow = [[NSShadow alloc] init];
-        shadow.shadowColor = [UIColor blackColor];
-        shadow.shadowOffset = CGSizeMake(0, 1);
-        
-        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, shadow, NSShadowAttributeName, [UIFont fontWithName:FONT_NAME size:21.0], NSFontAttributeName, nil]];
+        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, [UIFont fontWithName:FONT_NAME size:20.0], NSFontAttributeName, nil]];
         [[UINavigationBar appearance] setBarTintColor:NAV_BACKGROUND_COLOR];
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
         //修改状态栏颜色为亮色,前提是在info.plist增加key"View controller-based status bar appearance"并设置值为NO

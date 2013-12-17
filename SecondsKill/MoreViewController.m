@@ -47,8 +47,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0 && indexPath.row == 0) {
-        [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY shareText:UM_SHARED_TEXT
-                                         shareImage:UM_SHARED_IMAGE shareToSnsNames:nil delegate:self];
+        [UMSocialSnsService presentSnsIconSheetView:self appKey:UMENG_APPKEY shareText:@"#秒杀惠# 强烈推荐一个秒杀神器，可以将京东亚马逊神马的秒杀信息一网打尽，赶快下载吧! http://ms.athui.com" shareImage:[UIImage imageNamed:@"logo@2x.png"] shareToSnsNames:nil delegate:self];
     }
     else if (indexPath.row == 1) {
         [UMFeedback showFeedback:self withAppkey:UMENG_APPKEY];

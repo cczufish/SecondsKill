@@ -55,26 +55,4 @@
 //先放大再恢复
 + (void)animationScaleAndRestore:(UIView *)view;
 
-#pragma mark - 私有API
-
-//上下左右翻转效果
-+ (void)animationFlipFromTop:(UIView *)view;
-+ (void)animationFlipFromBottom:(UIView *)view;
-
-//立方体翻滚效果
-+ (void)animationCubeFromLeft:(UIView *)view;
-+ (void)animationCubeFromRight:(UIView *)view;
-+ (void)animationCubeFromTop:(UIView *)view;
-+ (void)animationCubeFromBottom:(UIView *)view;
-
-//收缩效果，类似系统最小化窗口时的神奇效果(不支持过渡方向)
-+ (void)animationSuckEffect:(UIView *)view;
-//滴水效果,(不支持过渡方向)
-+ (void)animationRippleEffect:(UIView *)view;
-
-//向上翻一页
-+ (void)animationPageCurl:(UIView *)view;
-//向下翻一页
-+ (void)animationPageUnCurl:(UIView *)view;
-
 @end

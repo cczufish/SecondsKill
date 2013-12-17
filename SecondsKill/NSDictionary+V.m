@@ -15,7 +15,7 @@
 {
     __block NSMutableArray *params = [NSMutableArray array];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [params addObject:[NSString stringWithFormat:@"%@=%@", key, [obj URLParameterSupportEqualSign]]];
+        [params addObject:[NSString stringWithFormat:@"%@=%@", key, [obj URLParameterSupportEqualSignAndCommaSymbol]]];
     }];
     
     NSString *url = nil;

@@ -13,6 +13,7 @@
 - (BOOL)isEmail;
 
 //base64后的字符串会包括"="号，所以如果要将它用在url中，就不能对“＝“转码
-- (NSString *)URLParameterSupportEqualSign;
+//排序用的参数，对应的值里会包含逗号
+- (NSString *)URLParameterSupportEqualSignAndCommaSymbol;
 
 @end

@@ -25,4 +25,6 @@ typedef void (^CancelRequest)();
 
 - (void)requestWithCompletionBlock:(CompletionRequest)completionBlock;
 
+- (void)requestSimpleWithCompletionBlock:(CompletionRequest)completionBlock;
+
 @end

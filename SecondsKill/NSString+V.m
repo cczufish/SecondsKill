@@ -17,14 +17,14 @@
     return [emailTest evaluateWithObject:self];
 }
 
-- (NSString *)URLParameterSupportEqualSign
+- (NSString *)URLParameterSupportEqualSignAndCommaSymbol
 {
     
     CFStringRef buffer =
     CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                             (__bridge CFStringRef)self,
                                             NULL,
-                                            (__bridge CFStringRef)@";/?:@&+$,",
+                                            (__bridge CFStringRef)@";/?:@&+$",
                                             kCFStringEncodingUTF8);
     
     NSString *result = [NSString stringWithString:(__bridge NSString *)buffer];

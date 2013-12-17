@@ -20,4 +20,6 @@
 //从菜单界面返回时，触发此方法
 - (void)selectCommoditys:(NSString *)ql;
 
+- (void)showSortMenuView:(UIButton *)sender;
+
 @end

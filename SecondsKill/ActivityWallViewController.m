@@ -31,8 +31,12 @@
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
-    
+    BButton *refreshBtn = [BButton awesomeButtonWithOnlyIcon:FAIconRepeat color:[UIColor clearColor] style:BButtonStyleBootstrapV3];//V2有阴影
+    refreshBtn.titleLabel.textColor = [UIColor whiteColor];
+    refreshBtn.showsTouchWhenHighlighted = YES;
+    [refreshBtn addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshBtn];
+
     self.activitys = [NSMutableArray arrayWithCapacity:20];
     
     self.pageNO = 1;
@@ -149,7 +153,9 @@
     
     ActivityWall *activity = [self.activitys objectAtIndex:indexPath.row];
     webVC.linkAddress = activity.link;
-    
+    webVC.shareImage = [UIImage imageNamed:@"logo@2x.png"];
+    webVC.shareText = [NSString stringWithFormat:@"#秒杀惠# %@，赶紧来围观吧! %@", activity.title, activity.link];
+
     [webVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:webVC animated:YES];
     

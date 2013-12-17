@@ -8,6 +8,8 @@
 
 #import "CommodityTableViewAdapter.h"
 #import "CommodityTableViewCell.h"
+#import "KillingViewController.h"
+#import "NotBeginViewController.h"
 #import "Commodity.h"
 
 #define kPadding 5.0f
@@ -17,6 +19,8 @@
 @interface CommodityTableViewAdapter ()
 
 @property (nonatomic, assign) CommodityAdapterType adapterType;
+
+@property (nonatomic, strong) NSMutableArray *currentCells;
 
 @end
 
@@ -28,6 +32,7 @@
     if (self) {
         self.adapterType = adapterType;
         self.commoditys = [NSMutableArray arrayWithCapacity:20];
+        self.currentCells = [NSMutableArray arrayWithCapacity:3];
     }
     return self;
 }
@@ -52,6 +57,14 @@
 	CommodityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.adapterType == CommodityAdapterTypeKilling?@"killingCellID":@"notBeginCellID"];
     cell.adapterType = self.adapterType;
     cell.tableView = tableView;
+    
+    [self.currentCells addObject:cell];
+    
+    UINavigationController *nav = (UINavigationController *)[tableView inViewController];
+    if ([nav.topViewController isKindOfClass:[KillingViewController class]] || [nav.topViewController isKindOfClass:[NotBeginViewController         class]]) {
+        SuperViewController *superVC = (SuperViewController *)nav.topViewController;
+        [superVC.timers addObject:cell.timer];
+    }
 
     Commodity *commodity = [self.commoditys objectAtIndex:indexPath.row];
     cell.commodity = commodity;
@@ -73,11 +86,24 @@
     cell.priceLabel.text = [NSString stringWithFormat:@"￥%g", commodity.o_price];
     cell.killPriceLabel.text = [NSString stringWithFormat:@"￥%g", commodity.price];
     cell.sourceImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%@",commodity.site]];
-    [cell.pictureImg setImageWithURL:[NSURL URLWithString:commodity.image] placeholderImage:nil];
     
-    [cell.upBtn setTitle:commodity.likingCount forState:UIControlStateNormal];
-    [cell.upBtn setImage:[cell.upBtn.imageView.image tintColor:[UIColor blackColor]] forState:UIControlStateNormal];
-    [cell.linkOrAlertBtn setImage:[cell.linkOrAlertBtn.imageView.image tintColor:[UIColor blackColor]] forState:UIControlStateNormal];
+    [cell.pictureImg setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:commodity.image]] placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        cell.pictureImg.image = image;
+        cell.commodityImage = image;
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        
+    }];
+    
+    //没有网时，数据会从本地加载，所以为了防止upBtn.title为空或空字符串，做此操作
+    if (commodity.likingCount && ![@"" isEqualToString:commodity.likingCount]) {
+        [cell.upBtn setTitle:commodity.likingCount forState:UIControlStateNormal];
+    }
+    else {
+        [cell.upBtn setTitle:@"0" forState:UIControlStateNormal];
+    }
+    
+    [cell.upBtn setImage:[cell.upBtn.imageView.image tintColor:[UIColor darkGrayColor]] forState:UIControlStateNormal];
+    [cell.linkOrAlertBtn setImage:[cell.linkOrAlertBtn.imageView.image tintColor:[UIColor darkGrayColor]] forState:UIControlStateNormal];
     
     NSDictionary *dict = [VDataBaseHelper queryById:commodity.itemID from:[commodity tableName]];
     
@@ -112,7 +138,7 @@
             cell.alreadyOrderPB.layer.masksToBounds = YES;
             cell.alreadyOrderPB.indicatorTextDisplayMode = YLProgressBarIndicatorTextDisplayModeTrack;
             cell.alreadyOrderPB.indicatorTextLabel.textAlignment = NSTextAlignmentCenter;
-            cell.alreadyOrderPB.indicatorTextLabel.font = DEFAULT_FONT;
+            cell.alreadyOrderPB.indicatorTextLabel.font = [UIFont fontWithName:FONT_NAME size:14];
             cell.alreadyOrderPB.indicatorTextLabel.textColor = [UIColor blackColor];
             
             cell.alreadyOrderPB.indicatorTextLabel.text = [NSString stringWithFormat:@"现已订购: %d%%", (int)(alreadyOrder * 100)];
@@ -120,12 +146,12 @@
             
             if (cell.alreadyOrderPB.progress == 1.0f) {
                 cell.alreadyOrderPB.progressTintColor = [UIColor lightGrayColor];
-                cell.surplusLabel.hidden = YES;
-                cell.surplusTipLabel.hidden = YES;
+                cell.surplusLabel.textColor = [UIColor clearColor];
+                cell.surplusTipLabel.textColor = [UIColor clearColor];
             }
             else {
-                cell.surplusLabel.hidden = NO;
-                cell.surplusTipLabel.hidden = NO;
+                cell.surplusLabel.textColor = [UIColor blackColor];
+                cell.surplusTipLabel.textColor = [UIColor blackColor];
             }
         }
         
@@ -157,10 +183,6 @@
     }
     
     [cell updateSurplusOrDetrusionTime];
-
-    UINavigationController *nav = (UINavigationController *)[tableView inViewController];
-    SuperViewController *superVC = (SuperViewController *)nav.topViewController;
-    [superVC.timers addObject:cell.timer];
 
     return cell;
 }

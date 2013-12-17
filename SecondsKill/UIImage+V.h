@@ -18,4 +18,6 @@
 
 - (UIImage *)tintColor:(UIColor *)color;
 
++ (UIImage *)getWebSiteIcon:(NSString *)website;
+
 @end
