@@ -16,6 +16,8 @@
 
 @end
 
+static NSDate *preRefreshTime = nil;
+
 @implementation NotBeginViewController
 
 - (void)viewDidLoad
@@ -23,7 +25,7 @@
     self.canRefreshTableView = YES;
     
     [super viewDidLoad];
-    
+
     self.ql = @"";
     
     BButton *refreshBtn = [BButton awesomeButtonWithOnlyIcon:FAIconRepeat color:[UIColor clearColor] style:BButtonStyleBootstrapV3];//V2有阴影
@@ -49,9 +51,13 @@
     self.uri = [self.params toURLString:DEFAULT_URI];
 
     [SVProgressHUD show];
+    
     [self refreshTableView:RefreshTableViewModePullDown callBack:^(NSMutableArray *datas) {
         self.tableViewAdapter.commoditys = datas;
+        
         [SVProgressHUD dismiss];
+        
+        preRefreshTime = [NSDate date];
     }];
 }
 
@@ -108,6 +114,15 @@
 
 - (void)refresh
 {
+    //此方法会由定时器控制的代码连续刷新多次，所以做次处理，5秒内只响应一次刷新要求
+    NSDateComponents *comp = [VDateTimeHelper dateBetween:preRefreshTime toDate:[NSDate date]];
+
+    if (comp.second < 3) {
+        return;
+    }
+
+    preRefreshTime = [NSDate date];
+    
     [super pullDownRefresh];
     
     [SVProgressHUD show];

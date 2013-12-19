@@ -10,8 +10,7 @@
 #import "UMFeedback.h"
 #import "PXAlertView.h"
 
-#warning 在App Store新建应用后，将appid添加到进来。
-#define APP_ID @""
+#define APP_ID @"785820116"
 
 @interface MoreViewController ()
 
@@ -53,7 +52,12 @@
         [UMFeedback showFeedback:self withAppkey:UMENG_APPKEY];
     }
     else if (indexPath.row == 2) {
-        [MobClick checkUpdateWithDelegate:self selector:@selector(checkUpdateDelegate:)];
+        [VAlertHelper success:@"您的应用是最新版，不需要更新!"];
+        
+        
+        
+        
+//        [MobClick checkUpdateWithDelegate:self selector:@selector(checkUpdateDelegate:)];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

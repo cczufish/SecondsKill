@@ -70,7 +70,7 @@
                 NotBeginViewController *notBeginVC = (NotBeginViewController *)[self inViewController];
                 [notBeginVC.tableViewAdapter.commoditys removeObject:self.commodity];
                 [self.tableView reloadData];
-                
+
                 if ([notBeginVC.tableViewAdapter.commoditys count] == 0) {
                     [notBeginVC refresh];
                 }
@@ -89,12 +89,31 @@
     NSString *msg = @"";
     
     if (self.adapterType == CommodityAdapterTypeNotBegin) {
-        //2天
-        //3个多小时
-        //15分钟  不要秒
-        //只有秒   即刻开始秒杀
-        NSString *info = [NSString stringWithFormat:@"还有。。。。开始秒杀"];
         
+        NSString *info = @"";
+        
+        NSArray *ary = [self.detrusionTimeLabel.text componentsSeparatedByString:@" "];
+        
+        if ([ary count] == 2) {
+            info = [NSString stringWithFormat:@"还有%@开始秒杀", ary[0]];
+        }
+        else {
+            NSDate *date = [VDateTimeHelper formatStringToDate:self.detrusionTimeLabel.text dateFormat:@"HH:mm:ss"];
+            NSDateComponents *comp = [VDateTimeHelper splitDate:date];
+            
+            if (comp.hour > 0) {
+                info = [NSString stringWithFormat:@"还有%d个多小时开始秒杀", comp.hour];
+            }
+            else {
+                if (comp.minute > 0) {
+                    info = [NSString stringWithFormat:@"还有%d分钟开始秒杀", comp.minute];
+                }
+                else {
+                    info = [NSString stringWithFormat:@"只有%d秒，即刻开始秒杀", comp.second];
+                }
+            }
+        }
+
         if (self.commodity.price > 0) {
             info = [NSString stringWithFormat:@"只要%g元哟，%@",self.commodity.price,info];
         }

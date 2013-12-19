@@ -6,8 +6,6 @@
 //  Copyright (c) 2013年 edouglas. All rights reserved.
 //
 
-#warning 打包时把.git除去试试，看看ipa会不会小
-
 #ifndef SecondsKill_VGlobalHeader_h
 #define SecondsKill_VGlobalHeader_h
 

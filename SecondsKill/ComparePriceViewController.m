@@ -159,11 +159,11 @@
                     
                     [weakSelf.tableView reloadData];
                     
-                    [weakSelf endRefresh:[NSString stringWithFormat:@"成功请求%d条数据!", [commoditys count]] style:ALAlertBannerStyleNotify refreshMode:refreshMode];
+                    [weakSelf endRefresh:[NSString stringWithFormat:@"更新成功!"] style:ALAlertBannerStyleNotify refreshMode:refreshMode];
                 }
                 else {
                     NSLog(@"%@",error);
-                    [weakSelf endRefresh:@"数据请求失败，请重试!" style:ALAlertBannerStyleFailure refreshMode:refreshMode];
+                    [weakSelf endRefresh:NETWORK_ERROR style:ALAlertBannerStyleFailure refreshMode:refreshMode];
                 }
                 
                 if (refreshMode == RefreshTableViewModeNone) {

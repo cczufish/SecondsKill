@@ -60,11 +60,11 @@
 {
     NSDictionary *aps = [userInfo valueForKey:@"aps"];
     NSString *content = [aps valueForKey:@"alert"];
-    NSInteger badge = [[aps valueForKey:@"badge"] integerValue];
-    NSString *sound = [aps valueForKey:@"sound"];
-    
-    NSString *customizeField1 = [userInfo valueForKey:@"customizeField1"]; //自定义参数，key是自己定义的
-    NSLog(@"content =[%@], badge=[%ld], sound=[%@], customize field =[%@]",content,(long)badge,sound,customizeField1);
+//    NSInteger badge = [[aps valueForKey:@"badge"] integerValue];
+//    NSString *sound = [aps valueForKey:@"sound"];
+//    
+//    NSString *customizeField1 = [userInfo valueForKey:@"customizeField1"]; //自定义参数，key是自己定义的
+//    NSLog(@"content =[%@], badge=[%ld], sound=[%@], customize field =[%@]",content,(long)badge,sound,customizeField1);
 
     // 处理收到的APNS消息，向服务器上报收到APNS消息
     [APService handleRemoteNotification:userInfo];
